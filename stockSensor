@@ -1,0 +1,38 @@
+{
+    "name": "stockSensor",
+    "version": "1.0.1",
+    "script": "\n//price,volume,high,low,moving_avg,percent,date\n//3.35,5660888,3.43,3.34,3.3319,-2.05%,12/10/14,4:03pm\n\nvar price, volume, high, low, moving_average, percent, date;\nvar ticker  = options.requiredProperties.ticker;\nvar threshold  = options.requiredProperties.threshold;\nif(ticker) {\n    var url    = \"http://finance.yahoo.com/d/quotes.csv?s=\" + ticker + \"&f=l1vhgm4p2d1t1\";\n    request(url, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var res = body.split(',');\n        price = parseFloat(res[0]);\n        volume = Number(res[1]);\n        high = parseFloat(res[2]);\n        low = parseFloat(res[3]);\n        moving_average = parseFloat(res[4]);\n        percent = res[5];\n        date = res[6];\n        var value = {\n            observedState: price > threshold ? \"Above\" : \"Below\",\n            rawData: { price: price, high:high, volume:volume, low:low, movingAverage:moving_average,percent:percent, date:date }\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        send(new Error(\"Error: \" + response));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property stock\"));\n}\n\n\n\n\n\n\n",
+    "metadata": {
+        "author": "",
+        "category": "Finance",
+        "description": "Stock sensor",
+        "iconURL": "https://cdn2.iconfinder.com/data/icons/classic-development-circle/512/stock_table-512.png",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "ticker",
+            "threshold"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "price",
+                "dataType": "string"
+            },
+            {
+                "parameter": "low",
+                "dataType": "double"
+            },
+            {
+                "parameter": "high",
+                "dataType": "double"
+            },
+            {
+                "parameter": "volume",
+                "dataType": "double"
+            }
+        ]
+    }
+}
