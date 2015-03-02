@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "script": "var url =\"http://api.openweathermap.org/data/2.5/weather?q=\" + options.requiredProperties.city + \"&units=metric\";\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        var data = JSON.parse(body);\n        console.log(data);\n        var state = data.weather[0].main;\n        var icon = data.weather[0].icon;\n        var value = {\n        observedState: state,\n        rawData :{\n          temperature: data.main.temp,\n          pressure: data.main.pressure,\n          humidity: data.main.humidity,\n          temp_min: data.main.temp_min,\n          temp_max: data.main.temp_max,\n          wind_speed: data.wind.speed,\n          clouds_coverage: data.clouds.all,\n          sunrise: data.sys.sunrise,\n          sunset: data.sys.sunset,\n          longitude: data.coord.lon,\n          latitude:data.coord.lat,\n          name: data.name,\n          condition: state,\n          icon: \"http://openweathermap.org/img/w/\"+icon +\".png\"\n        }\n       };\n       //console.log(JSON.stringify(value));\n       send(null, value);\n});",
   "metadata": {
-    "author": "",
+    "author": "waylay",
     "category": "Weather",
     "description": "Weather sensor",
     "documentationURL": "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric",
