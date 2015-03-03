@@ -1,0 +1,22 @@
+{
+    "name": "shopSensor",
+    "version": "1.0.1",
+    "script": "//tempNode.state \nvar db = options.globalSettings.mongodb;\nvar token = options.requiredProperties.token || options.globalSettings.mongoKey;\n\nvar condition = waylayUtil.getRawData(options, options.requiredProperties.weatherTemp, \"state\");\nvar sex = waylayUtil.getRawData(options, options.requiredProperties.customer, \"sex\");\n\nif(condition){\n  condition = condition.toLowerCase();\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/shop?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var data = JSON.parse(body);\n        var item = __.findWhere(data, {condition: condition, sex: sex});\n        \n        var value = {\n            observedState: item !==undefined? \"Found\": \"Not Found\",\n            rawData: item\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(new Error(response));\n    }\n    }); \n}else{\n  send(new Error(\"Missing condition\"));\n}",
+    "metadata": {
+        "author": "",
+        "category": "Shopping",
+        "description": "shopSensor\nGives the shop item based on the weather condition\n\n<h3>Input parameters</h3>\n<ul>\n<li>nodes that can give back as a state a temperature: Cold, Warm, Freezing, Mild</li>\n</ul>",
+        "documentationURL": "",
+        "iconURL": "https://cdn4.iconfinder.com/data/icons/search-engine-optimization/512/shopping_bag_purchase_handbag_flat_icon_symbol-512.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "weatherTemp",
+            "customer"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
