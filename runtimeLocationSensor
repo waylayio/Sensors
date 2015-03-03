@@ -1,0 +1,50 @@
+{
+    "name": "runtimeLocationSensor",
+    "version": "1.0.1",
+    "script": "var latitude, longitude, runtimeLatitude, runtimeLongitude;\n\nvar sendDistance = function(){\n    var dist = waylayUtil.getDistance(latitude, longitude, runtimeLatitude, runtimeLongitude);\n    var value = {\n        observedState: dist > options.requiredProperties.distance ? \"Out\" : \"In\",\n        rawData: {  \n            distance: dist, \n            distanceConfigured: options.requiredProperties.distance,\n            latitude: runtimeLatitude, \n            longitude: runtimeLongitude,  \n            latitudeConfigured:  latitude, \n            longitudeConfigured: longitude\n            \n        }\n    };\n    send(null, value);\n};\n\nlatitude = waylayUtil.getCacheData(options,\"latitudeConfigured\");\nlongitude = waylayUtil.getCacheData(options,\"longitudeConfigured\");\n\ntry{\n    runtimeLatitude = options.rawData.GLOBAL[\"latitude\"];\n    runtimeLongitude = options.rawData.GLOBAL[\"longitude\"];    \n} catch(err){\n    send(new Error(err));\n}\n\nif(!runtimeLatitude || !runtimeLongitude){\n    send(new Error(\"runtime location not available\"));\n}\nelse if(latitude && longitude){\n    try{\n        sendDistance()\n    } catch(err){\n        console.log(\"ERROR\");\n        send(new Error(\"calling mashape endpoint\"));\n    }\n}\nelse if(options.requiredProperties.address && options.globalSettings.MASHAPE_KEY && \n        options.requiredProperties.distance && runtimeLongitude && runtimeLatitude){\n    var API_KEY = options.globalSettings.MASHAPE_KEY;\n    unirest.get(\"https://montanaflynn-geocoder.p.mashape.com/address?address=\"+options.requiredProperties.address).header(\"X-Mashape-Key\", API_KEY).end(function (result) {\n        try{\n            console.log(result.body);\n            latitude = result.body[\"latitude\"];\n            longitude = result.body[\"longitude\"];\n            sendDistance();\n        } catch (err){\n          send(new Error(err));\n        }\n\n    }, function(){\n        console.log(\"ERROR\");\n        send(new Error(\"calling mashape endpoint\"));\n    });\n} else {\n    send(new Error(\"Missing properties\"));\n}\n\n",
+    "metadata": {
+        "author": "",
+        "category": "Location",
+        "description": "Distance calculator based on runtime location and address.\n<h3>Inputs</h3>\n<ul>\n<li>Address: address from which you want to calculate a distiance</li>\n<li>distance: distance between location coming from the address and real data</li>\n</ul>\n",
+        "iconURL": "http://www.uhu.es/canaluhu/paneleventos/images/map.png",
+        "supportedStates": [
+            "Out",
+            "In"
+        ],
+        "requiredProperties": [
+            "distance",
+            "address"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "distance",
+                "dataType": "string"
+            },
+            {
+                "parameter": "latitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distance",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distanceConfigured",
+                "dataType": "double"
+            }
+        ]
+    }
+}
