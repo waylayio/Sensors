@@ -1,0 +1,27 @@
+{
+    "name": "thresholdRawSensor",
+    "version": "1.0.1",
+    "script": "// sensors should never throw exceptions but instead send an error back\noptions.rawData = {\n  \"hello\" : \n  {   randomValue: 5,\n      state: \"True\"\n  }\n};\nconsole.log(\"rawData sensor\");\nif(options.requiredProperties.node && options.requiredProperties.param) {\n    try{\n      var rawData =  waylayUtil.getRawData(options, options.requiredProperties.node);\n      console.log(rawData || \"no raw Data\");\n      var rawValue = rawData[options.requiredProperties.param];\n      console.log(rawValue || \"nothing\");\n      var value = {\n        observedState: rawValue > options.requiredProperties.threshold ? \"Above\" : \"Below\",\n        rawData:  {  value: rawValue}  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing property testProperty1\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Functions",
+        "description": "Threshold RAW sensor\n<h3>Example input params</h3>\n<ul>\n<li>node: hello</li>\n<li>param: randomValue</li>\n<li>threshold: 6</li>\n</ul>\n\nDon't forget to <strong>commnent out the raw data</strong> from the script once you put it in production.\n\nNote that there are two ways to use the function <strong>waylayUtil.getRawData</strong> \n<h4>By just trying to get a param</h4>\n<ul>\n<li>param: node.randomValue</li>\n</ul>\nIn this case, the return value is just a value \n\n<h4>By just trying to get a raw data</h4>\n<ul>\n<li>param: node</li>\n</ul>\nIn this case, the return value is just an object with rawdata and state that is returned",
+        "iconURL": "http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/256/Bar-chart-icon.png",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "node",
+            "threshold",
+            "param"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "rawValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
