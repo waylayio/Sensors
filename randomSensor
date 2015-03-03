@@ -1,0 +1,24 @@
+{
+    "name": "randomSensor",
+    "version": "1.0.1",
+    "script": "var randomValue = Math.random(); \nvar state;\nif(randomValue > 0.85)\n  state = \"High\";\nelse if(randomValue > 0.4)\n  state = \"Medium\";\nelse \n  state = \"Low\";\nvalue = {  \n    observedState:  state, \n    rawData : {  randomValue: randomValue}  \n}; \nsend(null,value);",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Random sensor\nIt gives back random value and three states. ",
+        "iconURL": "http://sensorcon.com/product_images/uploaded_images/water-quality-android-app.png",
+        "supportedStates": [
+            "Low",
+            "Medium",
+            "High"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "randomValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
