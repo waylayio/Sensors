@@ -1,0 +1,52 @@
+{
+    "name": "locationSensor",
+    "version": "1.0.1",
+    "script": "// take first runtime from global, that way you don't need to define a node that has raw data.\n// if you have more than one node that produces geo data, you should not do this\nvar lat1 = options.rawData.GLOBAL[\"latitude\"];\nvar lon1 = options.rawData.GLOBAL[\"longitude\"];\nif(options.requiredProperties.node){\n    var nodeName = options.requiredProperties.node;\n    lat1 = options.rawData[nodeName].latitude;\n    lon1 = options.rawData[nodeName].longitude; \n} \n\nif(options.requiredProperties.distance && lat1 && lon1) {\n    var radlat1 = Math.PI * lat1/180;\n    var radlat2 = Math.PI * options.requiredProperties.latitude/180;\n    var radlon1 = Math.PI * lon1/180;\n    var radlon2 = Math.PI * options.requiredProperties.longitude/180;\n    var theta = lon1-options.requiredProperties.longitude;\n    \n    var radtheta = Math.PI * theta/180;\n\n    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);\n    dist = Math.acos(dist);\n    dist = dist * 180/Math.PI;\n    dist = dist * 60 * 1.1515;\n    dist = dist * 1.609344;\n    var value = {\n        observedState: dist > options.requiredProperties.distance ? \"Out\" : \"In\",\n        rawData: {  \n            distance: dist, \n            distanceConfigured: options.requiredProperties.distance,\n            latitude: lat1, \n            longitude: lon1,  \n            latitudeConfigured:  options.requiredProperties.latitude, \n            longitudeConfigured: options.requiredProperties.longitude\n            \n        }\n    };\n    send(null, value);\n}else{\n  send(new Error(\"Missing properties\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Location",
+        "description": "Distance sensor allows you to fetch location data from external\nsource (using REST push data calls) or by selecting raw data\nfrom another sensor.\n<h3>Inputs</h3>\n<ul>\n<li>node: if provided, sensor node which collects location data</li>\n<li>distance: distance between location coming from the node or real data and \nconfigured location</li>\n<li>latitude: configured latitude from which you want to calculate a distance</li>\n<li>longitude: configured longitude from which you want to calculate a distance</li>\n</ul>\n",
+        "iconURL": "https://cdn4.iconfinder.com/data/icons/flat-icon-set/128/location-icon.png",
+        "supportedStates": [
+            "Out",
+            "In"
+        ],
+        "requiredProperties": [
+            "node",
+            "distance",
+            "latitude",
+            "longitude"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "distance",
+                "dataType": "string"
+            },
+            {
+                "parameter": "latitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distance",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distanceConfigured",
+                "dataType": "double"
+            }
+        ]
+    }
+}
