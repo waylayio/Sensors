@@ -1,0 +1,17 @@
+{
+    "name": "alwaysON",
+    "version": "1.0.1",
+    "script": "var value = {\n    observedState: \"ON\"\n};\nsend(null, value);",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Always ON sensor allows you to create a task that triggers multiple actuators.\nFor instance, you can create a cron that fires every morning,\nby associating multiple actuators with it.",
+        "iconURL": "http://cryptosource.org/images/site/started.png",
+        "supportedStates": [
+            "ON"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
