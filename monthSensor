@@ -1,0 +1,46 @@
+{
+    "name": "monthSensor",
+    "version": "1.0.1",
+    "script": " var d = new Date();\n console.log(d);\n var nd = d; \n //  offset in hours\n var offset = options.requiredProperties.timeZoneOffset;\n var month = options.requiredProperties.month;\n if(month === undefined) {\n     send(new Error(\"Missing property month\"));\n }\n else {\n     if(offset){\n        // convert to msec, add local time zone offset and get UTC time in msec\n        var utc = d.getTime() + (d.getTimezoneOffset() * 60000);\n        nd = new Date(utc + (3600000*offset));\n    }\n    //using underscore library\n  var retValue = __.find(month.split(\",\"), function(num){ return num == nd.getMonth() +1; });\n  var value = {\n    observedState: retValue ? \"TRUE\" : \"FALSE\",\n    rawData: {  utc: d.getTime() , year: nd.getFullYear(), month: nd.getMonth() +1, day: nd.getDate(), hours:nd.getHours(), minutes: nd.getMinutes()}\n  };\n  console.log(value);\n  send(null, value);\n }\n",
+    "metadata": {
+        "author": "",
+        "category": "Time",
+        "description": "Month sensor: input is a month or list of months(comma separated)",
+        "iconURL": "https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-259_calendar-512.png",
+        "supportedStates": [
+            "TRUE",
+            "FALSE"
+        ],
+        "requiredProperties": [
+            "timeZoneOffset",
+            "month"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "utc",
+                "dataType": "double"
+            },
+            {
+                "parameter": "hours",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "minutes",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "day",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "month",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "year",
+                "dataType": "integer"
+            }
+        ]
+    }
+}
