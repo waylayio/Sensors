@@ -1,0 +1,25 @@
+{
+    "name": "pingWaylayServer",
+    "version": "1.0.1",
+    "script": "var username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar address = options.requiredProperties.address || options.task.RESOURCE;\n\nvar start = new Date().getTime();\n\nvar url =\"https://\"+ username + ':' + password +'@' + address + \"/api/ping\";\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        console.log(body);\n        var end = new Date().getTime();\n        var time = end - start;\n        value ={\n               observedState: body == \"alive\" ? \"Alive\" : \"Not Alive\",\n               rawData: {\n                   time: time,\n               }\n        }\n        send(null, value);\n});\n\n",
+    "metadata": {
+        "author": "",
+        "category": "Waylay",
+        "description": "Test sensor",
+        "iconURL": "https://pbs.twimg.com/profile_images/551368936948654082/gfTrJCSX_400x400.png",
+        "supportedStates": [
+            "Alive",
+            "Not Alive"
+        ],
+        "requiredProperties": [
+            "address"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "time",
+                "dataType": "double"
+            }
+        ]
+    }
+}
