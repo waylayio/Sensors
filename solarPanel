@@ -1,0 +1,26 @@
+{
+    "name": "solarPanel",
+    "version": "1.0.1",
+    "script": "var randomValue = Math.random(); \nvar energy;\nvar surface;\n\nenergy = (0.75+ (randomValue-0.5)*0.2) * 30;\nsurface = 30;\nvalue = {  \n    rawData : {  \n        energy: energy,\n        surface: surface}  \n}; \nsend(null,value);",
+    "metadata": {
+        "author": "Piet Vandaele",
+        "category": "Experimental",
+        "description": "Solar panel",
+        "iconURL": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQwOhoA5PbqyN1_umBevgi0CMESfQU_Z-6SYaSGpc1006nchItzjWabJg",
+        "supportedStates": [],
+        "requiredProperties": [
+            "location"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "energy",
+                "dataType": "double"
+            },
+            {
+                "parameter": "surface",
+                "dataType": "double"
+            }
+        ]
+    }
+}
