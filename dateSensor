@@ -1,0 +1,46 @@
+{
+    "name": "dateSensor",
+    "version": "1.0.1",
+    "script": " var d = new Date();\n console.log(d);\n var nd = d; \n //  offset in hours\n var offset = options.requiredProperties.timeZoneOffset;\n if(options.requiredProperties.date === undefined) {\n     send(new Error(\"Missing property date\"));\n }\n else {\n     var inputDate = new Date(options.requiredProperties.date);\n     if(offset){\n        // convert to msec, add local time zone offset and get UTC time in msec\n        var utc = d.getTime() + (d.getTimezoneOffset() * 60000);\n        nd = new Date(utc + (3600000*offset));\n    }\n    //using underscore library\n  var retValue = inputDate.getFullYear() == nd.getFullYear() && inputDate.getMonth() == nd.getMonth() && inputDate.getDate() == nd.getDate();\n  var value = {\n    observedState: retValue ? \"TRUE\" : \"FALSE\",\n    rawData: {  utc: d.getTime() , year: nd.getFullYear(), month: nd.getMonth() +1 , day: nd.getDate(), hours:nd.getHours(), minutes: nd.getMinutes()}\n  };\n  console.log(value);\n  send(null, value);\n }\n",
+    "metadata": {
+        "author": "",
+        "category": "Time",
+        "description": "Date sensor:format <strong>MM/DD/YYYY</strong>\n<p>Example: 12/31/2014</p>",
+        "iconURL": "http://icalshare.com/images/hosts/default.png?1405767788",
+        "supportedStates": [
+            "TRUE",
+            "FALSE"
+        ],
+        "requiredProperties": [
+            "timeZoneOffset",
+            "date"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "utc",
+                "dataType": "double"
+            },
+            {
+                "parameter": "hours",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "minutes",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "day",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "month",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "year",
+                "dataType": "integer"
+            }
+        ]
+    }
+}
