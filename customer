@@ -1,0 +1,41 @@
+{
+    "name": "customer",
+    "version": "1.0.1",
+    "script": "var db = options.globalSettings.mongodb;\nvar token = options.globalSettings.mongoKey;\nvar customer = options.requiredProperties.customerID || options.task.RESOURCE;\nvar JSONQ = JSON.stringify({customerID: customer});\n\nif(customer){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/customers?apiKey=\"+token+'&q='+JSONQ;\n  var options = {\n    url: url\n  };\n  var callback = function(error, response, body) {\n    if (!error && response.statusCode == 200) {\n      var users = JSON.parse(body);\n      //var user = __.findWhere(users, {customerID: customer});\n      var user = users[0];\n      console.log(users);\n      console.log(user);\n      var state = user?  \"Found\" : \"NotFound\";\n      var value = {\n        observedState: state,\n        rawData: user\n      };\n      send(null, value);\n    }else{\n      send(new Error(\"Calling mongolab failed: \" + error + \" \" + body));\n    }\n  };\n  request.get(options, callback);\n}else{\n  send(new Error(\"Missing customer input\"));\n}",
+    "metadata": {
+        "author": "",
+        "category": "Demo",
+        "description": "Demo cusomter database using monglolab\nIf the customerID is not provided in inout settings, it will try to fetch it from\nresource on the task level.\n<h3>Current Users</h3>\n\n<ul>\n<li>Piet 1245-4124-1212</li>\n<li>Veselin 1234-1234-1212</li>\n<li>Francis 1212-1233-1212</li>\n<li>Tom 3333-1233-1212</li>\n</ul>",
+        "iconURL": "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_smart_guy-512.png",
+        "supportedStates": [
+            "Found",
+            "NotFound"
+        ],
+        "requiredProperties": [
+            "customerID"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "address",
+                "dataType": "string"
+            },
+            {
+                "parameter": "user",
+                "dataType": "string"
+            },
+            {
+                "parameter": "phoneNumber",
+                "dataType": "string"
+            },
+            {
+                "parameter": "e-mail",
+                "dataType": "double"
+            },
+            {
+                "parameter": "subscriptionType",
+                "dataType": "double"
+            }
+        ]
+    }
+}
