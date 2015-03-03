@@ -1,0 +1,21 @@
+{
+    "name": "supportSensor",
+    "version": "1.0.1",
+    "script": "//tempNode.state \nvar db = options.globalSettings.mongodb;\nvar token = options.requiredProperties.token || options.globalSettings.mongoKey;\n\nvar day ;\ntry {\n    day =  waylayUtil.getRawData(options, options.requiredProperties.dayInWeek, \"state\");\n} catch(err) {\n    day = options.requiredProperties.dayInWeek;\n}\n\nif(day){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/support?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var data = JSON.parse(body);\n        var item = __.find(data, function(person) {if(person.days.indexOf(day) > -1) return person;});\n        \n        var value = {\n            observedState: item !==undefined? \"Found\": \"Not Found\",\n            rawData: item\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(new Error(response));\n    }\n    }); \n}else{\n  send(new Error(\"Missing day\"));\n}",
+    "metadata": {
+        "author": "",
+        "category": "Waylay",
+        "description": "",
+        "documentationURL": "",
+        "iconURL": "http://content.presentermedia.com/files/clipart/00009000/9176/tech_support_figure_gear_icon_md_wm.jpg",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "dayInWeek"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
