@@ -1,0 +1,22 @@
+{
+    "name": "motionSensor",
+    "version": "1.0.1",
+    "script": "var props = options.requiredProperties;\nvar token = props.access_token || options.globalSettings.spark_token;\n\n\nif(token !== undefined && props.device !== undefined){\n    \n    var options = {\n        url: 'https://api.spark.io/v1/devices/' + props.device + \"/motion\",\n        headers: {\n            'Authorization: ': 'Bearer ' + token\n        }\n    };\n    \n    var callback = function(error, response, body) {\n        if (!error && response.statusCode == 200) {\n            var bodyJson = JSON.parse(body);\n            console.info(options.url);\n            console.info(bodyJson);\n            var value = {\n                observedState: bodyJson.result? \"Motion\" : \"NoMotion\",\n                rawData: bodyJson\n            };\n            send(null, value);\n        }else{\n            send(new Error(\"Calling api.spark.io failed: \" + error + \" \" + body + options.url));\n        }\n\n    }    \n    \n    request.get(options, callback);\n}else{\n    send(new Error(\"Missing properties\"));\n}\n\n\n",
+    "metadata": {
+        "author": "Francis",
+        "category": "IOT Platforms",
+        "description": "Spark sensor",
+        "documentationURL": "https://www.spark.io/build/547ee705ce4a72985f0015f6",
+        "iconURL": "http://www.technomate.com/javascript/ckfinder/userfiles/images/TM%20Mot%20ico.jpg",
+        "supportedStates": [
+            "Motion",
+            "NoMotion"
+        ],
+        "requiredProperties": [
+            "access_token",
+            "device"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
