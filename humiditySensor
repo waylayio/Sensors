@@ -1,0 +1,59 @@
+{
+    "name": "humiditySensor",
+    "version": "1.0.1",
+    "script": "var url =\"http://api.openweathermap.org/data/2.5/weather?q=\" + options.requiredProperties.city + \"&units=metric\";\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        var data = JSON.parse(body);\n        console.log(data);\n        var state = data.weather[0].main;\n        var icon = data.weather[0].icon;\n        var humidity = data.main.humidity;\n        \n        var retState;\n        if(humidity > 85)\n          retState = \"High\";\n        else if(humidity > 45)\n          retState = \"Normal\";\n        else \n          retState = \"Low\";\n        var value = {\n        observedState: retState,\n        rawData :{\n          temperature: data.main.temperature,\n          pressure: data.main.pressure,\n          humidity: data.main.humidity,\n          temp_min: data.main.temp_min,\n          temp_max: data.main.temp_max,\n          wind_speed: data.wind.speed,\n          clouds_coverage: data.clouds.all,\n          sunrise: data.sys.sunrise,\n          sunset: data.sys.sunset,\n          longitude: data.coord.lon,\n          latitude:data.coord.lat,\n          name: data.name,\n          condition: state,\n          icon: \"http://openweathermap.org/img/w/\"+icon +\".png\"\n        }\n       };\n       //console.log(JSON.stringify(value));\n       send(null, value);\n});",
+    "metadata": {
+        "author": "",
+        "category": "Weather",
+        "description": "Humidity sensor",
+        "documentationURL": "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric",
+        "iconURL": "http://s.icons8.com/wp-content/uploads/2014/04/humidity-128.png",
+        "supportedStates": [
+            "High",
+            "Normal",
+            "Low"
+        ],
+        "requiredProperties": [
+            "city"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "temperature",
+                "dataType": "double"
+            },
+            {
+                "parameter": "pressure",
+                "dataType": "double"
+            },
+            {
+                "parameter": "humidity",
+                "dataType": "double"
+            },
+            {
+                "parameter": "wind_speed",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "clouds_coverage",
+                "dataType": "double"
+            },
+            {
+                "parameter": "sunrise",
+                "dataType": "double"
+            },
+            {
+                "parameter": "sunset",
+                "dataType": "double"
+            }
+        ]
+    }
+}
