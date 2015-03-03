@@ -1,0 +1,23 @@
+{
+    "name": "xively",
+    "version": "1.0.1",
+    "script": "var id = options.requiredProperties.id;\nvar threshold =  options.requiredProperties.threshold;\nvar httpOptions = {\n    url: 'https://api.xively.com/v2/feeds/' + options.requiredProperties.feed\n};\nif(options.requiredProperties.key && options.requiredProperties.key !== \"\"){\n    httpOptions.headers = {\n        'X-ApiKey': options.requiredProperties.key\n   };\n}\nfunction callback(error, response, body) {\n    if (!error && response.statusCode == 200) {\n        var var1 = JSON.parse(body);\n        logger.info(var1);\n        var data = __.find(var1.datastreams, function(d){\n            return (d.id === id);\n        });\n        data.collectedTime = new Date(data.at).getTime();\n        data.current_value = parseFloat(data.current_value);\n        data.min_value = parseFloat(data.min_value);\n        data.max_value = parseFloat(data.max_value);\n        data.threshold = threshold;\n        var raw = {};\n        if(data.current_value > threshold)\n            raw.icon = \"https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png\";\n        else\n            raw.icon = \"https://maps.gstatic.com/mapfiles/ms2/micons/green-dot.png\";\n        if(var1.location && var1.location.lat && var1.location.lon){\n            raw.latitude = var1.location.lat;\n            raw.longitude = var1.location.lon;\n        }\n        __.map(var1.datastreams, function(data){\n            raw[data.id+'_current_value'] = parseFloat(data.current_value);\n            raw[data.id+'_min_value'] = parseFloat(data.min_value);\n            raw[data.id+'_max_value'] = parseFloat(data.max_value);\n            //raw[data.id+'_collectedTime'] = new Date(data.at).getTime();\n        });\n        console.log(raw);\n        value = {  \n            observedState:  data.current_value > threshold ? \"Above\": \"Below\", \n            rawData : raw \n        }; \n        send(null, value);\n    }\n}\nrequest(httpOptions, callback);",
+    "metadata": {
+        "author": "",
+        "category": "IOT Platforms",
+        "description": "Xively sensor",
+        "iconURL": "https://d15n4q3o4x3svq.cloudfront.net/assets/tutorials/xively/xively-a3a5ade94230669d1a0d82473b025c93.png",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "feed",
+            "key",
+            "id",
+            "threshold"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
