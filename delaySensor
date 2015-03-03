@@ -1,0 +1,31 @@
+{
+    "name": "delaySensor",
+    "version": "1.0.1",
+    "script": "var myVar = setInterval(function(){myTimer()}, 1000);\nvar count = 0;\nvar startTime = new Date();\n\nfunction myTimer() {\n    var d = new Date();\n    console.log(\"Time was \" + d);\n    count++;\n    if(count === 3){\n        console.log(\"I am done\");\n        clearInterval(myVar);\n        value = {\n            observedState: \"hello\",\n            rawData: {\n                startTime: startTime.getTime(),\n                endTime: d.getTime(),\n                executionTime: d.getTime() - startTime.getTime()\n            }\n        }\n        send(null, value);\n    }\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Test sensor",
+        "iconURL": "http://dummyimage.com/160&text=delaySensorTest",
+        "supportedStates": [
+            "hello",
+            "world"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "startTime",
+                "dataType": "long"
+            },
+            {
+                "parameter": "endTIme",
+                "dataType": "double"
+            },
+            {
+                "parameter": "executionTime",
+                "dataType": "double"
+            }
+        ]
+    }
+}
