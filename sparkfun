@@ -1,0 +1,24 @@
+{
+    "name": "sparkfun",
+    "version": "1.0.1",
+    "script": "//http://data.sparkfun.com/streams/8dXr4rzoRoIy5XW2G6dy\n\n//var url =\"http://data.sparkfun.com/streams/\" + options.requiredProperties.streamID;\nvar url = \"http://data.sparkfun.com/streams/8dXr4rzoRoIy5XW2G6dy\";\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        var data = JSON.parse(body);\n        console.log(data);\n        /*if(options.requiredProperties.aggregateValue){\n            \n        }*/\n        var value = {\n        observedState: \"state\"\n       };\n       send(null, value);\n});",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Test sensor",
+        "documentationURL": "https://data.sparkfun.com/",
+        "iconURL": "http://dummyimage.com/160&text=sparkfun",
+        "supportedStates": [
+            "Above",
+            "Below",
+            "Equal"
+        ],
+        "requiredProperties": [
+            "streamID",
+            "parameter",
+            "aggregateValue"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
