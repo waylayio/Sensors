@@ -1,0 +1,27 @@
+{
+    "name": "runtimeDataSensor",
+    "version": "1.0.1",
+    "script": "if(!options.requiredProperties.param || !options.requiredProperties.threshold){\n    send(new Error(\"missing properites\"))\n}\nelse {\n    try{\n    var runtimeParam = options.rawData.GLOBAL[options.requiredProperties.param];\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n            value = {\n            observedState: runtimeParam > options.requiredProperties.threshold ? \"Above\" : \"Below\",\n            rawData: { runtimeParam: runtimeParam}\n        };\n        send(null, value);\n    }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
+    "metadata": {
+        "author": "Veselin",
+        "category": "Functions",
+        "description": "Test sensor for test runtime data.\nThe waylay application allows you to use runtime data that it is pushed to the task by resource name (see REST documentation for more information) .\n\nIn that case, you access the data via: <strong>options.rawData.GLOBAL.parameter</strong>\n\nwhere parameter is the runtime data that is pushed to the current task.",
+        "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
+        "iconURL": "http://www.sas.com/content/dam/SAS/en_us/image/sas-com/icons/navmenu/data-visualization-icon.png",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "param",
+            "threshold"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "runtimeParam",
+                "dataType": "double"
+            }
+        ]
+    }
+}
