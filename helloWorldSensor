@@ -1,0 +1,23 @@
+{
+    "name": "helloWorldSensor",
+    "version": "1.0.1",
+    "script": " var randomValue = Math.random();\n  var value = {\n    observedState: randomValue > 0.5 ? \"hello\" : \"world\",\n    rawData: { randomValue: randomValue}\n  };\n  console.log(\"random value was \" + randomValue);\n  send(null, value);",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Test sensor",
+        "iconURL": "http://icons.iconarchive.com/icons/tsukasa-tux/daft-punks/256/Thomas-Hello-icon.png",
+        "supportedStates": [
+            "hello",
+            "world"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "randomValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
