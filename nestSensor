@@ -1,0 +1,26 @@
+{
+    "name": "nestSensor",
+    "version": "1.0.1",
+    "script": "/*Check the documentation and how to get an API key, After this, you need to invoke a REST call and pass the\nobject in the callback (in this example device)\nAPI reference: https://developer.nest.com/documentation/api-reference\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        var data = JSON.parse(body);\n        ...YOUR FUNCITON GOES here, see below the example\n       send(null, value);\n        \n    });\n*/\n\n\nvar device =  { \n    \"device_id\": \"peyiJNo0IldT2YlIVtYaGQ\" ,\n    \"locale\": \"en-US\" ,\n    \"software_version\": \"4.0\" ,\n    \"structure_id\": \"VqFabWH21nwVyd4RWgJgNb292wa7hG_dUwo2i2SG7j3-BOLY0BA4sw\" ,\n    \"name\": \"Hallway (upstairs)\" ,\n    \"name_long\": \"Hallway Thermostat (upstairs)\" ,\n    \"last_connection\": \"2014-03-02T23:20:19+00:00\" ,\n    \"is_online\": true ,\n    \"can_cool\": true ,\n    \"can_heat\": true ,\n    \"is_using_emergency_heat\": true ,\n    \"has_fan\": true ,\n    \"fan_timer_active\": true ,\n    \"fan_timer_timeout\": \"2014-03-02T23:20:19+00:00\" ,\n    \"has_leaf\": true ,\n    \"temperature_scale\": \"C\" ,\n    \"target_temperature_f\": 72 ,\n    \"target_temperature_c\": 21.5 ,\n    \"target_temperature_high_f\": 72 ,\n    \"target_temperature_high_c\": 21.5 ,\n    \"target_temperature_low_f\": 64 ,\n    \"target_temperature_low_c\": 17.5 ,\n    \"away_temperature_high_f\": 72 ,\n    \"away_temperature_high_c\": 21.5 ,\n    \"away_temperature_low_f\": 64 ,\n    \"away_temperature_low_c\": 17.5 ,\n    \"hvac_mode\": \"heat\" ,\n    \"ambient_temperature_f\": 72 ,\n    \"ambient_temperature_c\": 21.5\n};\n//console.log(device);\nvar randomValue = Math.random();\nvar range = parseInt(options.requiredProperties.range) || device.target_temperature_high_c - device.target_temperature_low_c;\nvar thr = parseInt(options.requiredProperties.threshold) || (device.target_temperature_high_c + device.target_temperature_low_c)/2;\nvar valueToTest = device[options.requiredProperties.parameter] || device.ambient_temperature_c;\n//this is for widget\ndevice.temperature = device.ambient_temperature_c;\n//add some dynamic changes...\nvalueToTest += randomValue;\nif(valueToTest){\n    console.log(\"device value is \" + valueToTest);\n    //default range is 3 degrees\n    console.log(\"threshold: \" + thr );\n    console.log(\"range: \" + range );\n    var state = \"Lower\";\n    if(valueToTest > thr + range)\n        state = \"Higher\";\n    else if(valueToTest > thr && valueToTest < thr + range)\n        state = \"inRange\";\n    var value = {\n        observedState: state,\n        rawData: device\n      };\n      send(null, value);\n}\nelse{\n    send(new Error(\"Missing value on device for\" + options.requiredProperties.parameter));\n}\n\n/*\nExample response\n\"peyiJNo0IldT2YlIVtYaGQ\": {\n\"device_id\": \"peyiJNo0IldT2YlIVtYaGQ\" ,\n\"locale\": \"en-US\" ,\n\"software_version\": \"4.0\" ,\n\"structure_id\": \"VqFabWH21nwVyd4RWgJgNb292wa7hG_dUwo2i2SG7j3-BOLY0BA4sw\" ,\n\"name\": \"Hallway (upstairs)\" ,\n\"name_long\": \"Hallway Thermostat (upstairs)\" ,\n\"last_connection\": \"2014-03-02T23:20:19+00:00\" ,\n\"is_online\": true ,\n\"can_cool\": true ,\n\"can_heat\": true ,\n\"is_using_emergency_heat\": true ,\n\"has_fan\": true ,\n\"fan_timer_active\": true ,\n\"fan_timer_timeout\": \"2014-03-02T23:20:19+00:00\" ,\n\"has_leaf\": true ,\n\"temperature_scale\": \"C\" ,\n\"target_temperature_f\": 72 ,\n\"target_temperature_c\": 21.5 ,\n\"target_temperature_high_f\": 72 ,\n\"target_temperature_high_c\": 21.5 ,\n\"target_temperature_low_f\": 64 ,\n\"target_temperature_low_c\": 17.5 ,\n\"away_temperature_high_f\": 72 ,\n\"away_temperature_high_c\": 21.5 ,\n\"away_temperature_low_f\": 64 ,\n\"away_temperature_low_c\": 17.5 ,\n\"hvac_mode\": \"heat\" ,\n\"ambient_temperature_f\": 72 ,\n\"ambient_temperature_c\": 21.5\n}\n*/",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "NEST sensor \nIn this examaple we are actually just using JSON response and \nwe are not connecting to the NEST application. You will need to\nchange this code that really gets the data from your device.\nStill it is a good example how you can test a new sensor. Try first to \nget JSON response, and the decide what needs to be set of states you want\nto return.\n<h3>inputs are</h3>\n<ul>\n<li>API key</li>\n<li>parameter: Default value: ambient_temperature_c</li>\n<li>range: from device</li>\n<li>threshold</li>\n</ul>\n<a href='https://developer.nest.com'>NEST web site</a>",
+        "documentationURL": "https://developer.nest.com/documentation/api-reference",
+        "iconURL": "http://www.thebrokeniphone.com/images/icons/nest.png",
+        "supportedStates": [
+            "Lower",
+            "inRange",
+            "Higher"
+        ],
+        "requiredProperties": [
+            "range",
+            "deviceID",
+            "APIKey",
+            "parameter",
+            "threshold"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
