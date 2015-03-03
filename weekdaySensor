@@ -1,0 +1,50 @@
+{
+    "name": "weekdaySensor",
+    "version": "1.0.1",
+    "script": " var d = new Date();\n console.log(d);\n var nd = d; \n //  offset in hours\n var offset = options.requiredProperties.timeZoneOffset;\n if(offset){\n    // convert to msec, add local time zone offset and get UTC time in msec\n    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);\n    nd = new Date(utc + (3600000*offset));\n }\nvar day = parseInt(nd.getDay());\nvar retState = \"Monday\";\nif(day === 0)\n  retState = \"Sunday\";\nelse if(day == 1)\n  retState = \"Monday\";\nelse if(day == 2)\n  retState = \"Tuesday\";\nelse if(day == 3)\n  retState = \"Wednesday\";\nelse if(day == 4)\n  retState = \"Thursday\";\nelse if(day == 5)\n  retState = \"Friday\";\nelse \n  retState = \"Saturday\";\n  var value = {\n    observedState: retState,\n    rawData: {  utc: d.getTime() , year: nd.getFullYear(), month: nd.getMonth() +1 , day: nd.getDate(), hours:nd.getHours(), minutes: nd.getMinutes()}\n  };\nconsole.log(value);\nsend(null, value);",
+    "metadata": {
+        "author": "",
+        "category": "Time",
+        "description": "Weekday sensor",
+        "iconURL": "http://www.pathwayshrc.com.au/images/booknow.png",
+        "supportedStates": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        ],
+        "requiredProperties": [
+            "timeZoneOffset"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "utc",
+                "dataType": "double"
+            },
+            {
+                "parameter": "hours",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "minutes",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "day",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "month",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "year",
+                "dataType": "integer"
+            }
+        ]
+    }
+}
