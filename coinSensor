@@ -1,0 +1,23 @@
+{
+    "name": "coinSensor",
+    "version": "1.0.1",
+    "script": "var randomValue = Math.random(); \nvar state;\nif(randomValue >= 0.5)\n  state = \"HEADS\";\nelse\n  state = \"TAILS\";\n\nvalue = {  \n    observedState:  state, \n    rawData : {  randomValue: randomValue}  \n}; \nsend(null,value);",
+    "metadata": {
+        "author": "Piet Vandaele",
+        "category": "Experimental",
+        "description": "Coin sensor generates one of two states: HEADS or TAILS \nbased on a random value . It also returns\nthe raw data you can use for formula testing.",
+        "iconURL": "http://us.cdn4.123rf.com/168nwm/bobyramone/bobyramone1202/bobyramone120200039/12603126-blank-silver-coin.jpg",
+        "supportedStates": [
+            "HEADS",
+            "TAILS"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "randomValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
