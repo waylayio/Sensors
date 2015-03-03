@@ -1,0 +1,46 @@
+{
+    "name": "hourSensor",
+    "version": "1.0.1",
+    "script": " var d = new Date();\n console.log(d);\n var nd = d; \n //  offset in hours\n var offset = options.requiredProperties.timeZoneOffset;\n var hour = options.requiredProperties.hour;\n if(hour === undefined) {\n     send(new Error(\"Missing property hour\"));\n }\n else {\n     if(offset){\n        // convert to msec, add local time zone offset and get UTC time in msec\n        var utc = d.getTime() + (d.getTimezoneOffset() * 60000);\n        nd = new Date(utc + (3600000*offset));\n    }\n    //using underscore library\n  var retValue = __.find(hour.split(\",\"), function(num){ return num == nd.getHours(); });\n  var value = {\n    observedState: retValue ? \"TRUE\" : \"FALSE\",\n    rawData: {  utc: d.getTime() , year: nd.getFullYear(), month: nd.getMonth() +1 , day: nd.getDate(), hours:nd.getHours(), minutes: nd.getMinutes()}\n  };\n  console.log(value);\n  send(null, value);\n }\n",
+    "metadata": {
+        "author": "",
+        "category": "Time",
+        "description": "Hour sensor: input is a hour or list of hours(comma separated)",
+        "iconURL": "http://c.dryicons.com/images/icon_sets/symbolize_icons_set/png/128x128/old_clock.png",
+        "supportedStates": [
+            "TRUE",
+            "FALSE"
+        ],
+        "requiredProperties": [
+            "timeZoneOffset",
+            "hour"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "utc",
+                "dataType": "double"
+            },
+            {
+                "parameter": "hours",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "minutes",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "day",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "month",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "year",
+                "dataType": "integer"
+            }
+        ]
+    }
+}
