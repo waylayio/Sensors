@@ -1,0 +1,74 @@
+{
+    "name": "dayNightSensor",
+    "version": "1.0.1",
+    "script": "var url =\"http://api.openweathermap.org/data/2.5/weather?q=\" + options.requiredProperties.city + \"&units=metric\";\n\nvar currenTime = new Date()/1000; //to get UTC in seconds\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        var data = JSON.parse(body);\n        var state = data.weather[0].main;\n        var icon = data.weather[0].icon;\n        var sunrise = data.sys.sunrise;\n        var sunset =  data.sys.sunset;\n        var retState = \"Dark\";\n        var timeToLightHours =-1;\n        var timeToDarkHours =-1;\n        var dayLightHours = (sunset - sunrise)/60/60; //in hours\n        \n        if(currenTime < sunrise && currenTime < sunset){\n            retState = \"Dark\";\n            timeToLightHours = (sunrise - currenTime)/60/60; //in hours\n        } else if(currenTime > sunrise && currenTime < sunset){\n           retState = \"Light\"; \n           timeToDarkHours = (sunset - currenTime)/60/60; //in hours\n        } else if(currenTime > sunrise && currenTime > sunset){ // you are just end of a day, \n           retState = \"Dark\"; \n           //we assume that tomorrow sunset is exactly the same time as today, not accurate\n           timeToDarkHours = ((sunrise + 24*60*60) - currenTime)/60/60; //in hours\n        } \n        console.log(\"dayLightHours:\"+ dayLightHours);\n        console.log(\"timeToLightHours:\"+ timeToLightHours);\n        console.log(\"timeToDarkHours:\"+ timeToDarkHours);\n          \n        var value = {\n        observedState: retState,\n        rawData :{\n          temperature: data.main.temp,\n          pressure: data.main.pressure,\n          humidity: data.main.humidity,\n          temp_min: data.main.temp_min,\n          temp_max: data.main.temp_max,\n          wind_speed: data.wind.speed,\n          clouds_coverage: data.clouds.all,\n          sunrise: data.sys.sunrise,\n          sunset: data.sys.sunset,\n          currenTime: currenTime,\n          timeToDarkHours: timeToDarkHours,\n          timeToLightHours: timeToLightHours,\n          dayLightHours : dayLightHours,\n          longitude: data.coord.lon,\n          latitude:data.coord.lat,\n          name: data.name,\n          condition: state,\n          icon: \"http://openweathermap.org/img/w/\"+icon +\".png\"\n        }\n       };\n       //console.log(JSON.stringify(value));\n       send(null, value);\n});",
+    "metadata": {
+        "author": "",
+        "category": "Weather",
+        "description": "Weather sensor",
+        "documentationURL": "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric",
+        "iconURL": "http://transitiontownmedia.org/wp-content/uploads/2013/03/SunMoonStars1.jpg",
+        "supportedStates": [
+            "Dark",
+            "Light"
+        ],
+        "requiredProperties": [
+            "city"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "temperature",
+                "dataType": "double"
+            },
+            {
+                "parameter": "pressure",
+                "dataType": "double"
+            },
+            {
+                "parameter": "humidity",
+                "dataType": "double"
+            },
+            {
+                "parameter": "wind_speed",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "clouds_coverage",
+                "dataType": "double"
+            },
+            {
+                "parameter": "sunrise",
+                "dataType": "double"
+            },
+            {
+                "parameter": "sunset",
+                "dataType": "double"
+            },
+            {
+                "parameter": "currenTime",
+                "dataType": "double"
+            },
+            {
+                "parameter": "timeToDarkHours",
+                "dataType": "double"
+            },
+            {
+                "parameter": "timeToDarkHours",
+                "dataType": "double"
+            },
+            {
+                "parameter": "dayLightHours",
+                "dataType": "double"
+            }
+        ]
+    }
+}
