@@ -1,0 +1,26 @@
+{
+    "metadata": {
+        "author": "",
+        "category": "Smart City",
+        "description": "Travel time estimation Gent sensor",
+        "documentationURL": "http://data.beroads.com/v1/iway/forecast/traveltime",
+        "iconURL": "https://cdn2.iconfinder.com/data/icons/travel-set-2/512/17-128.png",
+        "supportedStates": [
+            "Found"
+        ],
+        "requiredProperties": [
+            "city"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "travelTimes",
+                "dataType": "string[]"
+            }
+        ]
+    },
+    "script": "//Travel jam detection: check if there is a delay (10 to 20 minutes), big delay (20 to 45 minutes), huge delay (> 45 minutes)\nvar city = options.requiredProperties.city || 'Gent';\n\ntry{\n    var url = \"http://data.beroads.com/v1/iway/forecast/traveltime.json\";\n    request({\n            \"uri\": url\n        }, function(err, response, body){\n            if (!err && response.statusCode == 200) {\n                body = body.replace(/Gand/g,\"Gent\");\n                body = body.replace(/Bruxelles/g,\"Brussels\");\n                body = body.replace(/Anvers/g,\"Antwerpen\");\n                var data = JSON.parse(body);\n                //console.log(data);\n                var travelTimes = data.Forecast.item;\n                travelTimes = __.filter(travelTimes, function(travel) {return travel.to === city ||  travel.from === city});\n                travelTimes = __.map(travelTimes, function(travel) {\n                    if(travel.current_time - travel.normal_time >  45)\n                        travel.jam = 'huge';\n                    else if(travel.current_time - travel.normal_time >  20)\n                        travel.jam = 'big';\n                    else if(travel.current_time - travel.normal_time >  10)\n                        travel.jam = 'small';\n                    else\n                        travel.jam = \"ok\";\n                    return travel;\n                });\n                var rawData = {travelTimes : travelTimes};\n                var value ={\n                    observedState : \"Found\",\n                    rawData : rawData\n                }\n               send(null, value);\n            } else {\n                console.log(response);\n                send(new Error(response.statusCode));\n            }\n    });    \n} catch(err){\n    send(new Error(err));\n}\n",
+    "name": "traveltimeTimeSensor",
+    "version": "0.0.3",
+    "type": "sensor"
+}
