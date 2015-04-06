@@ -1,0 +1,32 @@
+{
+    "metadata": {
+        "author": "Veselin",
+        "category": "Functions",
+        "description": "Threshold sensor for runtime data.\n\n<h3>Inputs</h3>\n<ul>\n<li>parameter (runtime name)</li>\n<li>threshold (value OR runtime name)</li>\n</ul>\n\n<h3>RawData</h3>\n<ul>\n<li>parameter result</li>\n<li>threshold</li>\n</ul>\n",
+        "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
+        "iconURL": "http://www.sas.com/content/dam/SAS/en_us/image/sas-com/icons/navmenu/data-visualization-icon.png",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "parameter",
+            "threshold"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "parameter",
+                "dataType": "double"
+            },
+            {
+                "parameter": "threshold",
+                "dataType": "double"
+            }
+        ]
+    },
+    "script": "var threshold = options.rawData.GLOBAL[options.requiredProperties.threshold] || options.requiredProperties.threshold;\n\nif(threshold === undefined){\n    send(new Error(\"missing properites\"))\n}\nelse {\n    try{\n    var runtimeParam = options.rawData.GLOBAL[options.requiredProperties.parameter];\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n        value = {\n            observedState: runtimeParam > threshold ? \"Above\" : \"Below\",\n            rawData: { \n                parameter: runtimeParam,\n                threshold : threshold\n            }\n        };\n        console.log(\"runtime=\" + runtimeParam +\", threshold= \"+threshold);\n        send(null, value);\n    }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
+    "name": "streamingDataSensor",
+    "version": "1.0.1",
+    "type": "sensor"
+}
