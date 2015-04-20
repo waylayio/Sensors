@@ -1,25 +1,26 @@
 {
     "name": "daySensor",
-    "version": "1.0.1",
-    "script": " var d = new Date();\n console.log(d);\n var nd = d; \n //  offset in hours\n var offset = options.requiredProperties.timeZoneOffset;\n var day = options.requiredProperties.day;\n if(day === undefined) {\n     send(new Error(\"Missing property day\"));\n }\n else {\n     if(offset){\n        // convert to msec, add local time zone offset and get UTC time in msec\n        var utc = d.getTime() + (d.getTimezoneOffset() * 60000);\n        nd = new Date(utc + (3600000*offset));\n    }\n    //using underscore library\n  var retValue = __.find(day.split(\",\"), function(num){ return num == nd.getDate(); });\n  var value = {\n    observedState: retValue ? \"TRUE\" : \"FALSE\",\n    rawData: {  utc: d.getTime() , year: nd.getFullYear(), month: nd.getMonth() +1 , day: nd.getDate(), hours:nd.getHours(), minutes: nd.getMinutes()}\n  };\n  console.log(value);\n  send(null, value);\n }\n",
+    "version": "1.1.0",
+    "type": "sensor",
+    "script": "// For timezone names, see http://en.wikipedia.org/wiki/List_of_tz_database_time_zones\n// examples:\n// * Europe/Brussels    ->  +1 or +2\n// * Pacific/Pago_Pago  -> -11\n// * Pacific/Kiritimati -> +14\n\nvar timeZone = options.requiredProperties.timeZone;\nif(!timeZone){\n    timeZone = \"UTC\";\n}\nvar now = moment().tz(timeZone);\nif(now.tz() === undefined){\n    send(new Error(\"Unknown timezone: \" + timeZone), null);\n}else{\n    var day = options.requiredProperties.day;\n    if(day === undefined) {\n        send(new Error(\"Missing property day\"));\n    } else {\n        //using underscore library\n      var retValue = __.find(day.split(\",\"), function(num){ return num == now.date(); });\n      var value = {\n        observedState: retValue ? \"TRUE\" : \"FALSE\",\n        rawData: {  \n            timestamp: now.valueOf() , \n            year: now.year(), \n            month: now.month() + 1 , \n            day: now.date(), \n            hours: now.hour(), \n            minutes: now.minute()\n        }\n      };\n      console.log(value);\n      send(null, value);\n    }\n}",
     "metadata": {
         "author": "",
         "category": "Time",
-        "description": "Day sensor: input is a day or list of days(comma separated)",
+        "description": "Day of month sensor:\n\ninput is a day or list of days (comma separated)",
         "iconURL": "http://static.wixstatic.com/media/6d6ca5_0e98fe7a4bb7293e5c806263a2efe276.png",
         "supportedStates": [
             "TRUE",
             "FALSE"
         ],
         "requiredProperties": [
-            "timeZoneOffset",
+            "timeZone",
             "day"
         ],
         "requiredRawData": [],
         "rawData": [
             {
-                "parameter": "utc",
-                "dataType": "double"
+                "parameter": "timestamp",
+                "dataType": "long"
             },
             {
                 "parameter": "hours",
