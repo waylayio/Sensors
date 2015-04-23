@@ -1,0 +1,22 @@
+{
+    "name": "bitcoinGetPrice",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var threshold = options.requiredProperties.threshold;\nvar API_KEY = options.globalSettings.MASHAPE_KEY;\nvar currency = options.requiredProperties.currency || \"USD\";\nconsole.log(currency);\nif(currency != \"EUR\" && currency != \"USD\")\n  currency = \"USD\";\n\nunirest.get(\"https://community-bitcointy.p.mashape.com/average/\"+currency).header(\"X-Mashape-Key\", API_KEY).end(function (result) {\n  var bitcoin = JSON.parse(result.body);\n  var value = {\n        observedState: bitcoin.value < threshold? \"Below\" : \"Above\",\n        rawData : {\n            currency: bitcoin.currency,\n            price : bitcoin.value \n        }\n       };\n  send(null, value);\n});",
+    "metadata": {
+        "author": "",
+        "category": "Finance",
+        "description": "Bitcoin sensor. \nYou need mashape key to execute this sensor. \nInput parameters are:\n<ul>\n<li>currency: USD</li>\n<li>threshold</li>\n</ul>\n\n\nThe output is:\n<ul>\n<li>currency: USD</li>\n<li>price</li>\n</ul>\n\nShould you prefer other currency, you would need to change the sensor.\n\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/bitcoin.png",
+        "supportedStates": [
+            "Below",
+            "Above"
+        ],
+        "requiredProperties": [
+            "threshold",
+            "currency"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
