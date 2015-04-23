@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Database",
-        "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>item, or you can as well provide here another sensor that has an item in rawData response</li>\n<li>database</li>\n</ul>\n\n",
+        "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>item, or you can as well provide here another sensor that has an item in rawData response</li>\n<li>identifier which will be used to match the item in the collection</li>\n<li>database</li>\n</ul>\n\nThis is just a demo sensor, not only becasue you would be better off with\nmore concrete implementation (where you define rawData), but also it is better to \nmake search of the item via REST call rather than accessing array client side.\n\nAlso note that the underscore package is used with __ .\n\n",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mongolab.png",
         "supportedStates": [
             "Found",
