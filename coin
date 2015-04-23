@@ -1,0 +1,24 @@
+{
+    "name": "coin",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var randomValue = Math.random(); \nvar state;\nif(randomValue >= 0.5)\n  state = \"HEADS\";\nelse\n  state = \"TAILS\";\n\nvalue = {  \n    observedState:  state, \n    rawData : {  randomValue: randomValue}  \n}; \nsend(null,value);",
+    "metadata": {
+        "author": "Piet Vandaele",
+        "category": "Experimental",
+        "description": "Coin sensor generates one of two states: HEADS or TAILS \nbased on a random value . \nIt also returns the random value (randomValue) as the raw data.\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/coin.png",
+        "supportedStates": [
+            "HEADS",
+            "TAILS"
+        ],
+        "requiredProperties": [],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "randomValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
