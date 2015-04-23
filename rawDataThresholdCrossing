@@ -1,0 +1,29 @@
+{
+    "name": "rawDataThresholdCrossing",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "\nvar options = __.extend(options, { \n    rawData : {\n        \"hello\" : {   \n            randomValue: 5,\n            state: \"True\" \n        }\n    }\n});\n\n  \nconsole.log(\"rawData sensor\");\nvar param = options.requiredProperties.parameter;\nvar node = options.requiredProperties.node;\nif(node !== undefined && param !== undefined && options.requiredProperties.threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.getRawData(options, node, param);\n      var state = \"Equal\";\n      if(rawValue > options.requiredProperties.threshold)\n        state = \"Above\"; \n      else if(rawValue < options.requiredProperties.threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Functions",
+        "description": "Raw threshold crossing sensor.\n\nInput parameters are:\n<ul>\n<li>node name for which we want to compute formula</li>\n<li>parameter</li>\n<li>threshold</li>\n</ul>",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/threshold.png",
+        "supportedStates": [
+            "Below",
+            "Equal",
+            "Above"
+        ],
+        "requiredProperties": [
+            "node",
+            "threshold",
+            "parameter"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "rawValue",
+                "dataType": "double"
+            }
+        ]
+    }
+}
