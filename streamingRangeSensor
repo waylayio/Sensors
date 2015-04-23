@@ -1,10 +1,14 @@
 {
+    "name": "streamingRangeSensor",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "/* uncomment for testing\nvar options = __.extend(options, {\n    rawData : {\n        \"GLOBAL\":{\n            \"TargetTemp\":\"70\",\n            \"Time\":\"21.0\",\n            \"BuildingID\":\"14.0\",\n            \"Date\":\"6.00\",\n            \"SystemAge\":\"21.0\",\n            \"System\":\"8.00\",\n            \"ActualTemp\":\"58.0\"\n        }\n    }\n});\n*/\n\n\nconsole.log(options.rawData);\n\nvar targetInput = options.requiredProperties.target;\nvar rangeInput = options.requiredProperties.range;\nvar runtimeParameter = options.requiredProperties.parameter;\n\nvar target = waylayUtil.getStreamData(options, targetInput) || targetInput;\nvar range = waylayUtil.getStreamData(options, rangeInput) || rangeInput;\n\nif(range === undefined  || target === undefined || runtimeParameter === undefined){\n    send(new Error(\"missing properites\"))\n} else {\n    try{\n    var runtimeParam = waylayUtil.getStreamData(options, runtimeParameter) ;\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n        var value = {\n            observedState : \"In Range\",\n            rawData: {\n                parameter: runtimeParam,\n                target:target,\n                range: range\n            }\n        }\n        console.log(\"runtime=\" + runtimeParam +\", target= \"+target+\", range=\"+range);\n        if(runtimeParam - target > range)\n            value.observedState = \"Above\";\n        else if(target - runtimeParam > range)\n            value.observedState = \"Below\";\n        send(null, value);\n     }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
     "metadata": {
         "author": "Veselin",
         "category": "Functions",
-        "description": "Range sensor for runtime data.\n\n<h3>Inputs</h3>\n<ul>\n<li>parameter (runtime name)</li>\n<li>target (value OR runtime name)</li>\n<li>range (value OR runtime name)</li>\n</ul>\n\n<h3>RawData</h3>\n<ul>\n<li>parameter result</li>\n<li>targetValue</li>\n<li>range</li>\n</ul>\n\n\n",
+        "description": "Range sensor for the runtime data. \nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>target (value OR runtime parameter)</li>\n<li>range (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>targetValue</li>\n<li>range</li>\n</ul>\n\n\n",
         "documentationURL": "",
-        "iconURL": "http://www.sas.com/content/dam/SAS/en_us/image/sas-com/icons/navmenu/high-performance-icon.png",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/range.png",
         "supportedStates": [
             "In Range",
             "Below",
@@ -30,9 +34,5 @@
                 "dataType": "double"
             }
         ]
-    },
-    "script": "/*var options = __.extend(options, {\n    rawData : {\n        \"GLOBAL\":{\n            \"TargetTemp\":\"70\",\n            \"Time\":\"21.0\",\n            \"BuildingID\":\"14.0\",\n            \"Date\":\"6.00\",\n            \"SystemAge\":\"21.0\",\n            \"System\":\"8.00\",\n            \"ActualTemp\":\"58.0\"\n        }\n    }\n});\n*/\nconsole.log(options.rawData);\nvar target = options.rawData.GLOBAL[options.requiredProperties.target] || options.requiredProperties.target;\nvar range = options.rawData.GLOBAL[options.requiredProperties.range] || options.requiredProperties.range;\n\nif(range === undefined  || target === undefined ){\n    send(new Error(\"missing properites\"))\n}\nelse {\n    try{\n    var runtimeParam = options.rawData.GLOBAL[options.requiredProperties.parameter];\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n        var value = {\n            observedState : \"In Range\",\n            rawData: {\n                parameter: runtimeParam,\n                target:target,\n                range: range\n            }\n        }\n        console.log(\"runtime=\" + runtimeParam +\", target= \"+target+\", range=\"+range);\n        if(runtimeParam - target > range)\n            value.observedState = \"Above\";\n        else if(target - runtimeParam > range)\n            value.observedState = \"Below\";\n        send(null, value);\n     }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
-    "name": "streamingRangeSensor",
-    "version": "1.0.1",
-    "type": "sensor"
+    }
 }
