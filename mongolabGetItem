@@ -1,0 +1,22 @@
+{
+    "name": "mongolabGetItem",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var db = options.globalSettings.mongodb;\nvar token = options.globalSettings.mongoKey;\nvar collection = options.requiredProperties.collection;\nvar item;\ntry{\n    item = waylayUtil.getRawData(options, options.requiredProperties.item, \"item\");\n} catch (err){\n    console.log(\"item not in the raw data\");  \n}\n\nitem = item || options.node.RESOURCE || options.task.RESOURCE || options.node.NAME;\n\n\nif(item !== undefined && token !== undefined && db !== undefined && collection !== undefined){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/\"+ collection +\"?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  var callback = function(error, response, body) {\n    if (!error && response.statusCode == 200) {\n      var users = JSON.parse(body);\n      var user = __.findWhere(users, {customerID: customer});\n      console.log(users);\n      console.log(user);\n      var state = user?  \"Found\" : \"NotFound\";\n      var value = {\n        observedState: state,\n        rawData: user\n      };\n      send(null, value);\n    }else{\n      send(new Error(\"Calling mongolab failed: \" + error + \" \" + body));\n    }\n  };\n  request.get(options, callback);\n}else{\n  send(new Error(\"Missing input parameters\"));\n}",
+    "metadata": {
+        "author": "",
+        "category": "Database",
+        "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>item, or you can as well provide here another sensor that has an item in rawData response</li>\n<li>database</li>\n</ul>\n\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mongolab.png",
+        "supportedStates": [
+            "Found",
+            "NotFound"
+        ],
+        "requiredProperties": [
+            "item",
+            "collection"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
