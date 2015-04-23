@@ -1,0 +1,23 @@
+{
+    "name": "dbGetItem",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var host = options.globalSettings.host;\nvar user = options.globalSettings.user;\nvar password = options.globalSettings.password;\nvar database = options.globalSettings.database;\n\nif(options.requiredProperties.type != \"mysql\"){\n    send(null, { observedState: \"Not Supported\"})\n} else if(options.requiredProperties.device) {\n    try{\n        var connection = mysql.createConnection({\n          host     : host,\n          user     : user,\n          password : password,\n          database: database\n        });\n        var res = {\n            observedState : \"Not Found\"\n        };\n        connection.connect();\n        connection.query('select * from devices where deviceId ='+connection.escape(options.requiredProperties.device), function(err, rows, fields) {\n          if (err) throw err;\n          for (var i in rows) {\n            console.log(rows[i]);\n          }\n          res.rawData = rows[0];\n          if(rows.length > 0)\n            res.observedState = \"Found\";\n          send(null, res);\n        });\n        connection.end();\n        }\n        catch(err){\n            console.log(err);\n            send(new Error(\"error\"));\n        }\n } else {\n    send(new Error(\"Missing property device\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Database",
+        "description": "Example how to retreive data from the database.\nRight now we only support mysql. \nYou should change the SQL query and add info about the raw data.\n\nInput arguments are:\n<ul>\n<li>device</li>\n<li>type, you need to put here database type, today we support only \"mysql\"</li>\n</ul>\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mysql.png",
+        "supportedStates": [
+            "Found",
+            "Not Found",
+            "Not Supported"
+        ],
+        "requiredProperties": [
+            "device",
+            "type"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
