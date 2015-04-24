@@ -2,7 +2,7 @@
     "name": "delay",
     "version": "1.0.1",
     "type": "sensor",
-    "script": "var delay = options.requiredProperties.delay;\nvar startTime = new Date();\nif(delay === undefined)\n  delay = 1;\n\nvar myVar = setTimeout(function(){myTimer()}, delay * 1000);\n\nfunction myTimer() {\n    var d = new Date();\n    value = {\n        observedState: \"ON\",\n        rawData: {\n            startTime: startTime.getTime(),\n            endTime: d.getTime(),\n            executionTime: d.getTime() - startTime.getTime()\n        }\n    }\n}\n",
+    "script": "var delay = options.requiredProperties.delay;\nvar startTime = new Date();\nif(delay === undefined)\n  delay = 1;\n\nvar myVar = setTimeout(function(){myTimer()}, delay * 1000);\n\nfunction myTimer() {\n    var d = new Date();\n    value = {\n        observedState: \"ON\",\n        rawData: {\n            startTime: startTime.getTime(),\n            endTime: d.getTime(),\n            executionTime: d.getTime() - startTime.getTime()\n        }\n    }\n    send(null, value)\n}\n",
     "metadata": {
         "author": "",
         "category": "Experimental",
