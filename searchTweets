@@ -4,7 +4,7 @@
         "category": "Social",
         "description": "Search tweets sensor",
         "documentationURL": "https://dev.twitter.com/rest/reference/get/search/tweets",
-        "iconURL": "https://cdn3.iconfinder.com/data/icons/free-social-icons/67/twitter_circle_color-512.png",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/tweet.png",
         "supportedStates": [
             "Found",
             "Not Found"
