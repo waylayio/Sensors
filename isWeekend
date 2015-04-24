@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Time",
-        "description": "Weekend sensor checks whether it is currently weekend\n(Saturday or Sunday) in the specified time zone and returns \n<br>\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n</ul>\n\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>",
+        "description": "Weekend sensor checks whether it is currently weekend\n(Saturday or Sunday) in the specified time zone and returns TRUE or FALSE \n<br>\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n</ul>\n\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/weekend.png",
         "supportedStates": [
             "TRUE",
