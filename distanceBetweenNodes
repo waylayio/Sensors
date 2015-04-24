@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Location",
-        "description": "Distance sensor allows you calculate distance between two nodes.\nBoth nodes <string>must return langitude and longitude</strong> in raw data.\n<br>\nInputs parameters are\n<ul>\n<li>node1</li>\n<li>node2</li>\n<li>distance: distance between two nodes in km</li>\n</ul>\nIt also shows two functions from waylayUtil package:\n<ul>\n<li>waylayUtil.getRawData() : to get raw data </li>\n<li> waylayUtil.getDistance() :and to calculate a distance</li>\n</ul>\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude1</li>\n<li>longitude1</li>\n<li>latitude2</li>\n<li>longitude2</li>\n<li>distanceConfigured</li>\n</ul>",
+        "description": "Distance sensor allows you calculate distance between two nodes.\nBoth nodes <strong>must return langitude and longitude</strong> in raw data.\n<br>\nInputs parameters are\n<ul>\n<li>node1</li>\n<li>node2</li>\n<li>distance: distance between two nodes in km</li>\n</ul>\nIt also shows two functions from waylayUtil package:\n<ul>\n<li>waylayUtil.getRawData() : to get raw data </li>\n<li> waylayUtil.getDistance() :and to calculate a distance</li>\n</ul>\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude1</li>\n<li>longitude1</li>\n<li>latitude2</li>\n<li>longitude2</li>\n<li>distanceConfigured</li>\n</ul>",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/distanceBetweenNodes.png",
         "supportedStates": [
             "IN",
