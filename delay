@@ -1,0 +1,34 @@
+{
+    "name": "delay",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var delay = options.requiredProperties.delay;\nvar startTime = new Date();\nif(delay === undefined)\n  delay = 1;\n\nvar myVar = setTimeout(function(){myTimer()}, delay * 1000);\n\nfunction myTimer() {\n    var d = new Date();\n    value = {\n        observedState: \"ON\",\n        rawData: {\n            startTime: startTime.getTime(),\n            endTime: d.getTime(),\n            executionTime: d.getTime() - startTime.getTime()\n        }\n    }\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Experimental",
+        "description": "Delay sensor. \n<br>\nInput paramter is delay in seconds, after which sensor will be in ON state.\n<br>\nRaw Data:\n<ul>\n<li>startTime, in UTC milis</li>\n<li>endTime, in UTC milis</li>\n<li>executionTime, in milis</li>\n</ul>",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/delay.png",
+        "supportedStates": [
+            "ON",
+            "OFF"
+        ],
+        "requiredProperties": [
+            "delay"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "startTime",
+                "dataType": "long"
+            },
+            {
+                "parameter": "endTIme",
+                "dataType": "double"
+            },
+            {
+                "parameter": "executionTime",
+                "dataType": "double"
+            }
+        ]
+    }
+}
