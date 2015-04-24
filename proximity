@@ -1,0 +1,49 @@
+{
+    "name": "proximity",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "/*\nvar options = __.extend(options, {\n    rawData : {\n        \"node1\":{\n            \"latitude\":\"51\",\n            \"longitude\":\"3.71\"\n        },\"GLOBAL\":{\n            \"latitude\":\"51.12\",\n            \"longitude\":\"3.51\"\n        }\n    }\n});\n*/\nif(options.requiredProperties.latitudeConfigured !== undefined || options.requiredProperties.longitudeConfigured !== undefined || \n            options.requiredProperties.distance !== undefined) {\n    // take first runtime from global, that way you don't need to define a node that has raw data.\n    // if you have more than one node that produces geo data, you should not do this\n    var lat1, lon1;\n    if(options.requiredProperties.node){\n        var nodeName = options.requiredProperties.node;\n        lat1 = options.rawData[nodeName].latitude;\n        lon1 = options.rawData[nodeName].longitude; \n    } else {\n        lat1 = waylayUtil.getStreamData(options,\"latitude\");\n        lon1 =  waylayUtil.getStreamData(options,\"longitude\");\n    }\n    \n    if(lat1 && lon1) {\n        var radlat1 = Math.PI * lat1/180;\n        var radlat2 = Math.PI * options.requiredProperties.latitudeConfigured/180;\n        var radlon1 = Math.PI * lon1/180;\n        var radlon2 = Math.PI * options.requiredProperties.longitudeConfigured/180;\n        var theta = lon1-options.requiredProperties.longitudeConfigured;\n        \n        var radtheta = Math.PI * theta/180;\n    \n        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);\n        if(!isNaN(dist)){\n            dist = Math.acos(dist);\n            dist = dist * 180/Math.PI;\n            dist = dist * 60 * 1.1515;\n            dist = dist * 1.609344;\n                var value = {\n                observedState: dist > options.requiredProperties.distance ? \"OUT\" : \"IN\",\n                rawData: {  \n                    distance: dist, \n                    distanceConfigured: options.requiredProperties.distance,\n                    latitude: lat1, \n                    longitude: lon1,  \n                    latitudeConfigured:  options.requiredProperties.latitudeConfigured, \n                    longitudeConfigured: options.requiredProperties.longitudeConfigured\n                    \n                }\n            };\n            send(null, value);\n        } else {\n            send(new Error(\"Error computing the distance\"));\n        }\n    }else{\n      send(new Error(\"Missing runtime properties\"));\n    }\n } else{\n      send(new Error(\"Missing properties\"));\n }\n",
+    "metadata": {
+        "author": "",
+        "category": "Location",
+        "description": "Proximity sensor that compares stream location with either fixed location\nthat is defined in the property settings or if it comes from anohter node\nthat has rowData location and latitude. \n\nInput arguments are:\n<ul>\n<li>node: if provided, sensor node which collects location data</li>\n<li>latitudeConfigured: configured latitude from which you want to calculate a distance</li>\n<li>longitudeConfigured: configured longitude from which you want to calculate a distance</li>\n<li>distance: distance between location coming from the node or real data and \nconfigured location</li>\n</ul>\n\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude</li>\n<li>longitude</li>\n<li>latitudeConfigured</li>\n<li>longitudeConfigured</li>\n<li>distanceConfigured</li>\n</ul>\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/location.png",
+        "supportedStates": [
+            "IN",
+            "OUT"
+        ],
+        "requiredProperties": [
+            "node",
+            "distance",
+            "latitudeConfigured",
+            "longitudeConfigured"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "distance",
+                "dataType": "string"
+            },
+            {
+                "parameter": "latitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitudeConfigured",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distanceConfigured",
+                "dataType": "double"
+            }
+        ]
+    }
+}
