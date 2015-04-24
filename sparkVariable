@@ -1,0 +1,24 @@
+{
+    "name": "sparkVariable",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "var props = options.requiredProperties;\nvar token = props.access_token || options.globalSettings.spark_token;\n\n\nif(token !== undefined && props.variable !== undefined && props.device !== undefined){\n    \n    var options = {\n        url: 'https://api.spark.io/v1/devices/' + props.device + \"/\" + props.variable,\n        headers: {\n            'Authorization: ': 'Bearer ' + token\n        }\n    };\n    \n    var callback = function(error, response, body) {\n        if (!error && response.statusCode == 200) {\n            var bodyJson = JSON.parse(body);\n            console.info(options.url);\n            console.info(bodyJson);\n            var value = {\n                observedState: bodyJson.result? \"Found\" : \"Not Found\",\n                rawData: bodyJson\n            };\n            send(null, value);\n        }else{\n            send(new Error(\"Calling api.spark.io failed: \" + error + \" \" + body + options.url));\n        }\n\n    }    \n    \n    request.get(options, callback);\n}else{\n    send(new Error(\"Missing properties\"));\n}\n\n\n",
+    "metadata": {
+        "author": "Francis",
+        "category": "IOT Platforms",
+        "description": "Spark sensor, you need access token to run it.\n\nInput parameters are:\n<ul>\n<li>access_token</li>\n<li>device</li>\n<li>variable</li>\n</ul>\n\nRaw data is reponse of the spark for that device and that variable.",
+        "documentationURL": "https://www.spark.io/build/547ee705ce4a72985f0015f6",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/spark.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "access_token",
+            "device",
+            "variable"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
