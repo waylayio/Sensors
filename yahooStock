@@ -2,11 +2,11 @@
     "name": "yahooStock",
     "version": "1.0.1",
     "type": "sensor",
-    "script": "\n//price,volume,high,low,moving_avg,percent,date\n//3.35,5660888,3.43,3.34,3.3319,-2.05%,12/10/14,4:03pm\n\nvar price, volume, high, low, moving_average, percent, date;\nvar ticker  = options.requiredProperties.ticker;\nvar threshold  = options.requiredProperties.threshold;\nif(ticker) {\n    var url    = \"http://finance.yahoo.com/d/quotes.csv?s=\" + ticker + \"&f=l1vhgm4p2d1t1\";\n    request(url, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var res = body.split(',');\n        price = parseFloat(res[0]);\n        volume = Number(res[1]);\n        high = parseFloat(res[2]);\n        low = parseFloat(res[3]);\n        moving_average = parseFloat(res[4]);\n        percent = res[5];\n        date = res[6];\n        var value = {\n            observedState: price > threshold ? \"Above\" : \"Below\",\n            rawData: { price: price, high:high, volume:volume, low:low, movingAverage:moving_average,percent:percent, date:date }\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        send(new Error(\"Error: \" + response));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property stock\"));\n}\n\n\n\n\n\n\n",
+    "script": "\n//price,volume,high,low,moving_avg,percent,date\n//3.35,5660888,3.43,3.34,3.3319,-2.05%,12/10/14,4:03pm\n\nvar price, volume, high, low, moving_average, percent, date;\nvar ticker  = options.requiredProperties.ticker;\nvar threshold  = options.requiredProperties.threshold;\nif(ticker) {\n    var url    = \"http://finance.yahoo.com/d/quotes.csv?s=\" + ticker + \"&f=l1vhgm4p2d1t1\";\n    request(url, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var res = body.split(',');\n        price = parseFloat(res[0]);\n        volume = Number(res[1]);\n        high = parseFloat(res[2]);\n        low = parseFloat(res[3]);\n        moving_average = parseFloat(res[4]);\n        percent = res[5].replace(/\"/g,\"\");\n        date = res[6].replace(/\"/g,\"\");\n        var value = {\n            observedState: price > threshold ? \"Above\" : \"Below\",\n            rawData: { price: price, high:high, volume:volume, low:low, movingAverage:moving_average,percent:percent, date:date }\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        send(new Error(\"Error: \" + response));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property stock\"));\n}\n\n\n\n\n\n\n",
     "metadata": {
         "author": "Veselin",
         "category": "Finance",
-        "description": "StockSensor checks a stock (specified by ticker) against\na threshold and returns the states Above or Below (equal or below)\nInput parameters are:\n<ul>\n<li>ticker symbol, example MSFT</li>\n<li>threshold in USD </li>\n</ul>\n\nRaw Data:\n<ul>\n<li>price in USD </li>\n<li>low</li>\n<li>high</li>\n<li>volume</li>\n<li>movingAverage</li>\n</ul>\n",
+        "description": "StockSensor checks a stock (specified by ticker) against\na threshold and returns the states Above or Below (equal or below)\nInput parameters are:\n<ul>\n<li>ticker symbol, example MSFT</li>\n<li>threshold in USD </li>\n</ul>\n\nRaw Data:\n<ul>\n<li>price in USD </li>\n<li>low</li>\n<li>high</li>\n<li>volume</li>\n<li>movingAverage</li>\n<li>percent</li>\n<li>date</li>\n</ul>\n",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/yahooStock.png",
         "supportedStates": [
             "Above",
@@ -36,6 +36,14 @@
             },
             {
                 "parameter": "movingAverage",
+                "dataType": "double"
+            },
+            {
+                "parameter": "date",
+                "dataType": "double"
+            },
+            {
+                "parameter": "percent",
                 "dataType": "double"
             }
         ]
