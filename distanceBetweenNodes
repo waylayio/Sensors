@@ -1,0 +1,48 @@
+
+    "name": "distanceBetweenNodes",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": "/*\nvar options = __.extend(options, {\n    rawData : {\n        \"node1\":{\n            \"latitude\":\"51\",\n            \"longitude\":\"3.71\"\n        },\"node2\":{\n            \"latitude\":\"51.12\",\n            \"longitude\":\"3.51\"\n        }\n    }\n});\n*/\n\nvar lat1, lat2, lon1, lon2;\nif(options.requiredProperties.node1 && options.requiredProperties.node2){\n    var rawData =  waylayUtil.getRawData(options, options.requiredProperties.node1);\n    console.log(rawData);\n    lat1 = rawData.latitude;\n    lon1 = rawData.longitude;\n    rawData =  waylayUtil.getRawData(options, options.requiredProperties.node2);\n    lat2 = rawData.latitude;\n    lon2 = rawData.longitude; \n    // you could as well get the data this way, but you would need 2 calls per node.\n    //lat2 = waylayUtil.getRawData(options, options.requiredProperties.node2, lat2);\n} \n\nif(options.requiredProperties.distance && lat1 && lon1 && lat2 && lon2) {\n    //option1 to calculate\n    //var dist = waylayUtil.getDistance(lat1, lon1, lat2, lon2);\n    //option2 to caclulate\n    var dist = waylayUtil.getDistance(options, options.requiredProperties.node1, options.requiredProperties.node2);\n    var value = {\n        observedState: dist > options.requiredProperties.distance ? \"OUT\" : \"IN\",\n        rawData: {  \n            distance: dist, \n            distanceConfigured: options.requiredProperties.distance,\n            latitude1: lat1, \n            longitude1: lon1, \n            latitude2: lat2, \n            longitude2: lon2  \n        }\n    };\n    send(null, value);\n}else{\n  send(new Error(\"Missing properties\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Location",
+        "description": "Distance sensor allows you calculate distance between two nodes.\nBoth nodes <string>must return langitude and longitude</strong> in raw data.\n<br>\nInputs parameters are\n<ul>\n<li>node1</li>\n<li>node2</li>\n<li>distance: distance between two nodes in km</li>\n</ul>\nIt also shows two functions from waylayUtil package:\n<ul>\n<li>waylayUtil.getRawData() : to get raw data </li>\n<li> waylayUtil.getDistance() :and to calculate a distance</li>\n</ul>\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude1</li>\n<li>longitude1</li>\n<li>latitude2</li>\n<li>longitude2</li>\n<li>distanceConfigured</li>\n</ul>",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/distanceBetweenNodes.png",
+        "supportedStates": [
+            "IN",
+            "OUT"
+        ],
+        "requiredProperties": [
+            "node1",
+            "node2",
+            "distance"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "distance",
+                "dataType": "string"
+            },
+            {
+                "parameter": "latitude1",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude1",
+                "dataType": "double"
+            },
+            {
+                "parameter": "latitude2",
+                "dataType": "double"
+            },
+            {
+                "parameter": "longitude2",
+                "dataType": "double"
+            },
+            {
+                "parameter": "distanceConfigured",
+                "dataType": "double"
+            }
+        ]
+    }
+}
