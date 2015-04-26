@@ -7,7 +7,7 @@
         "author": "",
         "category": "Database",
         "description": "Example how to retreive data from the database.\nRight now we only support mysql. \nYou should change the SQL query and add info about the raw data.\n\nInput arguments are:\n<ul>\n<li>device</li>\n<li>type, you need to put here database type, today we support only \"mysql\"</li>\n</ul>\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mysql.png",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dbGetItem.png",
         "supportedStates": [
             "Found",
             "Not Found",
