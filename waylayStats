@@ -7,7 +7,7 @@
         "category": "IOT Platforms",
         "description": "Waylay data sensor\n\n<br>\nFetches the statistical values and provide it as the rawData for waylay platform, \nfor more info, please go to the external documentation page.\n\n<h3>Input parameters</h3>\n<ul>\n<li>thing, or if NOT defined, sensor takes the resource</li>\n</ul>",
         "documentationURL": "",
-        "iconURL": "https://pbs.twimg.com/profile_images/551368936948654082/gfTrJCSX_400x400.png",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/waylayStats.png",
         "supportedStates": [
             "Collected"
         ],
