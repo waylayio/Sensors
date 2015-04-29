@@ -1,21 +1,21 @@
 {
-    "name": "dbGetItem",
-    "version": "1.0.1",
+    "name": "mongolabGetItem",
+    "version": "1.0.2",
     "type": "sensor",
-    "script": "var host = options.globalSettings.DB_HOST;\nvar user = options.globalSettings.DB_USER;\nvar password = options.globalSettings.DB_PASSWORD;\nvar database = options.globalSettings.DB_DATABASE;\n\nif(options.requiredProperties.type != \"mysql\"){\n    send(null, { observedState: \"Not Supported\"})\n} else if(options.requiredProperties.device) {\n    try{\n        var connection = mysql.createConnection({\n          host     : host,\n          user     : user,\n          password : password,\n          database: database\n        });\n        var res = {\n            observedState : \"Not Found\"\n        };\n        connection.connect();\n        connection.query('select * from devices where deviceId ='+connection.escape(options.requiredProperties.device), function(err, rows, fields) {\n          if (err) throw err;\n          for (var i in rows) {\n            console.log(rows[i]);\n          }\n          res.rawData = rows[0];\n          if(rows.length > 0)\n            res.observedState = \"Found\";\n          send(null, res);\n        });\n        connection.end();\n        }\n        catch(err){\n            console.log(err);\n            send(new Error(\"error\"));\n        }\n } else {\n    send(new Error(\"Missing property device\"));\n}\n",
+    "script": "var db = options.globalSettings.mongodb;\nvar token = options.globalSettings.mongoKey;\nvar collection = options.requiredProperties.collection;\nvar identifier = options.requiredProperties.identifier;\nvar item;\ntry{\n    item = waylayUtil.getRawData(options, options.requiredProperties.item, \"item\");\n} catch (err){\n    console.log(\"item not in the raw data\");  \n}\nif(item === undefined)\n   item = waylayUtil.evaluateData(options, options.requiredProperties.item);\n\nitem = item || options.requiredProperties.item || options.node.RESOURCE || options.task.RESOURCE || options.node.NAME;\n\n\nif(item !== undefined && token !== undefined && db !== undefined && collection !== undefined && identifier !== undefined){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/\"+ collection +\"?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  var callback = function(error, response, body) {\n    if (!error && response.statusCode == 200) {\n      var data = JSON.parse(body);\n      console.log(data);\n      var itemDB = __.find(data, function(d) { \n          if(Array.isArray(d[identifier]))\n            return (d[identifier].indexOf(item) > -1);\n          else\n            return (d[identifier] == item);\n      });\n      var state = itemDB ?  \"Found\" : \"NotFound\";\n      var value = {\n        observedState: state,\n        rawData: itemDB\n      };\n      send(null, value);\n    }else{\n      send(new Error(\"Calling mongolab failed: \" + error + \" \" + body));\n    }\n  };\n  request.get(options, callback);\n}else{\n  send(new Error(\"Missing input parameters\"));\n}",
     "metadata": {
         "author": "",
         "category": "Database",
-        "description": "Example how to retreive data from the database.\nRight now we only support mysql. \nYou should change the SQL query and add info about the raw data.\n\nInput arguments are:\n<ul>\n<li>device</li>\n<li>type, you need to put here database type, today we support only \"mysql\"</li>\n</ul>\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dbGetItem.png",
+        "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>item, or you can as well provide here another sensor name that has an item in rawData response</li>\n<li>identifier which will be used to match the item in the collection</li>\n<li>database</li>\n</ul>\n\nThis is just a demo sensor, not only becasue you would be better off with\nmore concrete implementation (where you define rawData), but also it is better to \nmake search of the item via REST call rather than accessing array client side.\n\nAlso note that the underscore package is used with __ .\n\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mongolab.png",
         "supportedStates": [
             "Found",
-            "Not Found",
-            "Not Supported"
+            "NotFound"
         ],
         "requiredProperties": [
-            "device",
-            "type"
+            "item",
+            "identifier",
+            "collection"
         ],
         "requiredRawData": [],
         "rawData": []
