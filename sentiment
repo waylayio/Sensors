@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Social",
-        "description": "Sentiment analysis, input paramter is pre-processed by evaluate data function.",
+        "description": "Sentiment analysis, input parameter is pre-processed with evaluate data function.",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/sentiment.png",
         "supportedStates": [
             "postive",
