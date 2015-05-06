@@ -1,6 +1,6 @@
 {
     "name": "isParameterAvailable",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "type": "sensor",
     "script": "/*var options = __.extend(options, { \n    rawData : {\n        \"hello\" : {   \n            randomValue: 5,\n            state: \"True\" \n        }\n    }\n});\n\n//console.log(options);\n*/\nvar param = options.requiredProperties.parameter;\nvar node = options.requiredProperties.node;\nif(node !== undefined && param !== undefined) {\n    try{\n      var searchString = node +\".\" + param;\n      var rawValue =  waylayUtil.evaluateData(options, searchString);\n      console.log(rawValue);\n      if(rawValue === undefined || rawValue == searchString || rawValue.toString().indexOf(\"[object Object]\") > -1)\n        rawValue = undefined;\n      var value = {\n        observedState: rawValue === undefined ? \"NO\" : \"YES\",\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        console.log(\"error\");\n        send(null, {observedState: \"NO\"});\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
     "metadata": {
