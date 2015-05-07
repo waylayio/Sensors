@@ -1,6 +1,6 @@
 {
     "name": "rawDataThresholdCrossing",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "type": "sensor",
     "script": "\n/*var options = __.extend(options, { \n    rawData : {\n        \"hello\" : {   \n            randomValue: 5,\n            state: \"True\" \n        }\n    }\n});*/\n\n  \nconsole.log(\"rawData sensor\");\nconsole.log(options);\nvar param = options.requiredProperties.parameter;\nvar node = options.requiredProperties.node;\nif(node !== undefined && param !== undefined && options.requiredProperties.threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.evaluateData(options, node + \".\" + param);\n      var state = \"Equal\";\n      if(rawValue > options.requiredProperties.threshold)\n        state = \"Above\"; \n      else if(rawValue < options.requiredProperties.threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
     "metadata": {
@@ -21,7 +21,7 @@
         "requiredRawData": [],
         "rawData": [
             {
-                "parameter": "rawValue",
+                "parameter": "value",
                 "dataType": "double"
             }
         ]
