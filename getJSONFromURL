@@ -1,0 +1,26 @@
+{
+    "name": "getJSONFromURL",
+    "version": "0.0.1",
+    "type": "sensor",
+    "script": "var url = options.requiredProperties.url;\ntry{\n    request({\n        \"uri\": url\n    }, function(err, response, body){\n        if (!err && response.statusCode == 200) {\n            send(null, {observedState: \"Found\", rawData: JSON.parse(body)});\n        } else {\n            console.log(response);\n            send(new Error(response.statusCode));\n        }\n    });\n} catch(err){\n    send(new Error(err)); \n}\n\n",
+    "metadata": {
+        "author": "",
+        "category": "Waylay",
+        "description": "Returns as the raw data JSON from URL.",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/JSON.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "url"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "data",
+                "dataType": "Object"
+            }
+        ]
+    }
+}
