@@ -1,8 +1,8 @@
 {
     "name": "getJSONFromURL",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "sensor",
-    "script": "var url = options.requiredProperties.url;\ntry{\n    request({\n        \"uri\": url\n    }, function(err, response, body){\n        if (!err && response.statusCode == 200) {\n            send(null, {observedState: \"Found\", rawData: JSON.parse(body)});\n        } else {\n            console.log(response);\n            send(new Error(response.statusCode));\n        }\n    });\n} catch(err){\n    send(new Error(err)); \n}\n\n",
+    "script": "var url = options.requiredProperties.url;\ntry{\n    request({\n        \"uri\": url\n    }, function(err, response, body){\n        if (!err && response.statusCode == 200) {\n            var data = JSON.parse(body);\n            if(Array.isArray(data))\n                data = {result :data};\n            send(null, {observedState: \"Found\", rawData: data});\n        } else {\n            console.log(response);\n            send(new Error(response.statusCode));\n        }\n    });\n} catch(err){\n    send(new Error(err)); \n}\n\n",
     "metadata": {
         "author": "",
         "category": "Waylay",
