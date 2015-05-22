@@ -1,0 +1,20 @@
+{
+    "name": "NexmoSMS",
+    "version": "0.2.2",
+    "type": "actuator",
+    "script": "var NEXMO_KEY = options.globalSettings.NEXMO_KEY;\nvar NEXMO_SECRET = options.globalSettings.NEXMO_SECRET;\nvar message = waylayUtil.evaluateData(options, options.requiredProperties.message);\nvar to = waylayUtil.evaluateData(options, options.requiredProperties.to);\nvar from =  waylayUtil.evaluateData(options, options.requiredProperties.from);\n\nif(NEXMO_KEY === undefined || message === undefined ||\n    NEXMO_SECRET === undefined || to === undefined || from === undefined) {\n        send(new Error(\"Error missing properties\"));\n} else {\n    var url = \"https://rest.nexmo.com/sms/json?api_key=\" +NEXMO_KEY + \"?api_secret=\"+NEXMO_SECRET +\"&from=\"+from+\"&to\"+to+\"&text=\"+message;\n    var options = {\n        url: url\n    };\n    request.post(options, function(){\n        if (!error && response.statusCode == 200) {\n            console.log(body);\n            send();\n        }else{\n            send(new Error(\"Calling nexmo failed: \" + error + \" \" + body));\n        }\n    });\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Messaging",
+        "description": "NEXMO SMS\n\nYou need to get access keys from NEXMO https://dashboard.nexmo.com/ and provide them in global settings.\n<br>\nInput parameters are:\n<ul>\n<li>from</li>\n<li>to</li>\n<li>message</li>\n</ul>\n<br>\nFrom, To, and Message properties will be parsed using waylayUtil.evaluateData function.",
+        "documentationURL": "https://docs.nexmo.com/index.php/sms-api/send-message",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/nexmo.png",
+        "supportedStates": [],
+        "requiredProperties": [
+            "from",
+            "to",
+            "message"
+        ],
+        "requiredRawData": []
+    }
+}
