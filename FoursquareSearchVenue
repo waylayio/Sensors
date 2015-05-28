@@ -1,0 +1,43 @@
+{
+    "name": "FoursquareSearchVenue",
+    "version": "0.2.1",
+    "type": "sensor",
+    "script": "if (options.requiredProperties.latitude_longitude !== undefined) {\n    var latitude_longitude = waylayUtil.evaluateData(options, options.requiredProperties.latitude_longitude);\n}\n\nif (options.requiredProperties.near_location !== undefined) {\n   var near_location = waylayUtil.evaluateData(options, options.requiredProperties.near_location);\n}\n\nif (latitude_longitude === undefined && near_location === undefined) {\n    send(new Error(\"Please specify EITHER latitude_longitude OR near_location\"));\n}\nvar foursquare_client_id = options.requiredProperties.foursquare_client_id;\nvar foursquare_client_secret = options.requiredProperties.foursquare_client_secret;\n\nif (foursquare_client_id === undefined || foursquare_client_secret === undefined) {\n    send(new Error(\"Please enter BOTH foursquare_client_id AND foursquare_client_secret found under your foursquare application.\"));\n}\n\nvar venue_name = waylayUtil.evaluateData(options, options.requiredProperties.venue_name);\nif (venue_name === undefined) {\n    send(new Error(\"Please specify the name of the location you wish to search for.\"));\n}\nvar foundVenueLocation;\nvar foundVenueName;\nvar venueId;\n\ntry {\n  \n   var ll_or_near;\n   var ll_or_near_value;\n   if (latitude_longitude !== undefined) {\n       console.log(\"lin32\");\n       ll_or_near = 'll';\n       ll_or_near_value = latitude_longitude;\n   } else {\n       ll_or_near = 'near';\n       ll_or_near_value = near_location;\n   }\n   \n   var url = 'https://api.foursquare.com/v2/venues/search'\n    + \"?\" + ll_or_near + '=' + ll_or_near_value\n    + '&query=' + venue_name\n    + \"&client_id=\" + foursquare_client_id\n    + \"&client_secret=\" + foursquare_client_secret\n    + '&v=' + '20140805'\n    ;\n  \n   \n    request({\n            'uri': url,\n            /*'method' : 'GET',\n            forms : {\n                'near' : ll_or_near_value,\n                'client_id' : foursquare_client_id,\n                'client_secret' : foursquare_client_secret,\n                'v' : '20140805'\n            }*/\n        }, function(err, response, body){\n            \n            if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                \n                var venues = data.response.venues;\n                var state = \"Not Found\";\n                for (var i = 0; i < venues.length; i++) {\n                     var thisVenue = venues[i];\n                     if (thisVenue.name.indexOf(venue_name) != -1) {\n                        foundVenueLocation = thisVenue.location;\n                        foundVenueName = thisVenue.name;\n                        venueId = thisVenue.id;\n                        state = \"Found\";\n                     }\n                }\n                //console.log(\"venueId : \"+venueId+'venueName : '+ foundVenueName + \"venueLocation : \" + foundVenueLocation);\n                \n                \n                var value = {\n                    observerdState : state,\n                    rawData : {\n                        venues : data.response,\n                        venueLocation : foundVenueLocation,\n                        venueName : foundVenueName,\n                        venueId : venueId\n                    }\n                };\n               send(null, value);\n            } else {\n                console.log(response);\n                send(new Error(response.statusCode));\n            }\n    });    \n} catch(err){\n    send(new Error(err));\n}",
+    "metadata": {
+        "author": "Dan Dan",
+        "category": "Location",
+        "description": "lets you search for a venue in FourSquare and returns the venue ID.<br>\n\n<b>States</b>\n<ul>\n<li>Found: when a venue's name containing the given name is found.</li>\n<li>Not Found</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>latitude_longitude, required unless near_location is provided. Latitude and longitude of the venue's location.</li>\n<li>near_location, required unless latitude_longitude is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error.</li>\n<li>venue_name, required to find your venue</li>\n<li>foursquare_client_id, foursquare_client_secret, required from your foursquare application in order to make the request to the foursquare server.</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>venues : list of venues found near the lat long or geocoded location.</li>\n<i>if a venue matching the given name is found:</i>\n<li>venueName</li>\n<li>venueLocation : JSON Object</li>\n<li>venueId provided by foursquare</li>\n</ul><br>\n\n<a href=\"https://developer.foursquare.com/overview/ratelimits\">\nRate Limits</a>: \nAn application can make up to 5,000 userless requests per hour to venues/* endpoints.<br>",
+        "documentationURL": "https://developer.foursquare.com/docs/venues/search",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/FoursquareSearchVenue.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "latitude_longitude",
+            "near_location",
+            "venue_name",
+            "foursquare_client_id",
+            "foursquare_client_secret"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "venues",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "venueName",
+                "dataType": "double"
+            },
+            {
+                "parameter": "venueLocation",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "venueId",
+                "dataType": "double"
+            }
+        ]
+    }
+}
