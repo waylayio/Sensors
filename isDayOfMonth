@@ -1,12 +1,12 @@
 {
     "name": "isDayOfMonth",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "sensor",
     "script": "// For timezone names, see http://en.wikipedia.org/wiki/List_of_tz_database_time_zones\n// examples:\n// * Europe/Brussels    ->  +1 or +2\n// * Pacific/Pago_Pago  -> -11\n// * Pacific/Kiritimati -> +14\n\nvar timeZone = options.requiredProperties.timeZone;\nif(!timeZone){\n    timeZone = \"Europe/Brussels\";\n}\nvar now = moment().tz(timeZone);\nif(now.tz() === undefined){\n    send(new Error(\"Unknown timezone: \" + timeZone), null);\n}else{\n    var day = options.requiredProperties.day;\n    if(day === undefined) {\n        send(new Error(\"Missing property day\"));\n    } else {\n        //using underscore library\n      var retValue = __.find(day.split(\",\"), function(num){ return num == now.date(); });\n      var value = {\n        observedState: retValue ? \"TRUE\" : \"FALSE\",\n        rawData: {  \n            timestamp: now.valueOf() , \n            year: now.year(), \n            month: now.month() + 1 , \n            day: now.date(), \n            hours: now.hour(), \n            minutes: now.minute()\n        }\n      };\n      console.log(value);\n      send(null, value);\n    }\n}",
     "metadata": {
         "author": "",
         "category": "Time",
-        "description": "Day of month sensor:\n\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n<li>day or list of days , example: 24 or 24,25</li>\n</ul>\n\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>\n",
+        "description": "Day of month sensor:\n\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n<li>day or list of days , example: 24 or 24,25</li>\n</ul>\n\nPossible input for timeZone: <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\" target=\"_blank\"> Time zones</a>\n<br>\n\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>\n",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dayOfMonth.png",
         "supportedStates": [
             "TRUE",
