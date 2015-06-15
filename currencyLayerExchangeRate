@@ -1,0 +1,46 @@
+{
+    "name": "currencyLayerExchangeRate",
+    "version": "0.0.2",
+    "type": "sensor",
+    "script": "var state = 'Not Found';\nvar url;\nvar date = options.requiredProperties.date;\ndate === undefined ? url = 'http://apilayer.net/api/live?' : url = 'http://apilayer.net/api/historical?date='+date+'&';\n\nvar accessKey = options.requiredProperties.accessKey;\nif (accessKey === undefined) \n    send(new Error(\"Please specify accessKey.\"));\nurl += 'access_key=' + accessKey  +'&';\n\nvar currencies = options.requiredProperties.currencies;\nif (currencies === undefined) \n    send(new Error(\"Please specify currencies (e.g. USD,EUR,GBP)\"));\nurl += 'currencies=' + currencies;    \n\nvar sourceCurrency = options.requiredProperties.sourceCurrency;\nif (!__.isEmpty(sourceCurrency)) \n    url += '&source=' + sourceCurrency;    \n\nconsole.log(url);\n\nvar value;\ntry {\n    request({\n            'uri': url,\n        }, function(err, response, body){\n            if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                if (data.success == 'True') {\n                    value = {\n                        observerdState : 'Found',\n                        rawData : {\n                            success : data.success,\n                            timestampSec : data.timestamp,\n                            source : data.source,\n                            timestamp : new Date(data.timestamp).toUTCString(),\n                            quotes : data.quotes\n                        }\n                    };\n                } else {\n                    value = {\n                        observerdState : 'Not Found',\n                        rawData : data\n                    };\n                }\n               send(null, value);\n            } else {\n                console.log(response);\n                send(new Error('Error: ' + err));\n            }\n    });    \n} catch(err){\n    send(new Error(err));\n}",
+    "metadata": {
+        "author": "Dan Dan",
+        "category": "Finance",
+        "description": "real-time and historical exchange rates for 168 world currencies.\n<br><br>\n<b>States</b>\n<ul>\n<li>Found: at least one exchange rate is found</li>\n<li>Not Found</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>accessKey: your personal password for the currencylayer API</li>\n<li>currencies: enter multiple currencies separate with commas (e.g. USD,EUR,GBP) returns all currencies if blank.</li>\n<li>sourceCurrency: the base currency (for paid customers only, default: USD)</li>\n<li>date: retrieves the exchange rates for the given date, if not provided, retrieve the latest exchange rates (e.g. 2015-01-30)</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>success</li>\n<li>timestamp: timestamp in UTC string</li>\n<li>timestampSec: timestamp in seconds since 01 January 1970 00:00:00 UTC</li>\n<li>source: base currency</li>\n<li>quotes: an object of currency pairs (e.g. {\"USDEUR\":0.904834,\"USDGBP\":0.656504})</li>\n</ul><br>",
+        "documentationURL": "https://currencylayer.com/documentation",
+        "iconURL": "https://cdn2.iconfinder.com/data/icons/simplus-finance/156/Layer_7-01-512.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "accessKey",
+            "currencies",
+            "sourceCurrency",
+            "date"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "success",
+                "dataType": "string"
+            },
+            {
+                "parameter": "timestampSec",
+                "dataType": "integer"
+            },
+            {
+                "parameter": "source",
+                "dataType": "string"
+            },
+            {
+                "parameter": "quotes",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "timestamp",
+                "dataType": "string"
+            }
+        ]
+    }
+}
