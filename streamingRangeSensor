@@ -1,11 +1,11 @@
 {
     "name": "streamingRangeSensor",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "sensor",
     "script": "/* uncomment for testing\nvar options = __.extend(options, {\n    rawData : {\n        \"GLOBAL\":{\n            \"TargetTemp\":\"70\",\n            \"Time\":\"21.0\",\n            \"BuildingID\":\"14.0\",\n            \"Date\":\"6.00\",\n            \"SystemAge\":\"21.0\",\n            \"System\":\"8.00\",\n            \"ActualTemp\":\"58.0\"\n        }\n    }\n});\n*/\n\n\nconsole.log(options.rawData);\n\nvar targetInput = options.requiredProperties.target;\nvar rangeInput = options.requiredProperties.range;\nvar runtimeParameter = options.requiredProperties.parameter;\n\nvar target = waylayUtil.getStreamData(options, targetInput) || targetInput;\nvar range = waylayUtil.getStreamData(options, rangeInput) || rangeInput;\n\nif(range === undefined  || target === undefined || runtimeParameter === undefined){\n    send(new Error(\"missing properites\"))\n} else {\n    try{\n    var runtimeParam = waylayUtil.getStreamData(options, runtimeParameter) ;\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n        var value = {\n            observedState : \"In Range\",\n            rawData: {\n                parameter: runtimeParam,\n                target:target,\n                range: range\n            }\n        }\n        console.log(\"runtime=\" + runtimeParam +\", target= \"+target+\", range=\"+range);\n        if(runtimeParam - target > range)\n            value.observedState = \"Above\";\n        else if(target - runtimeParam > range)\n            value.observedState = \"Below\";\n        send(null, value);\n     }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
     "metadata": {
         "author": "Veselin",
-        "category": "Functions",
+        "category": "Streaming",
         "description": "Range sensor for the runtime data. \nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>target (value OR runtime parameter)</li>\n<li>range (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>targetValue</li>\n<li>range</li>\n</ul>\n\n\n",
         "documentationURL": "",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/range.png",
