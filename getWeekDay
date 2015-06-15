@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Time",
-        "description": "WeekdaySensor returns the current day for a specific time zone.\n\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n</ul>\n\nPossible inout for timeZone: <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones> Time zones</a>\n<br>\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>",
+        "description": "WeekdaySensor returns the current day for a specific time zone.\n\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n</ul>\n\nPossible input for timeZone: <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\"> Time zones</a>\n<br>\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n</ul>",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/weekday.png",
         "supportedStates": [
             "Monday",
