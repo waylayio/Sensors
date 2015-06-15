@@ -1,0 +1,40 @@
+{
+    "name": "mailChimpGETSubscriberLists",
+    "version": "0.0.9",
+    "type": "sensor",
+    "script": "var APIKey = options.requiredProperties.APIKey;\nvar dc = options.requiredProperties.datacenter;\nif (APIKey === undefined) \n    send(new Error(\"Please specify APIKey.\"));\n\nif (dc === undefined) \n    send(new Error(\"Please specify datacenter.\"));\n\nif(dc !==undefined && APIKey !== undefined){\n    var url = 'https://' + dc + '.api.mailchimp.com/3.0/lists/?apikey=' + APIKey;\n\n    try {\n        request({\n                'uri' : url\n            }, function(err, response, body){\n                if (!err && response.statusCode == 200) {\n                    try{\n                        var data = JSON.parse(body);\n                        if (__.isEmpty(data.lists)) { //if no lists are retrieved\n                            value = {\n                                observerdState : 'Not Found',\n                                rawData : data\n                            };\n                        } else { \n                            value = {\n                                observerdState : 'Found',\n                                rawData : {\n                                    lists : data.lists,\n                                    total_items : data.total_items,\n                                    firstListId : data.lists[0],\n                                    lastListId : data.lists[data.lists.length-1]\n                                }\n                            };\n                        }\n                    \n                   send(null, value);\n                        \n                    } catch(err){\n                        send(new Error(err));\n                    }\n    \n                } else {\n                    console.log(response);\n                    send(new Error(err));\n                }\n        });    \n    } catch(err){\n        send(new Error(err));\n    }\n    \n}\n",
+    "metadata": {
+        "author": "Dan Dan",
+        "category": "Social",
+        "description": "retrieves the list of subsscriber lists you have on your MailChimp account. \n<br><br>\n<b>States</b>\n<ul>\n<li>Found: at least one list is retrieved</li>\n<li>Not Found</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>APIKey: found under your MailChimp Account > Extra > API Keys.</li>\n<li>datacenter: the last part of your APIKey (e.g. abcd...-us10, your datacenter is us10)</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>lists: array of lists</li>\n<li>firstListId: Id of the first list</li>\n<li>lastListId: Id of the last list</li>\n<li>total_items: number of lists</li>\n</ul><br>\nWork with the Lists Members Collections to GET members or POST new member to a list.\nhttp://kb.mailchimp.com/api/resources/lists/members/lists-members-collection",
+        "documentationURL": "http://kb.mailchimp.com/api/resources/lists/lists-collection",
+        "iconURL": "http://static.mailchimp.com/web/features/icon-mailchimp-mobile.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "APIKey",
+            "datacenter"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "lists",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "firstListId",
+                "dataType": "string"
+            },
+            {
+                "parameter": "lastListId",
+                "dataType": "string"
+            },
+            {
+                "parameter": "total_items",
+                "dataType": "integer"
+            }
+        ]
+    }
+}
