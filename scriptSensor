@@ -1,0 +1,21 @@
+{
+    "name": "scriptSensor",
+    "version": "0.0.7",
+    "type": "sensor",
+    "script": "if(!options.requiredProperties.script || options.requiredProperties.script.indexOf(\"send\") < 0){\n     send(new Error(\"script not correct!\"));\n}\nelse{\n    try{\n        eval(options.requiredProperties.script);\n    } catch(err){\n        send(new Error(err));\n    }\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Functions",
+        "description": "Script sensors let you execute the script directly.\nPlease be aware that script in the end <strong>must return back send(null, {observedState:\"done\"})</strong>\nYou should return back as the observed states either:\n<ul>\n<li>\"done</li>\n<li>\"error</li>\n</ul>",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/code.png",
+        "supportedStates": [
+            "done",
+            "error"
+        ],
+        "requiredProperties": [
+            "script"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
