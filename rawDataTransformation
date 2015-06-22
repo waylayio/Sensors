@@ -1,0 +1,21 @@
+{
+    "name": "rawDataTransformation",
+    "version": "0.0.8",
+    "type": "sensor",
+    "script": "/*\npayload message is in format:\na = <test1.x>;\nb = \"hello\";\nc = <test2.x.y>;\n*/\n\nif(options.requiredProperties.payload) {\n    try{\n        var array = __.compact(options.requiredProperties.payload.split(\";\"));\n        var args = {};\n        __.each(array, function(el) {\n            var index = el.split(\"=\")[0].trim();\n            args[index] = waylayUtil.evaluateData(options, el.split(\"=\")[1].trim());\n        });\n    \n        var value = {\n            observedState: \"done\",\n            rawData: args\n          };\n         send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n}else{\n     send(new Error(\"Missing property payload\"));\n}\n",
+    "metadata": {
+        "author": "",
+        "category": "Functions",
+        "description": "rawDataTransformation allows you to transform rawData from other sensors.\nReturn rawData object will include in the response all input variables as defined in the paylaod.\nThis is a safer way to control rawData arguments that need to be used in other sensors or actuators as the input arguments.\n\n<p>payload is in format: </p>\na = &lt;test1.x&gt;; <br>\nb = \"hello\"; <br>\nc = &lt;test2.x.y&gt;/60; <br>\ntravelTime = &lt;traveltimeTimeSensor_1.travelTimes[?(@.from == 'Gent' && @.to =='Brussels')]&gt;;\n",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/rawDataTransformation.png",
+        "supportedStates": [
+            "done",
+            "error"
+        ],
+        "requiredProperties": [
+            "payload"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
