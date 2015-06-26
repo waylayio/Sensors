@@ -1,0 +1,21 @@
+{
+    "name": "switch",
+    "version": "1.0.1",
+    "type": "sensor",
+    "script": " var data = waylayUtil.getStreamData(options, options.requiredProperties.item) || options.requiredProperties.item;\n try {\n     data = waylayUtil.getRawData(options, options.requiredProperties.item) ;\n } catch (err){\n    console.log(\"input argument is not in the raw data\");\n }\n \n if(data === undefined){\n     send(new Error(\"input argument not found\"))\n }\n else{\n     var openValue = data.toLowerCase().indexOf(\"on\") > -1;\n     var closedValue = data.toLowerCase().indexOf(\"off\") > -1;\n      if(!openValue && !closedValue){\n        send(new Error(\"Not found whether it is on or off\"))\n     } else {\n        send(null, { observedState : openValue ? \"on\":\"off\"});\n     }\n }\n",
+    "metadata": {
+        "author": "",
+        "category": "Home",
+        "description": "t will return back if the item is on or off. If none of these is found\nit will throw the exception.\n\nInput argument can be:\n<ul>\n<li>string like on/off</li>\n<li>rawData which holds on/off that holds open/close string<</li>\n<li>streamData parameter that holds on/off string</li>\n</ul>",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/switch.png",
+        "supportedStates": [
+            "on",
+            "off"
+        ],
+        "requiredProperties": [
+            "item"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
