@@ -1,8 +1,8 @@
 {
     "name": "waylayLatestValue",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "type": "sensor",
-    "script": "var thing  = options.requiredProperties.item || options.node.RESOURCE || options.task.RESOURCE;\nif(thing) {\n    var url = \"https://data.waylay.io/resources/\"+ thing +\"/current\";\n    request(url, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var rawData = JSON.parse(body);\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(new Error(response));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property item\"));\n}\n",
+    "script": "var thing;\ntry {\n    thing = waylayUtil.getRawData(options, options.requiredProperties.item);\n} catch(err){\n    thing = options.requiredProperties.item || options.node.RESOURCE || options.task.RESOURCE;\n}\n\nif(thing) {\n    var url = \"https://data.waylay.io/resources/\"+ thing +\"/current\";\n    request(url, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var rawData = JSON.parse(body);\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(new Error(response));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property item\"));\n}\n",
     "metadata": {
         "author": "",
         "category": "IOT Platforms",
