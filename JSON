@@ -5,7 +5,7 @@
     "script": "\nif(options.requiredProperties.message) {\n  var value = {\n    observedState: \"done\",\n    rawData: JSON.parse(options.requiredProperties.message)\n  };\n  send(null, value);\n}else{\n  send(new Error(\"Missing property message\"));\n}\n",
     "metadata": {
         "author": "",
-        "category": "Experimental",
+        "category": "General",
         "description": "Sensor you can use for testing, it retuns back message as the JSON rawData",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/json2.png",
         "supportedStates": [
