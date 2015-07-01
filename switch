@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Home",
-        "description": "t will return back if the item is on or off. If none of these is found\nit will throw the exception.\n\nInput argument can be:\n<ul>\n<li>string like on/off</li>\n<li>rawData which holds on/off that holds open/close string<</li>\n<li>streamData parameter that holds on/off string</li>\n</ul>",
+        "description": "It will return back if the item is on or off. If none of these is found\nit will throw the exception.\n\nInput argument can be:\n<ul>\n<li>string like on/off</li>\n<li>rawData which holds on/off that holds open/close string<</li>\n<li>streamData parameter that holds on/off string</li>\n</ul>",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/switch.png",
         "supportedStates": [
             "on",
