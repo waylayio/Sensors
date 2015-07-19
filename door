@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Home",
-        "description": "This sensor can be used in case you want either push the door state using a Broker \n- via getStreamData call, or if the state of the door comes from another node, \nvia getRawData. \n\nThe sensor will return back if the door is open or closed. If none of these is found\nit will throw the exception.\n\nInput argument (item) can be:\n<ul>\n<li>string like open/close</li>\n<li>rawData which holds open/close that holds open/close string</li>\n<li>streamData parameter that holds open/close string</li>\n</ul>\n\nExample: use as the item \"door\" and then push this data:\n\n{\n \"door\" : \"open\"\n}",
+        "description": "This sensor can be used in case you want either to push the door state using a Broker \n- via getStreamData call, or if the state of the door comes from another node, \nvia getRawData. \n\nThe sensor will return back if the door is open or closed. If none of these is found\nit will throw the exception.\n\nInput argument (item) can be:\n<ul>\n<li>string like open/close</li>\n<li>rawData which holds open/close that holds open/close string</li>\n<li>streamData parameter that holds open/close string</li>\n</ul>\n\nExample: use as the item \"door\" and then push this data:\n\n{\n \"door\" : \"open\"\n}",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/door.png",
         "supportedStates": [
             "open",
