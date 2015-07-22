@@ -1,0 +1,22 @@
+{
+    "name": "assetSensor",
+    "version": "0.0.8",
+    "type": "sensor",
+    "script": "//tempNode.state \nvar db = options.globalSettings.mongodb;\nvar token = options.requiredProperties.token || options.globalSettings.mongoKey;\n\nvar id;\ntry{\n    id = options.rawData.GLOBAL[options.requiredProperties.id].split(\".\")[0];\n} catch(err){\n    id = options.requiredProperties.id;\n}\n\nif(id !== undefined){\n  console.log(id);\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/assets?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var data = JSON.parse(body);\n        var item = __.find(data, function(asset) {if(asset.BuildingID == id) return asset;});\n        \n        var value = {\n            observedState: item !==undefined? \"Found\": \"Not Found\",\n            rawData: item\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(new Error(response));\n    }\n    }); \n}else{\n  send(new Error(\"Missing id\"));\n}",
+    "metadata": {
+        "author": "",
+        "category": "HVAC",
+        "description": "",
+        "documentationURL": "",
+        "iconURL": "https://cdn4.iconfinder.com/data/icons/REALVISTA/project_managment/png/128/agency.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "id"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
