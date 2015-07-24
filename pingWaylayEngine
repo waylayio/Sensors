@@ -1,8 +1,8 @@
 {
     "name": "pingWaylayEngine",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "sensor",
-    "script": "var username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.node.RESOURCE || options.task.RESOURCE;\n\nvar start = new Date().getTime();\n\nvar url =\"https://\"+ username + ':' + password +'@' + domain + \"/api/ping\";\n\nrequest({\n        \"uri\": url\n    }, function(err, resp, body){\n        console.log(body);\n        var end = new Date().getTime();\n        var time = end - start;\n        value ={\n               observedState: body == \"alive\" ? \"Alive\" : \"Not Alive\",\n               rawData: {\n                   time: time,\n               }\n        }\n        send(null, value);\n});\n\n",
+    "script": "var username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.node.RESOURCE || options.task.RESOURCE;\n\nvar start = new Date().getTime();\n\nvar url =\"https://\"+ domain + \"/api/ping\";\n\nvar options = {\n                url: url,\n                method: 'GET',\n                auth: {\n                user: username,\n                password: password\n              }\n};\n\nrequest(options, function(err, resp, body){\n        console.log(body);\n        var end = new Date().getTime();\n        var time = end - start;\n        value ={\n               observedState: body == \"alive\" ? \"Alive\" : \"Not Alive\",\n               rawData: {\n                   time: time,\n               }\n        }\n        send(null, value);\n});\n\n",
     "metadata": {
         "author": "",
         "category": "Waylay",
