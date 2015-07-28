@@ -1,0 +1,55 @@
+{
+    "name": "googleMapsDirections",
+    "version": "1.1.2",
+    "type": "sensor",
+    "script": "\nvar origin, destination, thresholdTimeSec;\n\norigin = waylayUtil.getStreamData(options, options.requiredProperties.origin);\nif (__.isEmpty(origin)) {\n    try {\n        origin = waylayUtil.getRawData(options, options.requiredProperties.origin);\n    } catch (err) {\n        origin = options.requiredProperties.origin;\n    }\n}\n\ndestination = waylayUtil.getStreamData(options, options.requiredProperties.destination);\nif (__.isEmpty(destination)) {\n    try {\n        destination = waylayUtil.getRawData(options, options.requiredProperties.destination);\n    } catch (err) {\n        destination = options.requiredProperties.destination;\n    }\n}\n\nthresholdTimeSec = waylayUtil.getStreamData(options, options.requiredProperties.thresholdTimeSec);\nif (__.isEmpty(thresholdTimeSec)) {\n    try {\n        thresholdTimeSec = waylayUtil.getRawData(options, options.requiredProperties.thresholdTimeSec);\n    } catch (err) {\n        thresholdTimeSec = options.requiredProperties.thresholdTimeSec;\n    }\n}\n\nif(origin === undefined || destination === undefined){\n    send(new Error(\"You need to specify origin and destination\"));\n}\nif(thresholdTimeSec === undefined){\n    send(new Error(\"You need to enter thresholdTimeSec\"));\n}\n\nvar modeOfTransport = options.requiredProperties.modeOfTransport || 'driving';\nvar transportModes = ['driving', 'walking', 'bicycling', 'transit'];\n\nvar API_Key = options.requiredProperties.API_Key;\n\n//if modeOfTransport is not one of the transportModes, it defaults to driving\nif (!__.contains(transportModes, modeOfTransport.toLowerCase())) {\n    send(new Error(\"wrong type selected, it should be one of \" + transportModes.join(\",\")));\n}\n\ntry{\n    var url = 'https://maps.googleapis.com/maps/api/directions/json';\n    url += \"?origin=\"+origin;\n    url += \"&destination=\"+destination;\n    url += \"&mode=\"+modeOfTransport;\n    \n    //if API_Key is given, concat the API_Key for google maps API for work users\n    if (!__.isEmpty(API_Key)) {\n        url += 'key=' + API_Key;\n    }\n    \n    request({\n            'uri': url,\n            /*method: 'GET',\n            form: {\n                origin: origin,\n                destination: destination,\n                mode: modeOfTransport\n            }*/\n        }, function(err, response, body){\n            \n            if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                \n                var travelTimeSec = data.routes[0].legs[0].duration.value;\n                var travelDistranceMetres = data.routes[0].legs[0].distance.value;\n                \n                data.travelTimeSec = travelTimeSec;\n                data.travelTimeMin = travelTimeSec / 60;\n                data.travelTimeHour = travelTimeSec / 3600;\n                data.travelDistranceMetres = travelDistranceMetres;\n                data.travelDistranceKM = travelDistranceMetres / 1000;\n                \n                var observedState = 'Above';\n                travelTimeSec < thresholdTimeSec ? observedState = 'Below' : 'Above';\n                \n                var value ={\n                    observedState : observedState,\n                    rawData : data\n                }\n               send(null, value);\n            } else {\n                console.log(response);\n                send(new Error(response.statusCode));\n            }\n    });    \n} catch(err){\n    send(new Error(err));\n}\n",
+    "metadata": {
+        "author": "Dan Dan",
+        "category": "Smart City",
+        "description": "determines if the duration taken between two points: \norigin and destination is above, in range, or below \nthe given threshold and range.<br>\n\n<b>States</b>\n<ul>\n<li>Above: travelTimeSec >= thresholdTimeSec</li>\n<li>Below: travelTimeSec < thresholdTimeSec</li>\n</ul><br>\n<b>Properties</b>\n<ul>\n<li>origin (required, evaluated)</li>\n<li>destination (required, evaluated)</li>\n<li>modeOfTransport (defaults to driving, evaluated)</li>\n<li>thresholdTimeSec (required, evaluated)</li>\n<li>API_Key</li>\n</ul>\n<i>Origin & destination</i> may be specified as \ntext strings (e.g. \"Chicago, IL\" or \"Darwin, NT, Australia\") \nor as latitude/longitude coordinates.<br><br>\n<i>ModeOfTransport</i> - when you calculate directions, you may specify the \ntransportation mode to use. By default, directions \nare calculated as driving directions. The following \ntravel modes are supported:\n<ul>\n<li><i>driving</i> (default) indicates standard driving \ndirections using the road network.</li>\n<li><i>walking</i> requests walking directions via \npedestrian paths & sidewalks.</li>\n<li><i>bicycling</i> requests bicycling directions via \nbicycle paths & preferred streets.</li>\n<li><i>transit</i> requests directions via public \ntransit routes.</li>\n</ul><br>\n\n<b>RawData</b>\n<ul>\n<li>routes: the entire JSON response <a href=\"https://developers.google.com/maps/documentation/directions/#sample-response\">[Sample]</a></li>\n<li>status: status of the request <a href=\"https://developers.google.com/maps/documentation/directions/#StatusCodes\">[Doc]</a></li>\n<li>travelDistranceMetres: travel distance in metres</li>\n<li>travelDistranceKM: travel distance in Kilo-Metres</li>\n<li>travelTimeSec: duration needed in seconds</li>\n<li>travelTimeMin: duration needed in minutes</li>\n<li>travelTimeHour: duration needed in hours </li>\n</ul><br>\nFor Google Maps API for Work users, you may\nenter your API Key in the <i>API_Key</i> field. Limits \nfor free users can be read \n<a href=\"https://developers.google.com/maps/documentation/directions/#Limits\">here</a>\n<br><br>\nNote: the duration returned is a constant value between two points, if you wish to take into account real-time traffic data,\nyou need to be a <a href=\"https://developers.google.com/maps/documentation/business/\">Google Maps API for Work</a> customer. \nFeature is not available on this sensor.",
+        "documentationURL": "https://developers.google.com/maps/documentation/directions/",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/google-maps-logo.jpg",
+        "supportedStates": [
+            "Above",
+            "Below"
+        ],
+        "requiredProperties": [
+            "origin",
+            "destination",
+            "modeOfTransport",
+            "thresholdTimeSec",
+            "API_Key"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "routes",
+                "dataType": "Object[]"
+            },
+            {
+                "parameter": "status",
+                "dataType": "double"
+            },
+            {
+                "parameter": "travelTimeSec",
+                "dataType": "double"
+            },
+            {
+                "parameter": "travelDistranceMetres",
+                "dataType": "double"
+            },
+            {
+                "parameter": "travelTimeMin",
+                "dataType": "double"
+            },
+            {
+                "parameter": "travelTimeHour",
+                "dataType": "double"
+            },
+            {
+                "parameter": "travelDistranceKM",
+                "dataType": "double"
+            }
+        ]
+    }
+}
