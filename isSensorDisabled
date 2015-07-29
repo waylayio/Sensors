@@ -1,0 +1,41 @@
+{
+    "name": "isSensorDisabled",
+    "version": "0.1.7",
+    "type": "sensor",
+    "script": "var state = 'Not Found';\nvar disabledSensors = [];\nvar enabledSensors = [];\nvar disabledSensorsNames = [];\nvar enabledSensorsNames = [];\n\nvar sensors = waylayUtil.getRawData(options, options.requiredProperties.sensors);\n\nfor (i = 0; i < sensors.length; i++) {\n    var curSensor = sensors[i];\n    if (curSensor.enabled == 'True') {\n        enabledSensors.push(curSensor);\n        enabledSensorsNames.push(curSensor.name);\n    } else {\n        disabledSensors.push(curSensor);\n        disabledSensorsNames.push(curSensor.name);\n    }\n}\n\nif (sensors.length === 0) {\n    state = 'Not Found'; //all sensors are disabled\n} else if (disabledSensors.length == sensors.length) {\n    state = 'All'; //all sensors are disabled\n} else if (disabledSensors.length === 0) {\n    state = 'None'; //no sensors are disabled\n} else if (disabledSensors.length < sensors.length) {\n    state = 'Some'; //some sensors are disabled\n}\n\nvar value = {\n    observedState : state,\n    rawData : {\n        disabledSensors : disabledSensors,\n        enabledSensors : enabledSensors,\n        disabledSensorsNames : disabledSensorsNames.join(', '),\n        enabledSensorsNames : enabledSensorsNames.join(', ')\n    }\n};\nsend(null, value);",
+    "metadata": {
+        "author": "",
+        "category": "SynField",
+        "description": "helps to check which SynField sensors are disabled based on the property sensorsArray.<br>\n\n<b>States</b>\n<ul>\n<li>None - when all sensors are enabled.</li>\n<li>Some - when some sensors are disabled and some are enabled.</li>\n<li>All - when all sensors are disabled</li>\n<li>Not Found - when sensorArray is empty</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>sensors[] - rawData from RetrieveHeadNodeSensors sensor</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>disabledSensors[]</li>\n<li>enabledSensors[]</li>\n<li>disabledSensorsNames : String (e.g. sensorAName, sensorBName)</li>\n<li>disabledSensorsNames : String</li>\n</ul><br>",
+        "documentationURL": "http://www.synelixis.com/synfield/",
+        "iconURL": "https://d2gg9evh47fn9z.cloudfront.net/thumb_COLOURBOX10105030.jpg",
+        "supportedStates": [
+            "None",
+            "Some",
+            "All",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "sensors"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "disabledSensors",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "enabledSensors",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "disabledSensorsNames",
+                "dataType": "string"
+            },
+            {
+                "parameter": "enabledSensorsNames",
+                "dataType": "string"
+            }
+        ]
+    }
+}

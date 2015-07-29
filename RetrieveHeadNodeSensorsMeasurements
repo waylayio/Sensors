@@ -1,0 +1,80 @@
+{
+    "name": "RetrieveHeadNodeSensorsMeasurements",
+    "version": "0.2.7",
+    "type": "sensor",
+    "script": "/*var username;\nif (__.isEmpty(options.requiredProperties.username)) {\n    username = options.globalSettings.synfield_guest_username;\n} else {\n    username = waylayUtil.evaluateData(options, options.requiredProperties.username);\n}*/\n\nvar authorizationToken;\nvar headNode;\nif (__.isEmpty(options.requiredProperties.authorizationToken)) {\n    authorizationToken = options.globalSettings.synfield_guest_authorizationToken;\n} else {\n    try {\n        authorizationToken = waylayUtil.getRawData(options, options.requiredProperties.authorizationToken);\n    } catch (err) {\n        authorizationToken = options.requiredProperties.authorizationToken;\n    }\n}\n\nif (__.isEmpty(options.requiredProperties.headNode)) {\n    send(new Error('Please enter value for headNode.'));\n} else {\n    try {\n        headNode = waylayUtil.getRawData(options, options.requiredProperties.headNode);\n    } catch (err) {\n        headNode = options.requiredProperties.headNode;\n    }\n}\n\nvar url = 'http://api-synfield.synelixis.com/v1/gateway/' + headNode + '/measurements/';\n\n\n\n/*\n    manages fromDate and untilDate\n*/\nvar fromDate, untilDate;\n\n//if both fromDate and untilDate are empty, defaults to yesterday to today\nif (__.isEmpty(options.requiredProperties.fromDate) && __.isEmpty(options.requiredProperties.untilDate)) {\n    fromDate = new Date(new Date().getTime() - 86400);//new Date(new Date().getTime() - 86400); //creates a date one day before today\n    untilDate = new Date();\n    var fromMonthNumber = fromDate.getMonth() + 1;\n    var untilMonthNumber = untilDate.getMonth() + 1;\n    url += fromDate.getFullYear() + '-' + fromMonthNumber + '-' + fromDate.getDate()\n    +   '/' + untilDate.getFullYear() + '-' + untilMonthNumber + '-' + untilDate.getDate();\n    \n} else {\n    \n    if (!__.isEmpty(options.requiredProperties.fromDate)){\n        try {\n            fromDate = waylayUtil.getRawData(options, options.requiredProperties.fromDate);\n        } catch (err) {\n            fromDate = options.requiredProperties.fromDate;\n        }\n    }\n    if (!__.isEmpty(options.requiredProperties.untilDate)){\n        try {\n            untilDate = waylayUtil.getRawData(options, options.requiredProperties.untilDate);\n        } catch (err) {\n            untilDate = options.requiredProperties.untilDate;\n        }\n    }\n        \n    //if only either of fromDate and untilDate is provided, throw error\n    if (!__.isEmpty(fromDate) && __.isEmpty(untilDate) || __.isEmpty(fromDate) && !__.isEmpty(untilDate)) {\n        send(new Error('Please provided both fromDate and untilDate.'));\n    }\n    \n}\n//concat dates to url\nif (!__.isEmpty(fromDate) && !__.isEmpty(untilDate)) {\n    //validate date\n    if (!isDate(fromDate) || !isDate(untilDate) ) {\n        send(new Error('Please provide in the yyyy-MM-dd format.'));\n    } else {\n        url += fromDate +'/' + untilDate + '/';\n    }\n}\n\n\n/*\n    manages offset and limit\n*/\nvar offset, limit;\nif (!__.isEmpty(options.requiredProperties.offset)){\n    try {\n        offset = waylayUtil.getRawData(options, options.requiredProperties.offset);\n    } catch (err) {\n        offset = options.requiredProperties.offset;\n    }\n}\nif (!__.isEmpty(options.requiredProperties.limit)){\n    try {\n        limit = waylayUtil.getRawData(options, options.requiredProperties.limit);\n    } catch (err) {\n        limit = options.requiredProperties.limit;\n    }\n}\n\nif (!__.isEmpty(offset) || !__.isEmpty(limit)) {\n    url += '?';\n}\nif (!__.isEmpty(offset)) {\n    url += 'offset=' + offset;\n}\nif (!__.isEmpty(offset) && !__.isEmpty(limit)) {\n    url += '&';\n}\nif (!__.isEmpty(limit)) {\n    url += 'limit=' + limit;\n}\n\nconsole.log(url);\n\ntry{\n    request({\n            'uri': url,\n            'headers' : {\n                'Authorization' : authorizationToken,\n                'Accept' : 'application/json'\n            }\n    }, function(err, response, body){\n        \n        if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                \n                /*\n                get the latest measurement of each sensor\n                */\n                var measurements = data.response.measurements;\n                \n                var batteryMeasures = [];\n                var systemtempMeasures = [];\n                var solarradlevelMeasures = [];\n                var windspeedMeasures = [];\n                var winddirMeasures = [];\n                var rainMeasures = [];\n                var airtempMeasures = [];\n                var airhumidityMeasures = [];\n                var foilmoistureMeasures = [];\n                \n                for (var i = 0; i < measurements.length; i++) {\n                    var curM = measurements[i];\n                    var curMService = curM.service;\n                    \n                    if (curMService === 'Battery') {\n                        batteryMeasures.push(curM);\n                    } else if (curMService === 'System temperature') {\n                        systemtempMeasures.push(curM);\n                    } else if (curMService === 'Solar radiation level') {\n                        solarradlevelMeasures.push(curM);\n                    } else if (curMService === 'Wind speed') {\n                        windspeedMeasures.push(curM);\n                    } else if (curMService === 'Wind direction') {\n                        winddirMeasures.push(curM);\n                    } else if (curMService === 'Rain') {\n                        rainMeasures.push(curM);\n                    } else if (curMService === 'Air temperature') {\n                        airtempMeasures.push(curM);\n                    } else if (curMService === 'Air humidity') {\n                        airhumidityMeasures.push(curM);\n                    } else if (curMService === 'Foil moisture') {\n                        foilmoistureMeasures.push(curM);\n                    }\n                }\n                \n                var value = {\n                    observedState : 'Found',\n                    rawData : \n                        {\n                        links : data.response.links,\n                        measurements : data.response.measurements,\n                        batteryMeasures : batteryMeasures,\n                        systemtempMeasures : systemtempMeasures,\n                        solarradlevelMeasures : solarradlevelMeasures,\n                        windspeedMeasures : windspeedMeasures,\n                        winddirMeasures : winddirMeasures,\n                        rainMeasures : rainMeasures,\n                        airtempMeasures : airtempMeasures,\n                        airhumidityMeasures : airhumidityMeasures,\n                        foilmoistureMeasures : foilmoistureMeasures,\n                        sectionName : data.response.name,\n                        timezone : data.response.timezone\n                        }   \n                };\n               send(null, value);\n            } else {\n                send(new Error(\"Could not load the url\" + url + \" , got the error \" + err));\n            }\n    });    \n} catch(err){\n    send(new Error(err));\n}\n\nfunction isDate(txtDate)\n{\n\tvar IsoDateRe = new RegExp(\"^([0-9]{4})-([0-9]{2})-([0-9]{2})$\");\n\tvar matches = IsoDateRe.exec(txtDate);\n\tif (!matches) return false;\n \n\tvar composedDate = new Date(matches[1], (matches[2] - 1), matches[3]);\n \n\treturn ((composedDate.getMonth() == (matches[2] - 1)) &&\n\t\t\t\t\t(composedDate.getDate() == matches[3]) &&\n\t\t\t\t\t(composedDate.getFullYear() == matches[1]));\n}",
+    "metadata": {
+        "author": "Dan Dan",
+        "category": "SynField",
+        "description": "Retrieve a collection of sensors' measurements in the Head Node (gateway).<br>\nEndpoint: http://api-synfield.synelixis.com//v1/gateway/{gatewayID}/measurements/<br>\n\n<b>States</b>\n<ul>\n<li>Found: when an owner's sensors' measurements are found.</li>\n<li>Not Found</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>authorizationToken (e.g. Basic Z3Vlc3Q...) (if undefined, globalSettings)</li>\n<li>headNode (gateway) (e.g. 00:06:66...) (required)</li>\n<li>offset : integer (optional) (default: 0)</li>\n<li>limit : integer (optional) (default: 500)(</li>\n<li>fromDate yyyy-MM-dd (if both blank, default to yesterday's date)</li>\n<li>untilDate yyyy-MM-dd (if both blank, default to today's date)</li>\n</ul><br>\n\n<b>Raw Data</b> <i>latest measurement = [array.length-1]</i>\n<ul>\n<li>links[]</li>\n<li>measurements[] - all services</li>\n<li>batteryMeasures[]</li>\n<li>systemtempMeasures[]</li>\n<li>solarradlevelMeasures[]</li>\n<li>windspeedMeasures[]</li>\n<li>winddirMeasures[]</li>\n<li>rainMeasures[]</li>\n<li>airtempMeasures[]</li>\n<li>airhumidityMeasures[]</li>\n<li>foilmoistureMeasures[]</li>\n<li>sectionName</li>\n<li>timezone</li>\n</ul><br>",
+        "documentationURL": "http://www.synelixis.com/synfield/",
+        "iconURL": "http://www.micronzindia.com/mic_images/mic_icon_organic.png",
+        "supportedStates": [
+            "Found",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "authorizationToken",
+            "headNode",
+            "offset",
+            "limit",
+            "fromDate",
+            "untilDate"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "links",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "measurements",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "batteryMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "systemtempMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "solarradlevelMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "windspeedMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "winddirMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "rainMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "airhumidityMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "airtempMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "foilmoistureMeasures",
+                "dataType": "string[]"
+            },
+            {
+                "parameter": "sectionName",
+                "dataType": "string"
+            },
+            {
+                "parameter": "timezone",
+                "dataType": "string"
+            }
+        ]
+    }
+}
