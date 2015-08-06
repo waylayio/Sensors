@@ -1,0 +1,28 @@
+{
+    "name": "coapSensor",
+    "version": "0.0.3",
+    "type": "sensor",
+    "script": "var server = options.requiredProperties.server ;\nvar path = options.requiredProperties.path;\nserver += \"/\"+path;\n\nif(server !== undefined){\n    try{\n        var req = coap.request(server);\n        req.on('response', function(res) {\n            console.log(res);\n            var ret = res.payload;\n            var value = {\n                observedState : \"Not Collected\"\n            }\n            var payload = ret.toString('ascii');\n            console.log(\"payload after conversion is \"+payload);\n            if(!isNaN(payload))\n                payload = parseFloat(payload);\n            if(ret !== undefined){\n                value.rawData = {\n                    value : payload\n                }\n                value.observedState = \"Collected\";\n            }\n            send(null, value);\n        });\n        req.end();\n     } catch(err){\n         send(new Error(err));\n     }\n} else {\n    send(new Error(\"nissing inout argumnet server\"));\n}\n\n",
+    "metadata": {
+        "author": "Veselin",
+        "category": "Waylay",
+        "description": "CoAP sensor\n<br>\nExample of input arguments:\n<br>\nserver: coap://coap.me:5683\n<br>\npath : hello\n<br>\nRawData:\n<br>\nvalue returned.",
+        "documentationURL": "",
+        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/coap.png",
+        "supportedStates": [
+            "Collected",
+            "Not Collected"
+        ],
+        "requiredProperties": [
+            "server",
+            "path"
+        ],
+        "requiredRawData": [],
+        "rawData": [
+            {
+                "parameter": "value",
+                "dataType": "string"
+            }
+        ]
+    }
+}
