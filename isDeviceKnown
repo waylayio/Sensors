@@ -1,0 +1,23 @@
+{
+    "name": "isDeviceKnown",
+    "version": "0.0.1",
+    "type": "sensor",
+    "script": "var token = options.globalSettings.Carriots_key;\nvar device  = options.requiredProperties.device;\n\nif(token !== undefined && device !== undefined){\n    \n     var options = {\n        url: 'http://api.carriots.com/devices/'+device,\n      \n        headers: {\n            \"carriots.apikey\" : token,\n            \"Content-Type\":\"application/json\",\n            \"User-Agent\" : device\n        }\n    };\n    \n    var callback = function(error, response, body) {\n        if (!error && response.statusCode == 200) {\n            var bodyJson = JSON.parse(body);\n            \n            var value = {\n                observedState : bodyJson.enabled ? \"Enabled\":\"Disabled\",\n                rawData:bodyJson\n            };\n            \n            console.log(bodyJson.enabled);\n            send(null,value);\n        }else{\n            send(null,{observedState : \"Not Found\"});\n        }\n\n    }    \n    \n    request.get(options, callback);\n}else{\n    send(new Error(\"Missing properties\"));\n}\n\n\n",
+    "metadata": {
+        "author": "Suat",
+        "category": "IOT Platforms",
+        "description": "Carriots sensor that gives you the information if a device is registered with platform",
+        "documentationURL": "https://www.carriots.com/documentation/api/device_management#",
+        "iconURL": "https://avatars0.githubusercontent.com/u/7299477?v=3&s=200",
+        "supportedStates": [
+            "Enabled",
+            "Disabled",
+            "Not Found"
+        ],
+        "requiredProperties": [
+            "device"
+        ],
+        "requiredRawData": [],
+        "rawData": []
+    }
+}
