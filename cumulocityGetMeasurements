@@ -1,12 +1,12 @@
 {
-    "name": "getMeasurementsCumulocity",
+    "name": "cumulocityGetMeasurements",
     "version": "0.0.1",
     "type": "sensor",
     "script": "var token = options.globalSettings.Cumulocity_Key;\nvar dateTo = options.requiredProperties.dateTo || moment().toISOString();\nvar yesterday = new Date();\nyesterday.setDate(yesterday.getDate() - 1);\nvar dateFrom = options.requiredProperties.dateFrom || moment(yesterday).toISOString();\n\nvar source = options.requiredProperties.source;\n\nif(token !== undefined && source !== undefined)\n{\n    \n     var options = {\n        url: 'http://suathh.cumulocity.com/measurement/measurements/series?dateTo='+dateTo+'&source='+source+'&dateFrom='+dateFrom,\n   \n        headers: {\n            Authorization: \"Basic \"+ token,\n            Accept: \"application/json\"\n        }\n    };\n    \n    var callback = function(error, response, body) {\n        if (!error && response.statusCode == 200) {\n            var bodyJson = JSON.parse(body);\n            \n            var value = {\n                rawData:bodyJson,\n                observedState : Object.keys(bodyJson[\"values\"]).length > 0 ? \"Found\" : \"Not Found\"\n            };\n            \n            send(null,value);\n        }else{\n            send(new Error(\"Calling api.cumulocity failed\"));\n        }\n    }    \n    \n    request.get(options, callback);\n}else{\n    send(new Error(\"Missing token or source\"));\n}\n\n\n",
     "metadata": {
         "author": "Suat",
         "category": "IOT Platforms",
-        "description": "getMeasurementsCumulocity gives back the list of measurements in rawData (values).\n<br>\nInput parameters are :\n<br>\n<ul>\n<li>dateFrom, ISO date format, default value is 24 hours ago</li>\n<li>dateTo, ISO date format, default date is now</li>\n<li>source</li>\n</ul>\n\nin rawData, values is an object, where the key is the time, and the value is a array of measurements.\n<br>\nSeries defines types of data points in value array.",
+        "description": "cumulocityGetMeasurements gives back the list of measurements in rawData (values).\n<br>\nInput parameters are :\n<br>\n<ul>\n<li>dateFrom, ISO date format, default value is 24 hours ago</li>\n<li>dateTo, ISO date format, default date is now</li>\n<li>source</li>\n</ul>\n\nin rawData, values is an object, where the key is the time, and the value is a array of measurements.\n<br>\nSeries defines types of data points in value array.",
         "documentationURL": "http://www.cumulocity.com/guides/reference/measurements/",
         "iconURL": "https://www.cumulocity.com/images/company/cumulocity-big-logo.png",
         "supportedStates": [
