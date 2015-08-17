@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Social",
-        "description": "Search tweets sensor\n\nInput paramters are:\n<ul>\n<li>search terms, that is required input</li>\n<li>user, if left empty it will search all tweets</li>\n<li>ignoreFirstSearch, should the first search be ignored, default is false</li>\n</ul>\n",
+        "description": "Search tweets sensor\n\nInput paramters are:\n<ul>\n<li>search terms (required)</li>\n<li>user (optional), the screen_name/handle of the twitter user (without @). When left empty we search any tweets.</li>\n<li>ignoreFirstSearch (defaults to false), when set to true the fist search is ignored causing only future tweets to be reported</li>\n</ul>\n",
         "documentationURL": "https://dev.twitter.com/rest/reference/get/search/tweets",
         "iconURL": "https://cdn3.iconfinder.com/data/icons/free-social-icons/67/twitter_circle_color-512.png",
         "supportedStates": [
