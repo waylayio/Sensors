@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Location",
-        "description": "geoFence calculator based on the runtime location and address.\n<br>\nInput arguments are:\n<ul>\n<li>Address: address from which you want to calculate a distiance</li>\n<li>distance: distance between location coming from the address and real data</li>\n</ul>\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude</li>\n<li>longitude</li>\n<li>latitudeConfigured</li>\n<li>longitudeConfigured</li>\n<li>distanceConfigured</li>\n</ul>\n",
+        "description": "geoFence calculator based on the runtime location and address.\n<br>\nInput arguments are:\n<ul>\n<li>Address: address from which you want to calculate a distance</li>\n<li>distance: distance between location coming from the address and real data</li>\n</ul>\n\nRaw data:\n<ul>\n<li>distance</li>\n<li>latitude</li>\n<li>longitude</li>\n<li>latitudeConfigured</li>\n<li>longitudeConfigured</li>\n<li>distanceConfigured</li>\n</ul>\n",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/map.png",
         "supportedStates": [
             "IN",
