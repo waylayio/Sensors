@@ -6,7 +6,7 @@
     "metadata": {
         "author": "",
         "category": "Social",
-        "description": "Sentiment analysis, input parameter is pre-processed with evaluate data function.",
+        "description": "Sentiment analysis for the provided text.<br/>See <a href=\"https://www.twinword.com/api/sentiment-analysis.php\">twinword</a> for more info<br/>Requires a MASHAPE_KEY<br/>The inputText parameter can handle the waylay expression language.",
         "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/sentiment.png",
         "supportedStates": [
             "postive",
