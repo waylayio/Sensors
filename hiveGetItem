@@ -1,0 +1,23 @@
+{
+  "name": "hiveGetItem",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "if(options.requiredProperties.server && options.requiredProperties.table){\n    client = nodeHive.for({ server: options.requiredProperties.server});\n    client.fetch(\"SELECT * FROM \" +options.requiredProperties.table, function(err, data) {\n        if(err){\n            send(new Error(err));\n        }\n        else{\n           //console.log(data);\n           send(null, { observedState : \"Found\"});\n        }\n    });\n} else {\n    send(new Error(\"missing properties\"));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Database",
+    "description": "Hive query sensor using node-hive package",
+    "documentationURL": "https://github.com/forward/node-hive",
+    "iconURL": "http://jira.pentaho.com/secure/thumbnail/35657/_thumb_35657.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "table",
+      "server"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
