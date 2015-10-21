@@ -1,0 +1,23 @@
+{
+  "name": "odooGetItem",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var model = options.requiredProperties.model || 'res.partner';\nvar id = options.requiredProperties.id;\nvar odoo_host = options.globalSettings.ODOO_HOST;\nvar odoo_db = options.globalSettings.ODOO_DB;\nvar odoo_user = options.globalSettings.ODOO_USER;\nvar odoo_password = options.globalSettings.ODOO_PASSWORD;\nvar odoo_protocol = options.globalSettings.ODOO_PROTOCOL || 'https';\n\nif(id === undefined || odoo_host === undefined || odoo_db === undefined ||\n    odoo_user === undefined || odoo_password === undefined){\n    send(new Error(\"missing properties\"));\n} else {\n    var odoo = new odoo({\n      protocol: odoo_protocol,\n      host: odoo_host,\n      database: odoo_db,\n      username: odoo_user,\n      password: odoo_password\n    });\n    \n    try{\n        odoo.connect(function (err) {\n          if (err) { \n              console.log(err);\n              send(new Error(err));\n          } else {\n                odoo.get(model, id , function (err, entry) {\n                    if (err) { \n                        console.log(err);\n                        send(new Error(err));\n                    } else {\n                        console.log('entry', entry);\n                        send(null, { observedState : \"Found\"} );\n                    }\n                });\n            }\n        });    \n    } catch (err){\n        console.log(err);\n        send(new Error(err));\n    }\n}\n\n",
+  "metadata": {
+    "author": "",
+    "category": "ERP",
+    "description": "Odoo sensor, gives back the entry based on:\n<ul>\n<li>model, default is res.partner</li>\n<li>id</li>\n</ul>\n\nyou need to add in the global settings:\n\n<ul>\n<li>ODOO_HOST</li>\n<li>ODOO_DB</li>\n<li>ODOO_USER</li>\n<li>ODOO_PASSWORD</li>\n<li>ODOO_PROTOCOL, default is https</li>\n</ul>\n",
+    "documentationURL": "https://github.com/4yopping/node-odoo",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/odoo.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "id",
+      "model"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
