@@ -1,0 +1,20 @@
+{
+  "name": "dbGetMSSQLItem",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var host = options.globalSettings.DB_HOST || \"81.246.24.199\";\nvar user = options.globalSettings.DB_USER || \"waylayr\";\nvar password = options.globalSettings.DB_PASSWORD || \"waylay123\";\nvar table = options.requiredProperties.table || \"Meter_ContactInfo\";\nvar database = options.requiredProperties.database || \"waylay\";\n\nvar config = {\n    user: \"waylayr\",\n    password: \"waylay123\",\n    server: \"81.246.24.199\",\n    database: \"waylay\",\n    options: {\n        encrypt: true // Use this if you're on Windows Azure\n    }\n};\n\n\ntry{\n    mssql.connect(config, function(err) {\n        if(err) {\n            console.log(\"error, enable to connect\")\n            console.log(err);\n             send(new Error(err));\n        } else {\n            var request = new sql.Request();\n            console.log(\"request...\");\n            request.query('select * from Meter_ContactInfo', function(err, recordset) {\n            if(err) {\n                console.log(\"error...\")\n                console.log(err);\n                send(new Error(\"error\"));\n            } else{\n                    var res = {\n                        observedState : \"Not Found\"\n                    };\n                    console.log(recordset);\n                    res.observedState = \"Found\";\n                    send(null, res);\n                }\n            });\n        }\n    });\n}\ncatch(err){\n    console.log(\"Exception connection error:\")\n    console.log(err);\n    send(new Error(\"error\"));\n}",
+  "metadata": {
+    "author": "",
+    "category": "Database",
+    "description": "Example how to retreive data from the database.\nRight now we only support mysql. \nYou should change the SQL query and add info about the raw data.\n\nInput arguments are:\n<ul>\n<li>device</li>\n<li>type, you need to put here database type, today we support only \"mysql\"</li>\n</ul>\n",
+    "documentationURL": "https://github.com/patriksimek/node-mssql",
+    "iconURL": "https://github.com/waylayio/documentation/blob/master/icons/mssql.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
