@@ -1,0 +1,22 @@
+{
+  "name": "dbGetPostgressItem",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var user = options.globalSettings.PG_USER;\nvar pwd = options.globalSettings.PG_PASSWORD;\nvar host = options.globalSettings.HOST;\nvar database = options.globalSettings.DATABASE;\nvar input = options.requiredProperties.inputQuery || 'SELECT $1::int AS number';\n\ntry{\n    \n//var conString = \"postgres://username:password@localhost/database\";\n\nvar conString = \"postgres://\" + user + \":\" + pwd +\"@\" + host + \"/\" + database ;\n\n//this initializes a connection pool\n//it will keep idle connections open for a (configurable) 30 seconds\n//and set a limit of 20 (also configurable)\npg.connect(conString, function(err, client, done) {\n  if(err) {\n    return console.error('error fetching client from pool', err);\n  }\n  client.query(input, ['1'], function(err, result) {\n    done();\n\n    if(err) {\n      console.log('error running query', err);\n      send(new Error(err));\n    } else {\n        console.log(result.rows[0].number);\n        var data = { \n            observedState : \"Found\",\n            rawData : { data: result.rows[0] }\n        }\n        send(null, data);\n    }\n  });\n});\n    \n} catch(err){\n    console.log(err);\n    send(new Error(err));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Database",
+    "description": "Postgress sensor\nExample how to retreive data from the database.\nYou should change the SQL query and add info about the raw data. Input arguments are:\nAlso not that the settings in the sensor come global settings;",
+    "documentationURL": "https://github.com/brianc/node-postgres",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/pg.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "inputQuery"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
