@@ -1,0 +1,42 @@
+{
+  "name": "semseyeSensor",
+  "version": "0.0.4",
+  "type": "sensor",
+  "script": "var device = options.requiredProperties.device;  \nvar organizationGUID = options.requiredProperties.organizationGUID;\n\nvar today = new Date().toISOString().slice(0, 10);\nvar defaultStart = today + \" 00:00\";\nvar defaultEnd = today + \" 23:00\";\n\nvar startDate = options.requiredProperties.startDate || defaultStart;\nvar endDate = options.requiredProperties.endDate || defaultEnd;\nvar visits = options.requiredProperties.visits || \"h\";\n  \n  var message = {\n      serial: device,\n      organizationGUID: organizationGUID,\n      vizits : visits,\n      startDate: startDate,\n      endDate: endDate\n  };\n  \n  \nvar requestOptions = {\n      url: 'https://userportal.semseye.com:443/NodeService/getDeviceDataJson',\n      json: message\n    };\n    \nrequest.post(requestOptions, function (error, response, body) {\n  if (!error && response.statusCode == 200) {\n    console.log(body);\n    \n    var totalHourlyVisits = __.reduce(body.getDeviceDataJsonResult.hourlyVisitCountList, function(memo, num){ return memo + num.Value; }, 0);\n    var totalDailyVisits = __.reduce(body.getDeviceDataJsonResult.dailyVisitCountList, function(memo, num){ return memo + num.Value; }, 0);\n    \n    send(null, { \n        observedState : \"Found\" , \n        rawData : {\n            totalHourlyVisits: totalHourlyVisits,\n            hourlyVisitCountList: body.getDeviceDataJsonResult.hourlyVisitCountList,\n            dailyVisitCountList: body.getDeviceDataJsonResult.dailyVisitCountList,\n            totalDailyVisits : totalDailyVisits \n            }\n        });\n  }else{\n      send(new Error(\"Error \" + error + \" \" + body));\n  }\n});",
+  "metadata": {
+    "author": "",
+    "category": "Retail",
+    "description": "Semseye sensor, count the number of visits.\n\nIf the visits input is is set to \"d\", it will use a daily count, \notherwise the hourly count will be used.\nIf you don't provide start and end time, the data will be for today.\n\nOutput:\n\n<ul>\n<li>totalHourlyVisits</li>\n<li>totalDailyVisits</li>\n<li>hourlyVisitCountList</li>\n<li>dailyVisitCountList</li>\n</ul>",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/semseye.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "device",
+      "startDate",
+      "endDate",
+      "organizationGUID",
+      "visits"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "totalHourlyVisits",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "totalDailyVisits",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "hourlyVisitCountList",
+        "dataType": "integer[]"
+      },
+      {
+        "parameter": "dailyVisitCountList",
+        "dataType": "integer[]"
+      }
+    ]
+  }
+}
