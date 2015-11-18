@@ -1,0 +1,33 @@
+{
+  "name": "streamEventTimeout",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "//code 40, clear code 41;\n\nvar timeout = waylayUtil.getProperty(options, \"timeout\") || 300;\nvar now = new Date().getTime();\nvar lastEventTime =  waylayUtil.getCacheData(options, \"eventTime\");\nvar lastCode = waylayUtil.getCacheData(options, \"eventCode\");\nvar delta;\nif(lastEventTime === undefined)\n    delta = 100000000000000; //first time execution\nelse\n    delta = parseFloat(now - lastEventTime)/1000;\nif(lastCode === undefined)\n    lastCode = 41; //clear alarm\n    \nvar streamData = waylayUtil.getStreamData(options);\n\n\nif(streamData === undefined){ // that is just a polling, so let's check the cache\n    if(delta > timeout && lastCode === 40) {\n        send(null, {observedState : \"Medium\", rawData :  { eventCode: lastCode , eventTime : lastEventTime || now } });\n    } else  if(delta < timeout && lastCode === 40) {\n        send(null, {observedState : \"Minor\", rawData :  { eventCode: lastCode , eventTime : lastEventTime || now } });\n    } else {\n        send(null, {observedState : \"Clear\", rawData :  { eventCode: lastCode , eventTime : lastEventTime || now} }); \n    }\n} else {\n    var eventCode = streamData.eventCode;\n    var eventTime = streamData.eventTime;\n    if(eventCode === 40 && lastCode === 40 && delta < timeout){\n        send(null, {observedState : \"Critical\", rawData : { eventCode: eventCode, eventTime : eventTime}});\n    } else if(eventCode === 40 && lastCode === 41 && delta > timeout){\n        send(null, {observedState : \"Medium\", rawData : { eventCode: eventCode, eventTime : eventTime}});\n    } else if(eventCode === 40 && lastCode === 41 && delta < timeout){\n        send(null, {observedState : \"Minor\", rawData : { eventCode: eventCode, eventTime : eventTime}});\n    } else if(eventCode === 41 && lastCode === 40 && delta > timeout){\n        send(null, {observedState : \"Medium\", rawData : { eventCode: eventCode, eventTime : eventTime}});\n    } \n}\n\n\n\n\n\n\n",
+  "metadata": {
+    "author": "Veselin",
+    "category": "Customer",
+    "description": "Gives the timeout if the node has not been exectued within a timeout period.\n\nInput paramters are:\n<ul>\n<li>timeout, default 300 seconds</li>\n</ul>\n\nRaw data:\n<ul>\n<li>eventCode</li>\n<li>eventTime</li>\n</ul>\n",
+    "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/hourglass.png",
+    "supportedStates": [
+      "Critical",
+      "Medium",
+      "Minor",
+      "Clear"
+    ],
+    "requiredProperties": [
+      "timeout"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "eventCode",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "eventTime",
+        "dataType": "integer"
+      }
+    ]
+  }
+}
