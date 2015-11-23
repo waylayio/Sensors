@@ -1,0 +1,24 @@
+{
+  "name": "streamBridgeData",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var streamdata = waylayUtil.getStreamData(options);\n    if(streamdata === undefined)\n        send(new Error(\"streamdata not found\"));\n    else{\n      var  value = {\n            observedState: \"Collected\",\n            rawData: { \n                streamData: streamdata\n            }\n        };\n    send(null, value);\n}",
+  "metadata": {
+    "author": "",
+    "category": "Streaming",
+    "description": "streamData sensor, \nit returns back as the rawData what has been sent,\nIt can be used as a bridge towards other platfroms.",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/right_arrow.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "streamData",
+        "dataType": "object"
+      }
+    ]
+  }
+}
