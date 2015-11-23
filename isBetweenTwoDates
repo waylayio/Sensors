@@ -1,0 +1,58 @@
+{
+  "name": "isBetweenTwoDates",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var fromDate, untilDate, eventDate, fromDateOffsetHours = 0;\nvar now = new Date().getTime();\n\nfromDateOffsetHours = options.requiredProperties.fromDateOffsetHours || 1; //default 1 hour\n\n//try get fromDate from rawdata in context, else get it from properties\ntry {\n    fromDate = waylayUtil.getRawData(options, options.requiredProperties.fromDate);\n} catch (err) {\n    fromDate = options.requiredProperties.fromDate;\n}\n if (isNaN(fromDate)) {\n        fromDate = new Date(fromDate).getTime();\n    } else {\n    fromDate = parseInt(fromDate);\n} \n\ntry {\n    untilDate = waylayUtil.getRawData(options, options.requiredProperties.untilDate);\n} catch (err) {\n    untilDate = options.requiredProperties.untilDate || (fromDate + fromDateOffsetHours * 3600000);\n}\n\nif (isNaN(untilDate)) {\n        untilDate = new Date(untilDate).getTime();\n    } else {\n     untilDate = parseInt(untilDate);\n}\n\n\ntry {\n    eventDate = waylayUtil.getRawData(options, options.requiredProperties.eventDate);\n} catch (err) {\n    eventDate = options.requiredProperties.eventDate || now;\n}\nif (isNaN(eventDate)) {\n    eventDate = new Date(eventDate).getTime();\n} \n\nif(isNaN(fromDate) || isNaN(untilDate) || isNaN(eventDate)){\n    send(new Error(\"Error in formating\"));\n} else {\n    var state = (eventDate > fromDate && eventDate < untilDate) ? 'Between' : 'Before';\n    if (eventDate > untilDate) {\n        state = 'After';\n    }\n    \n    var value = {\n        observedState: state,\n        rawData : {\n            fromDateEpoch : fromDate,\n            untilDateEpoch : untilDate,\n            eventDate: eventDate,\n            fromDateOffsetHours : fromDateOffsetHours,\n            fromDate : new Date(fromDate).toString(),\n            untilDate : new Date(untilDate).toString()\n        }\n        \n    };\n    send(null, value);\n}\n\n\n",
+  "metadata": {
+    "author": "Dan Dan",
+    "category": "Time",
+    "description": "returns InRange if the eventDate is between fromDate and untilDate.<br>\nIf UntilDate is not provided, sensor will get UntilDate by applying fromDateOffsetHours to fromDate.<br>\ne.g. fromDate is 2015-06-01 13:00 and fromDateOffsetHours is 2, UntilDate will be 2015-06-01 15:00.<br>\nDefault fromDateOffsetHours is 1 hour. Default eventDate is now.\n\n",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/betweenDates.png",
+    "supportedStates": [
+      "Between",
+      "Before",
+      "After"
+    ],
+    "requiredProperties": [
+      "fromDate",
+      "untilDate",
+      "eventDate",
+      "fromDateOffsetHours"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "fromDate",
+        "dataType": "string"
+      },
+      {
+        "parameter": "untilDate",
+        "dataType": "string"
+      },
+      {
+        "parameter": "eventDate",
+        "dataType": "string"
+      },
+      {
+        "parameter": "fromDateOffsetHours",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "fromDateEpoch",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "untilDateEpoch",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "fromDate",
+        "dataType": "Date"
+      },
+      {
+        "parameter": "untilDate",
+        "dataType": "Date"
+      }
+    ]
+  }
+}
