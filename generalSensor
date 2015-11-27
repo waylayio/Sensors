@@ -1,0 +1,38 @@
+{
+  "name": "generalSensor",
+  "version": "0.0.2",
+  "type": "sensor",
+  "script": "var parameter = options.requiredProperties.parameter;\nvar upperBound = options.requiredProperties.upperBound;\nvar lowerBound = options.requiredProperties.lowerBound;\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain ||\"app.waylay.io\";\nvar resource = \"veselin@waylay.io@fitbit.3QMWZV\";\n\nvar runtimeParam;\n\nvar sendResult = function(){\n    console.log(\"runtime=\" + runtimeParam +\", upperBound= \"+upperBound+\", lowerBound=\"+lowerBound);\n    var value = {\n        observedState : \"In Range\",\n        rawData: {\n            parameter: runtimeParam,\n            lowerBound: lowerBound,\n            upperBound: upperBound\n        }\n    }\n    if(runtimeParam > upperBound)\n        value.observedState = \"Above\";\n    else if(runtimeParam < lowerBound)\n        value.observedState = \"Below\";\n    send(null, value);\n}\n\ntry {\n    if(upperBound === undefined  || lowerBound === undefined || parameter === undefined){\n        send(new Error(\"missing properites\"))\n    } else {\n        runtimeParam = waylayUtil.getStreamData(options, parameter);\n        if(runtimeParam !== undefined){\n            console.log(\"runtime data : \" + runtimeParam);\n            sendResult();\n        } else{\n            if(domain !== undefined  && username !== undefined && password !== undefined && resource !== undefined)  {\n                var url = \"https://data.waylay.io/resources/\"+ resource +\"/current?domain=\"+domain;\n                var options = {\n                    url: url,\n                    method: 'GET',\n                    auth: {\n                        user: username,\n                        password: password\n                    }\n                };\n                request(options, function (error, response, body) {\n                  console.log(\"check the cloud cache\")\n                  if (!error && response.statusCode == 200) {\n                    console.log(body);\n                    var rawData = JSON.parse(body);\n                    console.log(rawData);\n                    runtimeParam = rawData[parameter];\n                    if(!isNaN(runtimeParam)){\n                        sendResult();\n                        } else {\n                            send(new Error(\"param\" +  runtimeParam + \"not a number\"));\n                        }\n                    } else {\n                        console.log(response);\n                        send(new Error(\"data not found\"));\n                    }\n                }); \n            } else{\n                 send(new Error(\"Missing properties\"));\n            }\n        }\n    }\n} catch(err){\n    send(new Error(err));   \n}",
+  "metadata": {
+    "author": "Veselin",
+    "category": "Waylay",
+    "description": "Range sensor that can be used either as a stream sensor or as a polling sensor.\nIn case of the polling, it tries to read the data from the waylaycache.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>upperBound</li>\n<li>lowerBound</li>\n</ul>\n\n",
+    "documentationURL": "",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/iot.png",
+    "supportedStates": [
+      "In Range",
+      "Below",
+      "Above"
+    ],
+    "requiredProperties": [
+      "parameter",
+      "upperBound",
+      "lowerBound"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "parameter",
+        "dataType": "double"
+      },
+      {
+        "parameter": "upperBound",
+        "dataType": "double"
+      },
+      {
+        "parameter": "lowerBound",
+        "dataType": "double"
+      }
+    ]
+  }
+}
