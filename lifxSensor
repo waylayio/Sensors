@@ -1,0 +1,68 @@
+{
+  "name": "lifxSensor",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var props = options.requiredProperties;\n\nvar clientId = props.clientKey || options.globalSettings.DASHBOARD_KEY;\nvar clientSecret = props.clientSecret || options.globalSettings.DASHBOARD_SECRET;\n\nvar selector = props.selector;\nvar profile = props.profile || waylayUtil.getResource(options);\n\nvar getToken = function(callback){\n  var options = {\n      url: \"https://dashboard.waylay.io/api/token/lifx/\" + profile,\n       auth: {\n        user: clientId,\n        password: clientSecret\n      }\n  };\n  \n  try {\n      request(options, function(error, response, body) {\n      if (!error && response.statusCode == 200) {\n          var bodyJson = JSON.parse(body);\n          console.info(bodyJson);\n          callback(null, bodyJson);\n      }else{\n          callback(new Error(\"Calling lifx api failed: \" + error + \" \" + body + options.url));\n      }\n    });\n  } catch(err){\n       callback(new Error(\"Calling lifx api failed: \" + err));\n  }\n}\n\n\nvar getState = function(token) {\n    var url = \"https://api.lifx.com/v1/lights/\" + selector +\"/state\";\n    request.post(url, {\n        auth: {\n            'bearer': token\n        }\n    }, function(err, response, body) {\n       if (!err && response.statusCode == 200) {\n            var data = JSON.parse(body);\n            send(null, { \n                observedState : data.power === \"on\"? \"ON\": \"OFF\",\n                rawData : data\n            });\n       } else{\n           console.log(response)\n           send(new Error(response.statusCode));\n       }\n    });\n};\n  \nvar getDeviceData = function(token){\n  console.log(token);\n  if(token.accessToken !== undefined){\n    getState(token.accessToken);\n  } else{\n    send(new Error(\"Token for profile \"+ profile + \" not valid\"));  \n    }\n}\n\nif(clientId !== undefined && clientSecret !== undefined && selector !== undefined){\n  getToken(function(err, token){\n    if(err){\n      //send(err);\n      //try with the old token\n      if(tokenFromCache !== undefined){\n          console.log(\"try with an old token, since the request to the dashboard failed\");\n          getDeviceData({accessToken: tokenFromCache});\n      }else {\n          console.log(err.stack)\n          send(new Error(err));\n      }\n    }else{\n      getDeviceData(token);\n    }\n  });\n}else{\n    send(new Error(\"Missing properties\"));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Home",
+    "description": "Lifx sensor\n\nIt returns as raw data:\n<pre>\n{\n    \"id\": \"d3b2f2d97452\",\n    \"uuid\": \"8fa5f072-af97-44ed-ae54-e70fd7bd9d20\",\n    \"label\": \"Left Lamp\",\n    \"connected\": true,\n    \"power\": \"on\",\n    \"color\": {\n      \"hue\": 250.0,\n      \"saturation\": 0.5,\n      \"kelvin\": 3500\n    },\n    \"brightness\": 0.5,\n    \"group\": {\n      \"id\": \"1c8de82b81f445e7cfaafae49b259c71\",\n      \"name\": \"Lounge\"\n    },\n    \"location\": {\n      \"id\": \"1d6fe8ef0fde4c6d77b0012dc736662c\",\n      \"name\": \"Home\"\n    },\n    \"last_seen\": \"2015-03-02T08:53:02.867+00:00\",\n    \"seconds_since_seen\": 0.002869418,\n    \"product\": {\n      \"name\": \"Original 1000\",\n      \"company\": \"LIFX\",\n      \"identifier\": \"lifx_original_1000\",\n      \"capabilities\": {\n        \"has_color\": true,\n        \"has_variable_color_temp\": true\n      }\n    }\n  }\n  </pre>",
+    "documentationURL": "http://api.developer.lifx.com/docs/list-lights",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/lifx.png",
+    "supportedStates": [
+      "ON",
+      "OFF"
+    ],
+    "requiredProperties": [
+      "selector",
+      "profile"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "id",
+        "dataType": "string"
+      },
+      {
+        "parameter": "uid",
+        "dataType": "string"
+      },
+      {
+        "parameter": "label",
+        "dataType": "string"
+      },
+      {
+        "parameter": "power",
+        "dataType": "string"
+      },
+      {
+        "parameter": "color",
+        "dataType": "object"
+      },
+      {
+        "parameter": "brightness",
+        "dataType": "double"
+      },
+      {
+        "parameter": "group",
+        "dataType": "object"
+      },
+      {
+        "parameter": "location",
+        "dataType": "object"
+      },
+      {
+        "parameter": "last_seen",
+        "dataType": "string"
+      },
+      {
+        "parameter": "seconds_since_seen",
+        "dataType": "double"
+      },
+      {
+        "parameter": "product",
+        "dataType": "string"
+      }
+    ]
+  }
+}
