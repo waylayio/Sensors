@@ -1,65 +1,65 @@
 {
-    "name": "wetWeatherForecast5Days",
-    "version": "0.2.2",
-    "type": "sensor",
-    "script": "try {\n    city = waylayUtil.getRawData(options, options.requiredProperties.city);\n} catch (err) {\n    city = options.requiredProperties.city;\n    if (__.isEmpty(options.requiredProperties.city)) {\n        send(new Error('Please enter value for city.'));\n    }\n}\n\n//format URL\nvar url =\"http://api.openweathermap.org/data/2.5/forecast?q=\" + options.requiredProperties.city + \"&units=metric\";\n\n//use OPENWEATHER_KEY from properties or else global settings \nvar API_KEY;\nif (!__.isEmpty(options.requiredProperties.openWeatherAPIKey)) {\n     API_KEY = options.requiredProperties.openWeatherAPIKey;\n} else if (!__.isEmpty(options.globalSettings.OPENWEATHER_KEY)) {\n    API_KEY = options.globalSettings.OPENWEATHER_KEY\n} else {\n    send(new Error('Please provide Open Weather Map API Key in the properties or global settings.'));\n}\n\n\nvar value;\ntry {\n    request({\n        \n        uri : url\n    }, function(err, response, body){\n        try {\n            if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                \n                var state = 'Not Found';\n                var list = data.list;\n                \n                // if there are no 3h weather forecasts found, state remains as 'Not Found' \n                if (__.isEmpty(list)) {\n                    value = {\n                        observedState: state,\n                        rawData : data\n                    };\n                } else {\n                    // if there are 3h weather forecasts found, find the ones with wet weather events\n                    var wetWeatherList = [], wetWeatherTypes = ['Rain','Drizzle','Thunderstorm','Snow'];\n                    var humiditySum = 0, rainSum = 0;\n                    for (var i = 0; i < list.length; i++) {\n                        var mainWeather = list[i].weather[0].main;\n                        \n                        // put all the forecast with wet weather in a wetWeatherList\n                        if (__.contains(wetWeatherTypes, mainWeather)) {\n                        \n                            wetWeatherList.push(\n                            {\n                                timestampString : list[i].dt_txt,\n                                weatherType : list[i].weather[0].main,\n                                description : list[i].weather[0].description,\n                                icon : list[i].weather[0].icon,\n                                rain : list[i].rain,\n                                humidity : list[i].main.humidity,\n                                timestamp : list[i].dt * 1000 //timestamp in milliseconds\n                            });\n                        }\n                        \n                        //if the wet weather has a rain property, sum up the rain volume\n                        if (!__.isEmpty(list[i].rain)) {\n                            rainSum += list[i].rain['3h'];\n                        }\n                        // sum up the humidity of all 3h weather forecasts\n                        humiditySum += list[i].main.humidity;\n                    }\n                    \n                    var avgHumidity, nextRain, nextRainVolume, daysTillNextRain;\n                    state = 'None'; \n                    \n                    \n                    if (wetWeatherList.length > 0) { \n                        avgHumidity = humiditySum / list.length;\n                        \n                        //the first wetWeatherForecast is the latest (i.e. closest to the current datetime)\n                        nextRain = wetWeatherList[0];\n                        nextRainVolume = wetWeatherList[0].rain['3h'];\n                        \n                        //calculate days to the next rain and therefore the state\n                        var nowDate = new Date();\n                        daysTillNextRain = ( nextRain.timestamp - (nowDate.valueOf()) )/ 86400000; //one day is 86400000 milliseconds\n                        \n                        if (daysTillNextRain < 1) {\n                            state = 'Today';\n                        } else if (daysTillNextRain < 2) {\n                            state = 'Next Day';\n                        } else if (daysTillNextRain < 3) {\n                            state = '2 Days Later';\n                        } else if (daysTillNextRain < 4) {\n                            state = '3 Days Later';\n                        } else if (daysTillNextRain < 5) {\n                            state = '4 Days Later';\n                        }\n                    }\n                    \n                    value = {\n                        observedState: state,\n                        rawData :{\n                            cityId : data.city.id,\n                            cityName : data.city.name,\n                            cityCountry : data.city.country,\n                            totalRainVolume : rainSum,\n                            wetWeatherList : wetWeatherList,\n                            wetWeatherTypes : wetWeatherTypes,\n                            avgHumidity : avgHumidity,\n                            daysTillNextRain : daysTillNextRain,\n                            nextRainVolume : nextRainVolume\n                        }\n                   };\n                }\n               send(null, value);\n            \n            } else {\n                send(new Error(err));\n            }\n        } catch (err) {\n                send(new Error(err));\n            \n        }\n    });\n} catch (err) {\n    send(new Error(err));\n}",
-    "metadata": {
-        "author": "Dan Dan",
-        "category": "Weather",
-        "description": "returns the number of days before the next wet weather.<br>\r\nIMPORTANT: The state \"Today\" means a wet weather is forecasted to be within the next 24hours, rather than on today's date. So is Next Day = 48hours, 2 Days Later = 72hours, so on.<br>\r\nNOTE: Wet weather types are defined in the script and may not include more specific terms such as tornado.<br>\r\nEndpoint: http://api.openweathermap.org/data/2.5/forecast<br>\r\n\r\n<b>States</b>\r\n<ul>\r\n<li>Not Found: no weather data can be found for given city.</li>\r\n<li>Today</li>\r\n<li>Next Day</li>\r\n<li>2 Days Later</li>\r\n<li>3 Days Later</li>\r\n<li>4 Days Later</li>\r\n<li>None: No wet weather is found within the 5 days forecast</li>\r\n</ul><br>\r\n\r\n<b>Properties</b>\r\n<ul>\r\n<li>city</li>\r\n<li>openWeatherAPIKey - required here in properties or global settines as OPENWEATHER_KEY</li>\r\n</ul><br>\r\n\r\n<b>Raw Data</b>\r\n<ul>\r\n<li>cityId</li>\r\n<li>cityName</li>\r\n<li>cityCountry</li>\r\n<li>totalRainVolume (mm)</li>\r\n<li>wetWeatherList {timestamp, timestampMS, weatherType, description, icon, rain{}, humidity}</li>\r\n<li>wetTypes (e.g. ['Rain','Drizzle','Thunderstorm','Snow'])</li>\r\n<li>avgHumidity (%)</li>\r\n<li>nextRainVolume (mm)</li>\r\n<li>daysTillNextRain (decimal, e.g. 0.8 = Today)</li>\r\n</ul><br>",
-        "documentationURL": "http://openweathermap.org/forecast",
-        "iconURL": "http://upload.wikimedia.org/wikipedia/commons/1/15/OpenWeatherMap_logo.png",
-        "supportedStates": [
-            "Next Day",
-            "2 Days Later",
-            "3 Days Later",
-            "4 Days Later",
-            "Today",
-            "Not Found",
-            "None"
-        ],
-        "requiredProperties": [
-            "city",
-            "openWeatherAPIKey"
-        ],
-        "requiredRawData": [],
-        "rawData": [
-            {
-                "parameter": "cityId",
-                "dataType": "integer"
-            },
-            {
-                "parameter": "cityName",
-                "dataType": "string"
-            },
-            {
-                "parameter": "cityCountry",
-                "dataType": "string"
-            },
-            {
-                "parameter": "totalRainVolume",
-                "dataType": "double"
-            },
-            {
-                "parameter": "wetWeatherList",
-                "dataType": "string[]"
-            },
-            {
-                "parameter": "wetTypes",
-                "dataType": "string[]"
-            },
-            {
-                "parameter": "avgHumidity",
-                "dataType": "double"
-            },
-            {
-                "parameter": "nextRainVolume",
-                "dataType": "double"
-            },
-            {
-                "parameter": "daysTillNextRain",
-                "dataType": "double"
-            }
-        ]
-    }
+  "name": "wetWeatherForecast5Days",
+  "version": "0.2.3",
+  "type": "sensor",
+  "script": "try {\n    city = waylayUtil.getRawData(options, options.requiredProperties.city);\n} catch (err) {\n    city = options.requiredProperties.city;\n    if (__.isEmpty(options.requiredProperties.city)) {\n        send(new Error('Please enter value for city.'));\n    }\n}\n\n//format URL\nvar url =\"http://api.openweathermap.org/data/2.5/forecast?q=\" + options.requiredProperties.city + \"&units=metric\";\n\n//use OPENWEATHER_KEY from properties or else global settings \nvar API_KEY;\nif (!__.isEmpty(options.requiredProperties.openWeatherAPIKey)) {\n     API_KEY = options.requiredProperties.openWeatherAPIKey;\n} else if (!__.isEmpty(options.globalSettings.OPENWEATHER_KEY)) {\n    API_KEY = options.globalSettings.OPENWEATHER_KEY\n} else {\n    send(new Error('Please provide Open Weather Map API Key in the properties or global settings.'));\n}\n\nif(API_KEY)\n  url = url + '&APPID='+API_KEY;\n\n\nvar value;\ntry {\n    request({\n        \n        uri : url\n    }, function(err, response, body){\n        try {\n            if (!err && response.statusCode == 200) {\n                var data = JSON.parse(body);\n                \n                var state = 'Not Found';\n                var list = data.list;\n                \n                // if there are no 3h weather forecasts found, state remains as 'Not Found' \n                if (__.isEmpty(list)) {\n                    value = {\n                        observedState: state,\n                        rawData : data\n                    };\n                } else {\n                    // if there are 3h weather forecasts found, find the ones with wet weather events\n                    var wetWeatherList = [], wetWeatherTypes = ['Rain','Drizzle','Thunderstorm','Snow'];\n                    var humiditySum = 0, rainSum = 0;\n                    for (var i = 0; i < list.length; i++) {\n                        var mainWeather = list[i].weather[0].main;\n                        \n                        // put all the forecast with wet weather in a wetWeatherList\n                        if (__.contains(wetWeatherTypes, mainWeather)) {\n                        \n                            wetWeatherList.push(\n                            {\n                                timestampString : list[i].dt_txt,\n                                weatherType : list[i].weather[0].main,\n                                description : list[i].weather[0].description,\n                                icon : list[i].weather[0].icon,\n                                rain : list[i].rain,\n                                humidity : list[i].main.humidity,\n                                timestamp : list[i].dt * 1000 //timestamp in milliseconds\n                            });\n                        }\n                        \n                        //if the wet weather has a rain property, sum up the rain volume\n                        if (!__.isEmpty(list[i].rain)) {\n                            rainSum += list[i].rain['3h'];\n                        }\n                        // sum up the humidity of all 3h weather forecasts\n                        humiditySum += list[i].main.humidity;\n                    }\n                    \n                    var avgHumidity, nextRain, nextRainVolume, daysTillNextRain;\n                    state = 'None'; \n                    \n                    \n                    if (wetWeatherList.length > 0) { \n                        avgHumidity = humiditySum / list.length;\n                        \n                        //the first wetWeatherForecast is the latest (i.e. closest to the current datetime)\n                        nextRain = wetWeatherList[0];\n                        nextRainVolume = wetWeatherList[0].rain['3h'];\n                        \n                        //calculate days to the next rain and therefore the state\n                        var nowDate = new Date();\n                        daysTillNextRain = ( nextRain.timestamp - (nowDate.valueOf()) )/ 86400000; //one day is 86400000 milliseconds\n                        \n                        if (daysTillNextRain < 1) {\n                            state = 'Today';\n                        } else if (daysTillNextRain < 2) {\n                            state = 'Next Day';\n                        } else if (daysTillNextRain < 3) {\n                            state = '2 Days Later';\n                        } else if (daysTillNextRain < 4) {\n                            state = '3 Days Later';\n                        } else if (daysTillNextRain < 5) {\n                            state = '4 Days Later';\n                        }\n                    }\n                    \n                    value = {\n                        observedState: state,\n                        rawData :{\n                            cityId : data.city.id,\n                            cityName : data.city.name,\n                            cityCountry : data.city.country,\n                            totalRainVolume : rainSum,\n                            wetWeatherList : wetWeatherList,\n                            wetWeatherTypes : wetWeatherTypes,\n                            avgHumidity : avgHumidity,\n                            daysTillNextRain : daysTillNextRain,\n                            nextRainVolume : nextRainVolume\n                        }\n                   };\n                }\n               send(null, value);\n            \n            } else {\n                send(new Error(err));\n            }\n        } catch (err) {\n                send(new Error(err));\n            \n        }\n    });\n} catch (err) {\n    send(new Error(err));\n}",
+  "metadata": {
+    "author": "Dan Dan",
+    "category": "Weather",
+    "description": "returns the number of days before the next wet weather.<br>\r\nIMPORTANT: The state \"Today\" means a wet weather is forecasted to be within the next 24hours, rather than on today's date. So is Next Day = 48hours, 2 Days Later = 72hours, so on.<br>\r\nNOTE: Wet weather types are defined in the script and may not include more specific terms such as tornado.<br>\r\nEndpoint: http://api.openweathermap.org/data/2.5/forecast<br>\r\n\r\n<b>States</b>\r\n<ul>\r\n<li>Not Found: no weather data can be found for given city.</li>\r\n<li>Today</li>\r\n<li>Next Day</li>\r\n<li>2 Days Later</li>\r\n<li>3 Days Later</li>\r\n<li>4 Days Later</li>\r\n<li>None: No wet weather is found within the 5 days forecast</li>\r\n</ul><br>\r\n\r\n<b>Properties</b>\r\n<ul>\r\n<li>city</li>\r\n<li>openWeatherAPIKey - required here in properties or global settines as OPENWEATHER_KEY</li>\r\n</ul><br>\r\n\r\n<b>Raw Data</b>\r\n<ul>\r\n<li>cityId</li>\r\n<li>cityName</li>\r\n<li>cityCountry</li>\r\n<li>totalRainVolume (mm)</li>\r\n<li>wetWeatherList {timestamp, timestampMS, weatherType, description, icon, rain{}, humidity}</li>\r\n<li>wetTypes (e.g. ['Rain','Drizzle','Thunderstorm','Snow'])</li>\r\n<li>avgHumidity (%)</li>\r\n<li>nextRainVolume (mm)</li>\r\n<li>daysTillNextRain (decimal, e.g. 0.8 = Today)</li>\r\n</ul><br>",
+    "documentationURL": "http://openweathermap.org/forecast",
+    "iconURL": "http://upload.wikimedia.org/wikipedia/commons/1/15/OpenWeatherMap_logo.png",
+    "supportedStates": [
+      "Next Day",
+      "2 Days Later",
+      "3 Days Later",
+      "4 Days Later",
+      "Today",
+      "Not Found",
+      "None"
+    ],
+    "requiredProperties": [
+      "city",
+      "openWeatherAPIKey"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "cityId",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "cityName",
+        "dataType": "string"
+      },
+      {
+        "parameter": "cityCountry",
+        "dataType": "string"
+      },
+      {
+        "parameter": "totalRainVolume",
+        "dataType": "double"
+      },
+      {
+        "parameter": "wetWeatherList",
+        "dataType": "string[]"
+      },
+      {
+        "parameter": "wetTypes",
+        "dataType": "string[]"
+      },
+      {
+        "parameter": "avgHumidity",
+        "dataType": "double"
+      },
+      {
+        "parameter": "nextRainVolume",
+        "dataType": "double"
+      },
+      {
+        "parameter": "daysTillNextRain",
+        "dataType": "double"
+      }
+    ]
+  }
 }
