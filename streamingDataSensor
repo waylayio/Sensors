@@ -1,33 +1,37 @@
 {
-    "name": "streamingDataSensor",
-    "version": "1.0.9",
-    "type": "sensor",
-    "script": "/*\nvar options = __.extend(options, {\n    rawData : {\n        \"GLOBAL\":{\n            \"TargetTemp\":\"70\",\n            \"Time\":\"21.0\",\n            \"BuildingID\":\"14.0\",\n            \"Date\":\"6.00\",\n            \"SystemAge\":\"21.0\",\n            \"System\":\"8.00\",\n            \"ActualTemp\":\"58.0\"\n        }\n    }\n});\n\nconsole.log(options.rawData);\n*/\n\n\nvar threshold = waylayUtil.getStreamData(options, options.requiredProperties.threshold) || options.requiredProperties.threshold;\n\nif(threshold === undefined){\n    send(new Error(\"threshold parameter not found\"));\n}\nelse {\n    try{\n    var runtimeParam = waylayUtil.getStreamData(options, options.requiredProperties.parameter);\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n      console.log(\"runtime=\" + runtimeParam +\", threshold= \"+threshold);\n      var  value = {\n            observedState: \"Equal\",\n            rawData: { \n                parameter: runtimeParam,\n                threshold : threshold\n            }\n        };\n      if(runtimeParam - threshold> 0)\n        value.observedState = \"Above\"; \n      else if(runtimeParam - threshold < 0)\n        value.observedState = \"Below\"; \n    send(null, value);\n    }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
-    "metadata": {
-        "author": "Veselin",
-        "category": "Streaming",
-        "description": "Threshold sensor for runtime data.\n\nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>threshold (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>threshold</li>\n</ul>\n",
-        "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/streaming.png",
-        "supportedStates": [
-            "Below",
-            "Equal",
-            "Above"
-        ],
-        "requiredProperties": [
-            "parameter",
-            "threshold"
-        ],
-        "requiredRawData": [],
-        "rawData": [
-            {
-                "parameter": "parameter",
-                "dataType": "double"
-            },
-            {
-                "parameter": "threshold",
-                "dataType": "double"
-            }
-        ]
-    }
+  "name": "streamingDataSensor",
+  "version": "1.1.0",
+  "type": "sensor",
+  "script": "//added complete stream data in the response\nvar streamdata = waylayUtil.getStreamData(options);\n\nvar threshold = waylayUtil.getStreamData(options, options.requiredProperties.threshold) || options.requiredProperties.threshold;\n\nif(threshold === undefined){\n    send(new Error(\"threshold parameter not found\"));\n}\nelse {\n    try{\n    var runtimeParam = waylayUtil.getStreamData(options, options.requiredProperties.parameter);\n    if(runtimeParam === undefined)\n        send(new Error(\"runtime parameter not found\"));\n    else{\n      console.log(\"runtime=\" + runtimeParam +\", threshold= \"+threshold);\n      var  value = {\n            observedState: \"Equal\",\n            rawData: { \n                parameter: runtimeParam,\n                threshold : threshold,\n                data: streamdata\n            }\n        };\n      if(runtimeParam - threshold> 0)\n        value.observedState = \"Above\"; \n      else if(runtimeParam - threshold < 0)\n        value.observedState = \"Below\"; \n    send(null, value);\n    }\n    } catch(err){\n         send(new Error(err));   \n    }\n}\n\n",
+  "metadata": {
+    "author": "Veselin",
+    "category": "Streaming",
+    "description": "Threshold sensor for runtime data.\n\nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>threshold (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>threshold</li>\n<li>data</li>\n</ul>\n",
+    "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/streaming.png",
+    "supportedStates": [
+      "Below",
+      "Equal",
+      "Above"
+    ],
+    "requiredProperties": [
+      "parameter",
+      "threshold"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "parameter",
+        "dataType": "double"
+      },
+      {
+        "parameter": "threshold",
+        "dataType": "double"
+      },
+      {
+        "parameter": "data",
+        "dataType": "object"
+      }
+    ]
+  }
 }
