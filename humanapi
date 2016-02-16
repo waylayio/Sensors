@@ -8,7 +8,7 @@
         "category": "Experimental",
         "description": "Human API example\nHuman API works out of the box with any application -- integrate over 55 data sources. \n<a target=\"_blank\" href='https://humanapi.co'>Human API web site</a> \nIf you don't have a token yet, use <strong>demo</strong> to test it.\n\nRaw Data:\n<ul>\n<li>userId</li>\n<li>humanId</li>\n<li>email</li>\n<li>gender</li>\n<li>heartRate</li>\n<li>weight</li>\n<li>bloodGlucose</li>\n<li>bloodOxygen</li>\n<li>bmi</li>\n<li>bodyFat</li>\n<li>activitySummary</li>\n<li>sleepSummary</li>\n</ul>",
         "documentationURL": "https://docs.humanapi.co/docs/api_overview",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/humanapi.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/humanapi.png",
         "supportedStates": [
             "Collected"
         ],

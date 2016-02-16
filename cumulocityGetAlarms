@@ -8,7 +8,7 @@
     "category": "IOT Platforms",
     "description": "cumulocityGetAlarms gives back list of alarms in rawData.\n<br>\nInput parameters are :\n<br>\n<ul>\n<li>dateFrom, ISO date format, default value is 24 hours ago</li>\n<li>dateTo, ISO date format, default date is now</li>\n</ul>",
     "documentationURL": "http://www.cumulocity.com/guides/reference/alarms/",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/cumulocity.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/cumulocity.png",
     "supportedStates": [
       "Found",
       "Not Found"

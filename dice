@@ -7,7 +7,7 @@
         "author": "Veselin Pizurica",
         "category": "Experimental",
         "description": "Dice  generates states bewteen ONE and SIX based on\na random value.\n<br>\nRaw Data is a randomValue used to compute the output state.",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dice.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/dice.png",
         "supportedStates": [
             "ONE",
             "TWO",

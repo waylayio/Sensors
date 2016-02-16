@@ -8,7 +8,7 @@
     "category": "IOT Platforms",
     "description": "Gives latest value for a device.\nDefault value for the stream is 1.",
     "documentationURL": "http://docs.enabling.be/docs/sensor-value-apis",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/proximus.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/proximus.png",
     "supportedStates": [
       "Collected",
       "Not Collected"

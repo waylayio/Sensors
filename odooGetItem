@@ -8,7 +8,7 @@
     "category": "ERP",
     "description": "Odoo sensor, gives back the entry based on:\n<ul>\n<li>model, default is res.partner</li>\n<li>id</li>\n</ul>\n\nyou need to add in the global settings:\n\n<ul>\n<li>ODOO_HOST</li>\n<li>ODOO_DB</li>\n<li>ODOO_USER</li>\n<li>ODOO_PASSWORD</li>\n<li>ODOO_PROTOCOL, default is https</li>\n</ul>\n",
     "documentationURL": "https://github.com/4yopping/node-odoo",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/odoo.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/odoo.png",
     "supportedStates": [
       "Found",
       "Not Found"

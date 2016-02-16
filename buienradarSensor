@@ -8,7 +8,7 @@
         "category": "Weather",
         "description": "Weather sensor:\n\nOp basis van lat lon coördinaten kunt u de neerslag twee uur vooruit ophalen in tekst vorm. 0 is droog, 255 is zware regen. \nmm/per uur = 10^((waarde -109)/32) \nDus 77 = 0.1 mm/uur\n\n\nHere is the classification:\n<ul>\n<li>Very light rain\tprecipitation rate is < 0.25 mm/hour</li>\n<li>Light rain precipitation rate is between 0.25mm/hour and 1.0mm/hour</li>\n<li>Moderate rain precipitation rate is between 1.0 mm/hour and 4.0 mm/hour</li>\n<li>Heavy rain recipitation rate is between 4.0 mm/hour and 16.0 mm/hour</li>\n<li>Very heavy rain precipitation rate is between 16.0 mm/hour and 50 mm/hour</li>\n<li>Extreme rain recipitation rate is > 50.0 mm/hour</li>\n</ul>",
         "documentationURL": "http://gratisweerdata.buienradar.nl/",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/buienradarSensor.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/buienradarSensor.png",
         "supportedStates": [
             "Dry",
             "Rain",

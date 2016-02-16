@@ -7,7 +7,7 @@
         "author": "",
         "category": "Home",
         "description": "This sensor can be used in case you want either to push the bell state using a Broker \n- via getStreamData call, or if the state of the bell comes from another node, \nvia getRawData. \n\nThe sensor will return back if the bell is on or off. If none of these is found\nit will throw the exception.\n\nInput argument (item) can be:\n<ul>\n<li>string like on/off</li>\n<li>rawData that holds on/off string</li>\n<li>streamData parameter that holds on/off string</li>\n</ul>\n\nExample: use as the item \"bell\" and then push this data:\n\n{\n \"bell\" : \"on\"\n}",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/alarm.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/alarm.png",
         "supportedStates": [
             "on",
             "off"

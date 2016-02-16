@@ -8,7 +8,7 @@
     "category": "Smart City",
     "description": "Parking fo sity Gent. If more than 3 parkings are full it returns CRITCAL state, and if\nthere are no full parkings it returns OK.\n\nIt returns as a raw data:\n<ul>\n<li>parkings, list of all parkings as an object</li>, \n<li>fullParkings, list of full parkings</li>, \n<li>availableParkings: list of availiable parkings</li>\n<li>lowCapacityParkings, list of parkings below 15%</li>\n<li>backToAvailableParkings, list of parkigs that are again free and above 15%</li>\n<li>remainFullParkings, list of parkigs that were full and are still full</li>\n<li>alterntativeAvailableParkings, list of parkings which are available and were not full or with low capacity before</li>\n</ul>\n",
     "documentationURL": "http://datatank.gent.be/Mobiliteitsbedrijf/Parkings11.jso",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/parking.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/parking.png",
     "supportedStates": [
       "OK",
       "MEDIUM",

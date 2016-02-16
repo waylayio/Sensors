@@ -7,7 +7,7 @@
         "author": "",
         "category": "Time",
         "description": "Day of month sensor:\n\nInput arguments are:\n<ul>\n<li>timeZone, defaults to Europe/Brussels</li>\n<li>day or list of days , example: 24 or 24,25</li>\n</ul>\n\nPossible input for timeZone: <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\" target=\"_blank\"> Time zones</a>\n<br>\n\nRaw data:\n<ul>\n<li>timestamp in UTC milis</li>\n<li>year</li>\n<li>month</li>\n<li>day</li>\n<li>hours</li>\n<li>minutes</li>\n<li>seconds</li>\n<li>dateString, in format: Mon Jun 29 2015 15:24:59 GMT+0200</li>\n</ul>\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dayOfMonth.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/dayOfMonth.png",
         "supportedStates": [
             "TRUE",
             "FALSE"

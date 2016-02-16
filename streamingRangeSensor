@@ -8,7 +8,7 @@
         "category": "Streaming",
         "description": "Range sensor for the runtime data. \nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>target (value OR runtime parameter)</li>\n<li>range (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>targetValue</li>\n<li>range</li>\n</ul>\n\n\n",
         "documentationURL": "",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/range.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/range.png",
         "supportedStates": [
             "In Range",
             "Below",

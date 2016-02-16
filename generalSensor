@@ -8,7 +8,7 @@
     "category": "Waylay",
     "description": "Range sensor that can be used either as a stream sensor or as a polling sensor.\nIn case of the polling, it tries to read the data from the waylaycache.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>upperBound</li>\n<li>lowerBound</li>\n</ul>\n\n",
     "documentationURL": "",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/iot.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/iot.png",
     "supportedStates": [
       "In Range",
       "Below",

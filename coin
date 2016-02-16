@@ -7,7 +7,7 @@
         "author": "Piet Vandaele",
         "category": "Experimental",
         "description": "Coin sensor generates one of two states: HEADS or TAILS \nbased on a random value . \nIt also returns the random value (randomValue) as the raw data.\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/coin.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/coin.png",
         "supportedStates": [
             "HEADS",
             "TAILS"

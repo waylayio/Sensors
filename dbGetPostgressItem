@@ -8,7 +8,7 @@
     "category": "Database",
     "description": "Postgress sensor\nExample how to retreive data from the database.\nYou should change the SQL query and add info about the raw data. Input arguments are:\nAlso not that the settings in the sensor come global settings;",
     "documentationURL": "https://github.com/brianc/node-postgres",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/pg.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/pg.png",
     "supportedStates": [
       "Found",
       "Not Found"

@@ -7,7 +7,7 @@
         "author": "Veselin",
         "category": "Finance",
         "description": "StockSensor checks a stock (specified by ticker) against\na threshold and returns the states Above or Below (equal or below)\nInput parameters are:\n<ul>\n<li>ticker symbol, example MSFT</li>\n<li>threshold in USD </li>\n</ul>\n\nRaw Data:\n<ul>\n<li>price in USD </li>\n<li>low</li>\n<li>high</li>\n<li>volume</li>\n<li>movingAverage</li>\n<li>percent</li>\n<li>date</li>\n<li>ticker</li>\n<li>threshold</li>\n</ul>\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/yahooStock.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/yahooStock.png",
         "supportedStates": [
             "Above",
             "Below"

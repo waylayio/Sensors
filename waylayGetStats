@@ -8,7 +8,7 @@
         "category": "Waylay",
         "description": "waylay sensor that returns a statistics of the resource stored in the Cloud Cache.\n\n<br>\nFetches the statistical values and provide it as the rawData for the waylay platform, \nfor more info, please check documentation.\n\nInput parameters are:\n<ul>\n<li>resource</li>\n<li>domain</li>\n<li>samples, if provided it will take up to the number of samples, otherwise it will take all data for calculation</li>\n</ul>\nIf resource is NOT defined as the input parameter, sensor takes as a resource what is defined as a resource on the node or task level.\n<br>\nDomain is a domain in which your platfrom is hosted",
         "documentationURL": "http://docs.waylay.io/Submitting-and-fetching-data.html#Retrievingdata",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/waylayGetStats.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/waylayGetStats.png",
         "supportedStates": [
             "Collected",
             "Not Collected"

@@ -7,7 +7,7 @@
     "author": "",
     "category": "SalesForce",
     "description": "Example of asset sensor for SalesForce\n",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/asset_sensor.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/asset_sensor.png",
     "supportedStates": [
       "Found",
       "Not Found"

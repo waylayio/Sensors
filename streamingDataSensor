@@ -8,7 +8,7 @@
     "category": "Streaming",
     "description": "Threshold sensor for runtime data.\n\nIt makes use of waylayUtil.getStreamData call.\n\nInput paramters are:\n<ul>\n<li>parameter (runtime name)</li>\n<li>threshold (value OR runtime parameter)</li>\n</ul>\n\nRaw data:\n<ul>\n<li>parameter result</li>\n<li>threshold</li>\n<li>data</li>\n</ul>\n",
     "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/streaming.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/streaming.png",
     "supportedStates": [
       "Below",
       "Equal",

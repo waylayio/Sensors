@@ -7,7 +7,7 @@
     "author": "",
     "category": "Streaming",
     "description": "streamData sensor, \nit returns back as the rawData what has been sent,\nIt can be used as a bridge towards other platfroms.",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/right_arrow.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/right_arrow.png",
     "supportedStates": [
       "Collected",
       "Not Collected"

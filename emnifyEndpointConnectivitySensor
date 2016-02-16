@@ -7,7 +7,7 @@
     "author": "Martin Giess",
     "category": "Network",
     "description": "EMnify Endpoint Connectivity Sensor\n\nMonitors cellular connectivity of Endpoints fitted with EMnify SIM.\n\nExpects EMnify authentication token stored in global settings as EMNIFY_AUTH_TOKEN and endpointId as required property.\n\nhttp://www.emnify.com\n",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/emnify.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/emnify.png",
     "supportedStates": [
       "ONLINE",
       "ATTACHED",

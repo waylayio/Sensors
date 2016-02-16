@@ -8,7 +8,7 @@
         "category": "General",
         "description": "The Always ON sensor always returns the state ON. \nWhen attaching actuators, those actuators will be triggered\nevery time the sensor is invoked. Often used in combination \nwith cron jobs, where actuators are triggered based on timing.\n\n",
         "documentationURL": "https://github.com/waylayio/Sensors/blob/master/alwaysON",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/alwaysON.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/alwaysON.png",
         "supportedStates": [
             "ON"
         ],

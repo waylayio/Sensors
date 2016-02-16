@@ -8,7 +8,7 @@
     "category": "Customer",
     "description": "Gives the timeout if the node has not been exectued within a timeout period.\n\nInput paramters are:\n<ul>\n<li>timeout, default 300 seconds</li>\n</ul>\n\nRaw data:\n<ul>\n<li>eventCode</li>\n<li>eventTime</li>\n</ul>\n",
     "documentationURL": "https://github.com/waylayio/WaylayPlugins/wiki/Plugin-API#realtime-data",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/hourglass.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/hourglass.png",
     "supportedStates": [
       "Critical",
       "Medium",

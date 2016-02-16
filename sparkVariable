@@ -8,7 +8,7 @@
         "category": "IOT Platforms",
         "description": "Spark sensor, you need access token to run it.\n\nInput parameters are:\n<ul>\n<li>access_token</li>\n<li>device</li>\n<li>variable</li>\n</ul>\n\nRaw data is reponse of the spark for that device and that variable.",
         "documentationURL": "https://www.spark.io/build/547ee705ce4a72985f0015f6",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/spark.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/spark.png",
         "supportedStates": [
             "Found",
             "Not Found"

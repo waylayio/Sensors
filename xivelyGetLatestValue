@@ -7,7 +7,7 @@
         "author": "",
         "category": "IOT Platforms",
         "description": "Xively sensor. You need xively API key to run it.\n<br>\nInput parameters are:\n<ul>\n<li>feed</li>\n<li>id, that is parameter on which you want to do the threshold crossing</li>\n<li>threshold</li>\n</ul>\n\n<br>\nExample: for air quality in Gent\n<ul>\n<li>feed: 2005839140</li>\n<li>id: PM2_5</li>\n</ul>\n\nRaw data output is return object\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/xively.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/xively.png",
         "supportedStates": [
             "Above",
             "Below"

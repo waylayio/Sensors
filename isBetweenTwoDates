@@ -7,7 +7,7 @@
     "author": "Dan Dan",
     "category": "Time",
     "description": "returns InRange if the eventDate is between fromDate and untilDate.<br>\nIf UntilDate is not provided, sensor will get UntilDate by applying fromDateOffsetHours to fromDate.<br>\ne.g. fromDate is 2015-06-01 13:00 and fromDateOffsetHours is 2, UntilDate will be 2015-06-01 15:00.<br>\nDefault fromDateOffsetHours is 1 hour. Default eventDate is now.\n\n",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/betweenDates.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/betweenDates.png",
     "supportedStates": [
       "Between",
       "Before",

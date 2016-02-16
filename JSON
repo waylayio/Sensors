@@ -7,7 +7,7 @@
         "author": "",
         "category": "General",
         "description": "Sensor you can use for testing, it retuns back message as the JSON rawData",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/json2.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/json2.png",
         "supportedStates": [
             "done",
             "error"

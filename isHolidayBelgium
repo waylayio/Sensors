@@ -8,7 +8,7 @@
         "category": "Experimental",
         "description": "Checks whether is holiday in Belgium.\n\nExample how to scrape the web site using cheerio library.",
         "documentationURL": "http://www.wettelijke-feestdagen.be/",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/holidayBelgium.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/holidayBelgium.png",
         "supportedStates": [
             "TRUE",
             "FALSE"

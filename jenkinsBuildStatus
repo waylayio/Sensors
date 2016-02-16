@@ -7,7 +7,7 @@
         "author": "francisdb",
         "category": "Experimental",
         "description": "Jenkins sensor\nInput properties are:\n<ul>\n<li>baseUrl (eg https://ci.yourcompany.com)</li>\n<li>username</li>\n<li>token</li>\n</ul>",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/jenkins.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/jenkins.png",
         "supportedStates": [
             "BLUE",
             "YELLOW",

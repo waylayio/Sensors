@@ -7,7 +7,7 @@
         "author": "",
         "category": "Functions",
         "description": "Raw threshold crossing sensor.\n\nInput parameters are:\n<ul>\n<li>node name for which we want to compute formula</li>\n<li>parameter</li>\n<li>threshold</li>\n</ul>",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/threshold.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/threshold.png",
         "supportedStates": [
             "Below",
             "Equal",

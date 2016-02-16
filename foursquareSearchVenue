@@ -8,7 +8,7 @@
         "category": "Location",
         "description": "lets you search for a venue in FourSquare and returns the venue ID.<br>\n\n<b>States</b>\n<ul>\n<li>Found: when a venue's name containing the given name is found.</li>\n<li>Not Found</li>\n</ul><br>\n\n<b>Properties</b>\n<ul>\n<li>latitude_longitude, required unless near_location is provided. Latitude and longitude of the venue's location.</li>\n<li>near_location, required unless latitude_longitude is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error.</li>\n<li>venue_name, required to find your venue</li>\n<li>foursquare_client_id, foursquare_client_secret, required from your foursquare application in order to make the request to the foursquare server. Or be available at global settings as FOURSQUARE_CLIENT_ID & FOURSQUARE_CLIENT_SECRET</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>venues : list of venues found near the lat long or geocoded location.</li>\n<i>if a venue matching the given name is found:</i>\n<li>venueName</li>\n<li>venueLocation : JSON Object</li>\n<li>venueId provided by foursquare</li>\n</ul><br>\n\n<a href=\"https://developer.foursquare.com/overview/ratelimits\">\nRate Limits</a>: \nAn application can make up to 5,000 userless requests per hour to venues/* endpoints.<br>",
         "documentationURL": "https://developer.foursquare.com/docs/venues/search",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/FoursquareSearchVenue.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/FoursquareSearchVenue.png",
         "supportedStates": [
             "Found",
             "Not Found"

@@ -7,7 +7,7 @@
     "author": "",
     "category": "Retail",
     "description": "Semseye sensor, count the number of visits.\n\nIf the visits input is is set to \"d\", it will use a daily count, \notherwise the hourly count will be used.\nIf you don't provide start and end time, the data will be for today.\n\nOutput:\n\n<ul>\n<li>totalHourlyVisits</li>\n<li>totalDailyVisits</li>\n<li>hourlyVisitCountList</li>\n<li>dailyVisitCountList</li>\n</ul>",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/semseye.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/semseye.png",
     "supportedStates": [
       "Found",
       "Not Found"

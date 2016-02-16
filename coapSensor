@@ -8,7 +8,7 @@
         "category": "Waylay",
         "description": "CoAP sensor\n<br>\nExample of input arguments:\n<br>\nserver: coap://coap.me:5683\n<br>\npath : hello\n<br>\nRawData:\n<br>\nvalue returned.",
         "documentationURL": "",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/coap.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/coap.png",
         "supportedStates": [
             "Collected",
             "Not Collected"

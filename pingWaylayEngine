@@ -7,7 +7,7 @@
         "author": "",
         "category": "Waylay",
         "description": "Pings the engine endpoint.\nThe input argument is either domain or if not defiend a resource. Raw data \nis time to response.",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/ping.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/ping.png",
         "supportedStates": [
             "Alive",
             "Not Alive"

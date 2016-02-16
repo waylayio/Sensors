@@ -7,7 +7,7 @@
         "author": "",
         "category": "General",
         "description": "Returns as the raw data JSON from URL.",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/JSON.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/JSON.png",
         "supportedStates": [
             "Found",
             "Not Found"

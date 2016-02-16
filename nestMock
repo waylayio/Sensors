@@ -8,7 +8,7 @@
         "category": "Experimental",
         "description": "NEST sensor \nIn this examaple we are actually just using JSON response and \nwe are not connecting to the NEST application. You will need to\nchange this code that really gets the data from your device.\nStill it is a good example how you can test a new sensor. Try first to \nget JSON response, and the decide what needs to be set of states you want\nto return.\n<br>\nInput arguments are:\n<ul>\n<li>API key</li>\n<li>parameter: Default value: ambient_temperature_c</li>\n<li>range: from device</li>\n<li>threshold</li>\n</ul>\n<a href='https://developer.nest.com'>NEST web site</a>",
         "documentationURL": "https://developer.nest.com/documentation/api-reference",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/nest.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/nest.png",
         "supportedStates": [
             "Lower",
             "inRange",

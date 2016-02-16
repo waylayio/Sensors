@@ -8,7 +8,7 @@
     "category": "Database",
     "description": "Example how to retreive data from the database.\nYou should change the SQL query and add info about the raw data.\n\nInput arguments are:\n<ul>\n<li>device</li>\n</ul>\n",
     "documentationURL": "https://github.com/felixge/node-mysql",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mysql.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/mysql.png",
     "supportedStates": [
       "Found",
       "Not Found"

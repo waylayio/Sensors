@@ -8,7 +8,7 @@
     "category": "Security",
     "description": "",
     "documentationURL": "https://haveibeenpwned.com/API/v2",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/key-icon.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/key-icon.png",
     "supportedStates": [
       "Breached",
       "Not Breached"

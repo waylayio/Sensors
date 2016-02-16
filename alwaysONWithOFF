@@ -8,7 +8,7 @@
         "category": "General",
         "description": "The sensor always returns the state ON, but it has two states defined. \nWhen attaching actuators, those actuators will be triggered\nevery time the sensor is invoked. Often used in combination \nwith conditional triggering (and eviction policy).",
         "documentationURL": "",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/alwaysONWithOFF.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/alwaysONWithOFF.png",
         "supportedStates": [
             "ON",
             "OFF"

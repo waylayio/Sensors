@@ -7,7 +7,7 @@
         "author": "",
         "category": "Waylay",
         "description": "Counts the number of persons and faces from the still image (url).\n\n\nIf it finds persons or faces it returns state Found, with the folowing info in the raw data:\n\n<ul>\n<li>personCount</li>\n<li>faceCount</li>\n<li>objects, list of objects in raw format</li>\n</ul>\n\n\nyou will need a SIGHTHOUND_TOKEN in the global settings.\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/persons.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/persons.png",
         "supportedStates": [
             "Found",
             "Not Found"

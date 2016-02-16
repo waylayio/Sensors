@@ -8,7 +8,7 @@
     "category": "Database",
     "description": "Example how to retreive data from the database.\nYou should change the SQL query and add info about the raw data.",
     "documentationURL": "https://github.com/patriksimek/node-mssql",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mssql.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/mssql.png",
     "supportedStates": [
       "Found",
       "Not Found"

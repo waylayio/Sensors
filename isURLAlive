@@ -7,7 +7,7 @@
         "author": "",
         "category": "Internet",
         "description": "This sensor executes a ping to the URL specified in the properties. You need mashape key for this sensor.\n\nRaw data is time to respond.",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/ping.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/ping.png",
         "supportedStates": [
             "Alive",
             "NotAlive"

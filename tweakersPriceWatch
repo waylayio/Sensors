@@ -8,7 +8,7 @@
         "category": "Experimental",
         "description": "Tweakers sensor for the best buy from <a href='http://www.tweakers.net'>Link to tweakers web site</a>\nIt shows you how to scrape with cheerio library.\n\nInput paramteres are:\n\n<ul>\n<li>url of the item you are interested in </li>\n<li>the threshold price</li>\n</ul>",
         "documentationURL": "http://tweakers.net/pricewatch",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/tweakersPriceWatch.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/tweakersPriceWatch.png",
         "supportedStates": [
             "Found",
             "NotFound"

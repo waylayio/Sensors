@@ -7,7 +7,7 @@
         "author": "francisdb",
         "category": "Experimental",
         "description": "Flipping bit\n\nAt any tick it flips between zero and one.",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/bitflip.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/bitflip.png",
         "supportedStates": [
             "0",
             "1"

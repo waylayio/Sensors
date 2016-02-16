@@ -8,7 +8,7 @@
         "category": "Waylay",
         "description": "Waylay sensor that fetches latest data based on the task ID of the running task - which is used as the resource identifier.\n<br>\nThis can be interesting in case you need temporarly to store data which is related only to the running task.\nFor instance, you can use the actuator that stores data in the cloudCache using options.task.TASK_ID as a resource, and use this sensor to retrieve the data.\nIt is also possible that external system sends data using task ID as a resource, and use this sensor fetches it.\n\n",
         "documentationURL": "http://docs.waylay.io/Submitting-and-fetching-data.html#Retrievingdata",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/inventory.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/inventory.png",
         "supportedStates": [
             "Collected",
             "Not Collected"

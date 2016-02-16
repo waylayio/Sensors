@@ -8,7 +8,7 @@
         "category": "IOT Platforms",
         "description": "Dweet.io sensor\n<br>\nFetches the statistical values and provide it as the rawData for waylay platform, \nfor more info, please go to the external documentation page.\n<br>\nInput parameters:\n<ul>\n<li>thing, or if NOT defined, sensor takes the resource</li>\n</ul>",
         "documentationURL": "https://dweet.io/play/",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/dweet.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/dweet.png",
         "supportedStates": [
             "Collected"
         ],

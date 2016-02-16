@@ -7,7 +7,7 @@
         "author": "",
         "category": "Finance",
         "description": "Bitcoin sensor. \nYou need mashape key to execute this sensor. \nInput parameters are:\n<ul>\n<li>currency: USD</li>\n<li>threshold</li>\n</ul>\n\n\nThe output is:\n<ul>\n<li>currency: USD</li>\n<li>price</li>\n</ul>\n\nShould you prefer other currency, you would need to change the sensor.\n\n",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/bitcoin.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/bitcoin.png",
         "supportedStates": [
             "Below",
             "Above"

@@ -7,7 +7,7 @@
         "author": "",
         "category": "Experimental",
         "description": "Delay sensor. \n<br>\nInput paramter is delay in seconds, after which sensor will be in ON state.\n<br>\nRaw Data:\n<ul>\n<li>startTime, in UTC milis</li>\n<li>endTime, in UTC milis</li>\n<li>executionTime, in milis</li>\n</ul>",
-        "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/delay.png",
+        "iconURL": "https://static.waylay.io/plugs/icons/delay.png",
         "supportedStates": [
             "ON",
             "OFF"

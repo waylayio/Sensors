@@ -7,7 +7,7 @@
     "author": "Veselin",
     "category": "Experimental",
     "description": "Cumulative sensor\nCounts how many time was invoked.",
-    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/sum.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/sum.png",
     "supportedStates": [
       "Incremented",
       "Idle"
