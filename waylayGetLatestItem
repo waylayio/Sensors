@@ -1,35 +1,23 @@
-var thing  = options.requiredProperties.resource || waylayUtil.getResource(options);
-var username =  options.globalSettings.API_KEY;
-var password = options.globalSettings.API_PASS;
-var domain = options.requiredProperties.domain || options.globalSettings.domain || "app.waylay.io";
-
-if(thing && domain && username && password) {
-    var url = "https://data.waylay.io/resources/"+ thing +"/current?domain="+domain;
-     var options = {
-                    url: url,
-                    method: 'GET',
-                    auth: {
-                    user: username,
-                    password: password
-                  }
-    };
-    request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body);
-        var rawData = JSON.parse(body);
-        var value = {
-            observedState: "Collected",
-            rawData: rawData
-        };
-        console.log("value " + value);
-        send(null, value);
-        }
-    else {
-        console.log(response);
-        send(null, {observedState : "Not Collected"});
-    }
-    }); 
-   
-}else{
-  send(new Error("Missing properties"));
+{
+  "name": "waylayGetLatestItem",
+  "version": "1.0.5",
+  "type": "sensor",
+  "script": "var thing  = options.requiredProperties.resource || waylayUtil.getResource(options);\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.globalSettings.domain || \"app.waylay.io\";\n\nif(thing && domain && username && password) {\n    var url = \"https://data.waylay.io/resources/\"+ thing +\"/current?domain=\"+domain;\n     var options = {\n                    url: url,\n                    method: 'GET',\n                    auth: {\n                    user: username,\n                    password: password\n                  }\n    };\n    request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var rawData = JSON.parse(body);\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(null, {observedState : \"Not Collected\"});\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing properties\"));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "waylay sensor that returns the latest data of the resource stored in the Cloud Cache.\n\n<br>\nFetches the statistical values and provide it as the rawData for the waylay platform, \nfor more info, please check documentation.\n\nInput parameters are:\n<ul>\n<li>resource</li>\n<li>domain</li>\n</ul>\nIf resource is NOT defined as the input parameter, sensor takes as a resource what is defined as a resource on the node or task level.\n<br>\nDomain is a domain in which your platfrom is hosted",
+    "documentationURL": "http://docs.waylay.io/Submitting-and-fetching-data.html#Retrievingdata",
+    "iconURL": "https://static.waylay.io/plugs/icons/waylayGetLatestItem.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource",
+      "domain"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
 }
