@@ -1,0 +1,63 @@
+{
+  "name": "weatherConditionGent",
+  "version": "0.0.2",
+  "type": "sensor",
+  "script": "\nvar url =\"http://vim.integr.io/weather/current\";\n\ntry {\n    request({\n        \"uri\": url\n    }, function(err, response, body){\n        if (!err && response.statusCode == 200) {\n            var data = JSON.parse(body);\n            console.log(data);\n            var rawData = {};\n            __.each(data.properties.attributes, function(p){\n                rawData[p[\"attributeName\"]] = p.value;\n            });\n            var state = \"Neutral\"; //neutral\n            var weather = rawData.weather_info.toLowerCase();\n            var precipation = parseFloat(rawData.precipitation);\n            var wind_kph = parseFloat(rawData.wind_kph);\n            var temperature_feeling = parseFloat(rawData.temperature_feeling);\n            if(temperature_feeling > 6 && temperature_feeling < 30 && precipation < 0.1)\n                state = \"Good\";\n            if(temperature_feeling < 0)\n                state = \"Bad\";\n            if(weather.indexOf('rain') > -1 || (precipation > 1 && precipation < 8))\n                state = \"Bad\";\n            else if(weather.indexOf('storm') > -1 || weather.indexOf('snow') > -1 || precipation > 8)\n                state = \"Terrible\";\n            if(wind_kph > 15)\n                state = \"Bad\"\n            if(wind_kph > 20)\n                state = \"Terrible\"\n            if(temperature_feeling > 33)\n                state = \"Bad\"\n            if(temperature_feeling > 37)\n                state = \"Terrible\"\n            var value = {\n                observedState: state,\n                rawData : rawData\n           };\n           send(null, value);\n        } else {\n            console.log(response);\n            send(new Error(response.statusCode));\n        }\n    });\n} catch(error){\n    send(new Error(error));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "VIM",
+    "description": "",
+    "documentationURL": "http://vim.integr.io/weather/current",
+    "iconURL": "https://static.waylay.io/plugs/icons/weather.png",
+    "supportedStates": [
+      "Neutral",
+      "Good",
+      "Bad",
+      "Terrible"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "temperature",
+        "dataType": "double"
+      },
+      {
+        "parameter": "temperature_feeling",
+        "dataType": "double"
+      },
+      {
+        "parameter": "precipitation",
+        "dataType": "double"
+      },
+      {
+        "parameter": "pressure",
+        "dataType": "double"
+      },
+      {
+        "parameter": "wind_kph",
+        "dataType": "double"
+      },
+      {
+        "parameter": "wind_gust_kph",
+        "dataType": "double"
+      },
+      {
+        "parameter": "wind_degrees",
+        "dataType": "double"
+      },
+      {
+        "parameter": "weather_info",
+        "dataType": "double"
+      },
+      {
+        "parameter": "sunset",
+        "dataType": "double"
+      },
+      {
+        "parameter": "observation_epoch",
+        "dataType": "double"
+      }
+    ]
+  }
+}
