@@ -1,0 +1,19 @@
+{
+  "name": "locationSensor",
+  "version": "0.0.2",
+  "type": "sensor",
+  "script": "var data = waylayUtil.getStreamData(options, \"message\");\nif(data)\n    data = data.toLowerCase();\n\n if(data === undefined || (\"enter\" !== data  && \"exit\" !== data)) {\n    send(new Error(\"input argument: [\" + data + \"] not found or not correct\"))\n }\n else{\n    var enterValue = data.indexOf(\"enter\") > -1;\n    var exitValue = data.indexOf(\"exit\") > -1;\n    if(!enterValue && !exitValue){\n        send(new Error(\"Not found whether it is enter or exit event\"))\n    } else {\n        send(null, { observedState : enterValue ? \"In\":\"Out\"});\n    }\n }\n",
+  "metadata": {
+    "author": "",
+    "category": "Location",
+    "description": "Input argment mast be a message that contains either enter or exit field:\n\n{\n  \"message\" : \"enter/exit\"\n }",
+    "iconURL": "https://avatars2.githubusercontent.com/u/5873151?v=3&s=200",
+    "supportedStates": [
+      "In",
+      "Out"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
