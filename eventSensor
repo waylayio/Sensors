@@ -1,0 +1,27 @@
+{
+  "name": "eventSensor",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var resource =  options.requiredProperties.resource || waylayUtil.getResource(options);\n\nvar runtimeParam = waylayUtil.getStreamData(options);\nif(runtimeParam !== undefined){\n    console.log(\"runtime data : \" + runtimeParam);\n    send(null, {observedState : \"Event\", rawData: {streamData: runtimeParam}});\n} else {\n    send(new Error(\"No runtime event, this sensor should only be triggered by reactive task or node\"));\n} \n",
+  "metadata": {
+    "author": "Veselin",
+    "category": "Dashboard",
+    "description": "",
+    "documentationURL": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/green_flag.png",
+    "supportedStates": [
+      "Event",
+      "No Event"
+    ],
+    "requiredProperties": [
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "streamData",
+        "dataType": "object"
+      }
+    ]
+  }
+}
