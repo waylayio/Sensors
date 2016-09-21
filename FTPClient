@@ -1,0 +1,19 @@
+{
+  "name": "FTPClient",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var connectionProperties = {\n    host: \"ftp.funet.fi\",\n};\n\nvar write = concat(function(data) {\n  console.log(data.toString());\n  send(null, {observedState : \"Collected\"})\n})\n\n\ntry{\n   var c = new FTPClient();\n    c.on('ready', function() {\n      c.get('/pub/standards/RFC/rfc959.txt', function(err, stream) {\n        if (err) throw err;\n        stream.once('close', function() {\n          write.end()\n          c.end();\n        });\n        stream.pipe(write);\n      });\n    });\n    c.connect(connectionProperties); \n} catch (err){\n    send(null, {observedState : \"Error\"})\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Vito",
+    "description": "FTP test sensor",
+    "iconURL": "https://dummyimage.com/160&text=FTPClient",
+    "supportedStates": [
+      "Collected",
+      "Error"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
