@@ -1,16 +1,16 @@
 {
   "name": "streamBridgeData",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "sensor",
-  "script": "var streamdata = waylayUtil.getStreamData(options);\n    if(streamdata === undefined)\n        send(new Error(\"streamdata not found\"));\n    else{\n      var  value = {\n            observedState: \"Collected\",\n            rawData: { \n                streamData: streamdata\n            }\n        };\n    send(null, value);\n}",
+  "script": "var previousState = waylayUtil.getCacheData(options, \"state\");\nvar newState = \"toggle1\";\nif(previousState === undefined || previousState === \"toggle1\"){\n    newState = \"toggle2\";\n}\n\n\nvar streamdata = waylayUtil.getStreamData(options);\nif(_.isEmpty(streamdata))\n    send(new Error(\"No Streamdata\"));\n    else{\n      var  value = {\n            observedState: newState,\n            rawData: { \n                streamData: streamdata\n            }\n        };\n    send(null, value);\n}",
   "metadata": {
     "author": "",
     "category": "Streaming",
-    "description": "streamData sensor, \nit returns back as the rawData what has been sent,\nIt can be used as a bridge towards other platfroms.",
+    "description": "streamData sensor, \nit returns back as the rawData what has been sent, and toggle automatically states.\nToggle states can be used as *-* towards other sensors or actuators.\nThat way you can create a flow control.",
     "iconURL": "https://static.waylay.io/plugs/icons/right_arrow.png",
     "supportedStates": [
-      "Collected",
-      "Not Collected"
+      "toggle1",
+      "toggle2"
     ],
     "requiredProperties": [],
     "requiredRawData": [],
