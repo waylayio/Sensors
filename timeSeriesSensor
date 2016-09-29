@@ -1,0 +1,36 @@
+{
+  "name": "timeSeriesSensor",
+  "version": "1.0.3",
+  "type": "sensor",
+  "script": "var resource  = options.requiredProperties.resource || waylayUtil.getResource(options) ;\n\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || \"app.waylay.io\";\nvar metric = options.requiredProperties.metric;\n\nvar qs = {};\n\nqs.from = options.requiredProperties.from;\nqs.to = options.requiredProperties.to;\nqs.grouping = options.requiredProperties.grouping;\nqs.aggregate = options.requiredProperties.aggregate;\n\nif(metric && domain && username && password) {\n    var url = \"https://data.waylay.io/resources/\"+ resource +\"/series/\"+metric +\"?domain=\" + domain;\n    var options = {\n        url: url,\n        method: 'GET',\n        qs: qs, \n        auth: {\n            user: username,\n            password: password\n      }\n    };\n    \n    request(options, function (error, response, body) {\n      console.log(response)\n      if (!error && response.statusCode == 200) {\n        //console.log(body);\n        var data = JSON.parse(body);\n        console.log(data);\n        var value = {\n            observedState: \"Collected\",\n            rawData: data\n        };\n        send(null, value);\n        }\n    else {\n         send(null, {observedState : \"Not Collected\"});\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property resource\"));\n}",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Gives back the time series data.",
+    "iconURL": "https://static.waylay.io/plugs/icons/timeseries.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "resource",
+      "metric",
+      "from",
+      "to",
+      "aggregate",
+      "grouping",
+      "domain"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "series",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "query",
+        "dataType": "double"
+      }
+    ]
+  }
+}
