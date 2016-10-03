@@ -1,0 +1,21 @@
+{
+  "name": "openClosedSensor",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "if (options.requiredProperties.parameter) {\n    var data = waylayUtil.getStreamData(options, options.requiredProperties.parameter);\n    if(data === undefined || _.isEmpty(data)){\n        send(new Error(\"This is a stream sensor\" ));\n    } else {\n        if(!(data === false || data === true)){\n            send(new Error(\"Not true or false value \" + data))\n        } else {\n            send(null, { observedState : data ? \"OPEN\":\"CLOSED\"});\n        }\n    }\n} else {\n    send(new Error(\"property 'parameter ' is required.\"))\n}",
+  "metadata": {
+    "author": "",
+    "category": "Dashboard",
+    "description": "openClosedSensor",
+    "iconURL": "https://dummyimage.com/160&text=openClosedSensor",
+    "supportedStates": [
+      "OPEN",
+      "CLOSED"
+    ],
+    "requiredProperties": [
+      "parameter"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
