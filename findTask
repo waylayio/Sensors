@@ -1,0 +1,66 @@
+{
+  "name": "findTask",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var taskID = options.requiredProperties.taskId || options.task.TASK_ID;\nvar command = options.requiredProperties.command;\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar waylay_domain = options.globalSettings.waylay_domain;\n\ntry{\n    var ops = {\n        url : 'https://'+waylay_domain +'/api/tasks/'+taskID,\n        auth: {\n            username: username,\n            password: password\n        }\n    }\n    request(ops,function (error, response, body) {\n        //console.log(response)\n        var data = JSON.parse(body)\n        if (!error && response.statusCode == 200) {\n            var sensors =  _.compact(_.map(data.nodes, function(n) { if (n.sensor)return {name:n.sensor.name, version: n.sensor.version}}))\n            send(null, {observedState : \"Found\", rawData : {\n                name : data.name,\n                template: data.template,\n                resource: data.resource,\n                type: data.type,\n                ID: data.ID,\n                createTime: data.createTime,\n                startTime: data.startTime,\n                lastExecutionTime: data.lastExecutionTime,\n                user: data.user,\n                actuatorsLastInvocations: data.actuatorsLastInvocations,\n                sensors: sensors,\n                history: data.history\n            }});\n        } else\n            send(null, {observedState : \"Not Found\"});\n    }\n    );\n} catch(err){\n   send(new Error(\"Error: \" + err)); \n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Find Task",
+    "iconURL": "https://static.waylay.io/plugs/icons/question.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "taskId"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "name",
+        "dataType": "string"
+      },
+      {
+        "parameter": "template",
+        "dataType": "string"
+      },
+      {
+        "parameter": "resource",
+        "dataType": "string"
+      },
+      {
+        "parameter": "ID",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "createTime",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "startTime",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "lastExecutionTime",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "user",
+        "dataType": "string"
+      },
+      {
+        "parameter": "actuatorsLastInvocations",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "sensors",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "history",
+        "dataType": "object[]"
+      }
+    ]
+  }
+}
