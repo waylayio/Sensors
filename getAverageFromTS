@@ -1,0 +1,37 @@
+{
+  "name": "getAverageFromTS",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var resource = options.requiredProperties.resource || waylayUtil.getResource(options)\nvar parameter = options.requiredProperties.parameter\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.globalSettings.waylay_domain;\nvar hours;\n\ntry{\n    hours = waylayUtil.getRawData(options, options.requiredProperties.hours);\n} catch(err){\n    hours = options.requiredProperties.hours || 1\n}\n\nvar from = moment().subtract(parseInt(hours),'hours');\nvar qs = {from: from.unix() * 1000};\n\nif(domain && username && password) {\n    var url = \"https://data.waylay.io/resources/\"+ resource +\"/series/\"+parameter +\"?domain=\" + domain;\n    var options = {\n        url: url,\n        method: 'GET',\n        qs: qs, \n        auth: {\n            user: username,\n            password: password\n      }\n    };\n    request(options, function (error, response, body) {\n      console.log(response)\n      if (!error && response.statusCode == 200) {\n        //console.log(body);\n        var data = JSON.parse(body);\n        //console.log(data);\n        if(data.series.length > 0) {\n           var avg = _.sumBy(data.series, function(o) { return o[1]; })/data.series.length;\n            console.log(\"avg:\", avg)\n            var value = {\n                observedState: \"Collected\",\n                rawData: {avg: avg, data: data.series, count: data.series.length}\n            };\n            send(null, value); \n            } else {\n                send(null, {observedState : \"Not Collected\"});\n            }\n        }\n       else {\n         send(new Error(error));\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing properties\"));\n}",
+  "metadata": {
+    "author": "Veselin",
+    "category": "Waylay",
+    "description": "Get average value from the time series database. Input arguments are <br>\n<ul>\n<li>resource</li>\n<li>parameters, select a metric</li>\n<li>hours, past number of hours, default 1 hour</li>\n<ul>\n",
+    "documentationURL": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/graph-circle.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource",
+      "parameter",
+      "hours"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "data",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "avg",
+        "dataType": "double"
+      },
+      {
+        "parameter": "count",
+        "dataType": "double"
+      }
+    ]
+  }
+}
