@@ -1,0 +1,32 @@
+{
+  "name": "pingNodeServer",
+  "version": "1.0.6",
+  "type": "sensor",
+  "script": "var username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar address = options.requiredProperties.address || waylayUtil.getResource(options);\nvar sensor = options.requiredProperties.sensor || \"alwaysON\";\nvar version = options.requiredProperties.version || \"1.0.1\";\n\nvar start = new Date().getTime();\n\nvar url =\"https://\"+ address + \"/api/sensors/\" + sensor+\"/versions/\"+version;\nvar data = { properties: {\"city\" : \"Gent\"}};\n\n\nvar options = {\n                url: url,\n                method: 'GET',\n                json: data,\n                auth: {\n                user: username,\n                password: password\n              }\n};\n\ntry{\n    request.post(options, function(error, response, body){\n        var end = new Date().getTime();\n        if (!error && response.statusCode == 200) {\n            console.log(body);\n            var time = end - start;\n            var res = body.state;\n            var value = {\n                   observedState: \"Alive\",\n                   rawData: {\n                       time: time,\n                       state: res\n                   }\n            }\n            send(null, value);\n        } else {\n            time = end - start;\n            var errorMessage = response? response.statusCode : error;\n            send(null, {\n                   observedState: \"Not Alive\",\n                   rawData: {\n                       time: time,\n                       errorMessage : errorMessage\n                }});\n        }\n    });\n} catch(err){\n    /*var time = end - start;\n    send(null, {\n           observedState: \"Not Alive\",\n           rawData: {\n               time: time\n        }});*/\n    send(new Error(err))    \n}\n\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "pingNodeServer calls a sensor of the other waylay application.\nThis way you can check that the nodejs works behind the application.\nIn order to run this sensor you need to put waylay API keys in global settings.\n\nInput paramaters are:\n<ul>\n<li>address, address of waylay application (just domain name, without http)</li>\n<li>sensor, sensor that you will be calling</li>\n<li>version, sensor version</li>\n</ul>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/JSFunction.png",
+    "supportedStates": [
+      "Alive",
+      "Not Alive"
+    ],
+    "requiredProperties": [
+      "address",
+      "sensor",
+      "version"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "time",
+        "dataType": "double"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
+    ]
+  }
+}
