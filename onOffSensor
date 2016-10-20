@@ -1,8 +1,8 @@
 {
   "name": "onOffSensor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "sensor",
-  "script": "if (options.requiredProperties.parameter) {\n    var data = waylayUtil.getStreamData(options, options.requiredProperties.parameter);\n    if(data === undefined || _.isEmpty(data)){\n        send(new Error(\"This is a stream sensor\" ));\n    } else {\n        if(!(data === false || data === true)){\n            send(new Error(\"Not true or false value \" + data))\n        } else {\n            send(null, { observedState : data ? \"ON\":\"OFF\"});\n        }\n    }\n} else {\n    send(new Error(\"property 'parameter ' is required.\"))\n}",
+  "script": "if (options.requiredProperties.parameter) {\n    var data = waylayUtil.getStreamData(options, options.requiredProperties.parameter);\n    if(data === undefined){\n        send(new Error(\"This is a stream sensor\" ));\n    } else {\n        if(!(data === false || data === true)){\n            send(new Error(\"Not true or false value \" + data))\n        } else {\n            send(null, { observedState : data ? \"ON\":\"OFF\"});\n        }\n    }\n} else {\n    send(new Error(\"property 'parameter ' is required.\"))\n}",
   "metadata": {
     "author": "",
     "category": "Dashboard",
