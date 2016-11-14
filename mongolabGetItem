@@ -1,23 +1,28 @@
 {
-    "name": "mongolabGetItem",
-    "version": "1.0.2",
-    "type": "sensor",
-    "script": "var db = options.globalSettings.mongodb;\nvar token = options.globalSettings.mongoKey;\nvar collection = options.requiredProperties.collection;\nvar identifier = options.requiredProperties.identifier;\nvar item;\ntry{\n    item = waylayUtil.getRawData(options, options.requiredProperties.item, \"item\");\n} catch (err){\n    console.log(\"item not in the raw data\");  \n}\nif(item === undefined)\n   item = waylayUtil.evaluateData(options, options.requiredProperties.item);\n\nitem = item || options.requiredProperties.item || options.node.RESOURCE || options.task.RESOURCE || options.node.NAME;\n\n\nif(item !== undefined && token !== undefined && db !== undefined && collection !== undefined && identifier !== undefined){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/\"+ collection +\"?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  var callback = function(error, response, body) {\n    if (!error && response.statusCode == 200) {\n      var data = JSON.parse(body);\n      console.log(data);\n      var itemDB = __.find(data, function(d) { \n          if(Array.isArray(d[identifier]))\n            return (d[identifier].indexOf(item) > -1);\n          else\n            return (d[identifier] == item);\n      });\n      var state = itemDB ?  \"Found\" : \"NotFound\";\n      var value = {\n        observedState: state,\n        rawData: itemDB\n      };\n      send(null, value);\n    }else{\n      send(new Error(\"Calling mongolab failed: \" + error + \" \" + body));\n    }\n  };\n  request.get(options, callback);\n}else{\n  send(new Error(\"Missing input parameters\"));\n}",
-    "metadata": {
-        "author": "",
-        "category": "Database",
-        "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>item, or you can as well provide here another sensor name that has an item in rawData response</li>\n<li>identifier which will be used to match the item in the collection</li>\n<li>database</li>\n</ul>\n\nThis is just a demo sensor, not only becasue you would be better off with\nmore concrete implementation (where you define rawData), but also it is better to \nmake search of the item via REST call rather than accessing array client side.\n\nAlso note that the underscore package is used with __ .\n\n",
-        "iconURL": "https://static.waylay.io/plugs/icons/mongolab.png",
-        "supportedStates": [
-            "Found",
-            "NotFound"
-        ],
-        "requiredProperties": [
-            "item",
-            "identifier",
-            "collection"
-        ],
-        "requiredRawData": [],
-        "rawData": []
-    }
+  "name": "mongolabGetItem",
+  "version": "1.0.3",
+  "type": "sensor",
+  "script": "var db = options.globalSettings.mongodb;\nvar token = options.globalSettings.mongoKey;\nvar collection = options.requiredProperties.collection;\nvar key = options.requiredProperties.key;\nvar value;\ntry{\n    value = waylayUtil.getRawData(options, options.requiredProperties.item, \"value\");\n} catch (err){\n    console.log(\"item not in the raw data\");  \n}\nif(value === undefined)\n   value = waylayUtil.evaluateData(options, options.requiredProperties.value);\n\nvalue = value || waylayUtil.getResource(options);\n\n\nif(value !== undefined && token !== undefined && db !== undefined && collection !== undefined && key !== undefined){\n  var url = \"https://api.mongolab.com/api/1/databases/\"+ db +\"/collections/\"+ collection +\"?apiKey=\"+token;\n  var options = {\n    url: url\n  };\n  var callback = function(error, response, body) {\n    if (!error && response.statusCode == 200) {\n      var data = JSON.parse(body);\n      console.log(data);\n      var itemDB = _.find(data, function(d) { \n          if(Array.isArray(d[key]))\n            return (d[key].indexOf(value) > -1);\n          else\n            return (d[key] == value);\n      });\n      var state = itemDB ?  \"Found\" : \"Not Found\";\n      var value = {\n        observedState: state,\n        rawData: itemDB\n      };\n      send(null, value);\n    }else{\n      send(new Error(\"Calling mongolab failed: \" + error + \" \" + body));\n    }\n  };\n  request.get(options, callback);\n}else{\n  send(new Error(\"Missing input parameters\"));\n}",
+  "metadata": {
+    "author": "",
+    "category": "Database",
+    "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>identifier(key) which will be used to match the entry in the collection</li>\n<li>item (value), or you can as well provide here another sensor name that has an item in rawData response</li>\n<li>database</li>\n</ul>\n",
+    "iconURL": "https://raw.githubusercontent.com/waylayio/documentation/master/icons/mongolab.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "key",
+      "value",
+      "collection"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "_id",
+        "dataType": "object"
+      }
+    ]
+  }
 }
