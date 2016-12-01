@@ -1,0 +1,26 @@
+{
+  "name": "nestCameraOnOff",
+  "version": "0.0.4",
+  "script": "var username =  options.globalSettings.API_KEY;\nvar parameter = options.requiredProperties.parameter;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain ||\"app.waylay.io\";\nvar resource =  options.requiredProperties.resource || waylayUtil.getResource(options);\n\nvar sendResult = function(param){\n    console.log(\"param=\" + param);\n    var state;\n    if(parameter === 'is_camera_online'){\n        state = param.is_camera_online ? 'ON' : 'OFF'\n    }else if(parameter === 'is_camera_streaming'){\n        state = param.is_camera_streaming ? 'ON' : 'OFF'\n    }else{\n        send(new Error(\"Invalid parameter, not a Nest camera resource\"))\n    }\n    var value = {\n        observedState : state,\n        rawData: {\n            resultState: state\n        }\n    }\n    console.log(value)\n    send(null, value);\n}\n\ntry {\n    if(domain !== undefined  && username === undefined  || password === undefined){\n        send(new Error(\"missing properites\"))\n    } else {\n        var runtimeParam = waylayUtil.getStreamData(options);\n        if(!_.isEmpty(runtimeParam)){\n            console.log(\"runtime data : \" + runtimeParam);\n            sendResult(runtimeParam);\n        } else{\n            if(domain !== undefined  && username !== undefined && password !== undefined && resource !== undefined)  {\n                var url = \"https://data.waylay.io/resources/\"+ resource +\"/current?domain=\"+domain;\n                var options = {\n                    url: url,\n                    method: 'GET',\n                    auth: {\n                        user: username,\n                        password: password\n                    }\n                };\n                request(options, function (error, response, body) {\n                  console.log(\"check the cloud cache\")\n                  if (!error && response.statusCode == 200) {\n                    console.log(body);\n                    var rawData = JSON.parse(body);\n                    sendResult(rawData);\n                    } else {\n                        console.log(response);\n                        send(new Error(\"data not found\"));\n                    }\n                }); \n            } else{\n                 send(new Error(\"Missing properties\"));\n            }\n        }\n    }\n} catch(err){\n    send(new Error(err));   \n}",
+  "metadata": {
+    "author": "Lorenzo",
+    "category": "Nest",
+    "description": "On/Off sensor for nest camera resources",
+    "iconURL": "https://static.waylay.io/plugs/icons/nest_icon.jpg",
+    "supportedStates": [
+      "ON",
+      "OFF"
+    ],
+    "requiredProperties": [
+      "resource",
+      "parameter"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "resultState",
+        "dataType": "string"
+      }
+    ]
+  }
+}
