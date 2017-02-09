@@ -1,0 +1,59 @@
+{
+  "name": "Airvisual",
+  "version": "0.0.5",
+  "type": "sensor",
+  "script": "var API_KEY = options.globalSettings.AIR_VISUAL_KEY;\nvar API_KEY_GOOGLE = options.globalSettings.GOOGLEMAPS_GEOCODING\nvar city = options.requiredProperties.city || 'Gent'\n\ngetCoordinates()\n\nfunction getCoordinates () {\n    var url = 'https://maps.googleapis.com/maps/api/geocode/json'\n    url += '?address=' + city\n    \n    if (API_KEY_GOOGLE) {\n       url += \"&key=\" + API_KEY_GOOGLE\n    }\n    \n    try {\n        request({\n            \"uri\": url,\n            \"method\": \"GET\",\n            \"json\": true\n        }, function(err, response, body){\n            if (!err && response.statusCode == 200) {\n                var lat = body.results[0].geometry.location.lat\n                var lng = body.results[0].geometry.location.lng\n                getAirvisualData(lat, lng)\n            } else {\n                send(new Error(response.statusCode));\n            }\n        });\n    } catch(error){\n        send(new Error(error));\n    }\n}\n\nfunction getAirvisualData (lat, long) {\n    var url =\"http://api.airvisual.com/v1/nearest\";\n    if (API_KEY) {\n       url += \"?key=\" + API_KEY\n    }\n    \n    url += \"&lat=\" + lat + \"&lon=\" + long\n    \n    try {\n        request({\n            \"uri\": url,\n            \"method\": \"GET\",\n            \"json\": true\n        }, function(err, response, body){\n            if (!err && response.statusCode == 200) {\n                // console.log(body)\n                var state = evaluateAQI(body.data.current.pollution.aqius)\n                var value = {\n                    observedState: state,\n                    rawData :{\n                        latitude: lat,\n                        longitude: long,\n                        location: body.data.local_name,\n                        temperature: body.data.current.weather.tp,\n                        atmospheric_pressure: body.data.current.weather.pr,\n                        relative_humidity: body.data.current.weather.hu,\n                        windspeed: body.data.current.weather.ws,\n                        AQI_US: body.data.current.pollution.aqius\n                    }\n                };\n               //console.log(JSON.stringify(value));\n               send(null, value);\n            } else {\n                console.log(response);\n                send(new Error(response.statusCode));\n            }\n        });\n    } catch(error){\n        send(new Error(error));\n    }   \n}\n\nfunction evaluateAQI (aqi) {\n    if (aqi >= 0 && aqi <= 50) return 'Good'\n    else if (aqi >= 51 && aqi <= 100) return 'Moderate'\n    else if (aqi >= 101 && aqi <= 150) return 'Unhealthy for Sensitive Groups'\n    else if (aqi >= 151 && aqi <= 200) return 'Unhealthy'\n    else if (aqi >= 201 && aqi <= 300) return 'Very Unhealthy'\n    else return 'Hazardous'\n}",
+  "metadata": {
+    "author": "Glenn",
+    "category": "Experimental",
+    "description": "Airquality sensor based on the API provided by <a target=\"_blank\" href=\"https://airvisual.com/\">Air Visual</a><br>\nWe use the <a target=\"_blank\" href=\"https://developers.google.com/maps/documentation/geocoding/intro\">Google Geocode API</a><br> to retrieve the coördinates for the inputted city.\n<br/>\n\n<b>Properties</b>\n<ul>\n<li>city</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>latitude</li>\n<li>longitude</li>\n<li>location</li>\n<li>temperature</li>\n<li>atmospheric_pressure</li>\n<li>relative_humidity</li>\n<li>windspeed</li>\n<li>AQI_US</li>\n</ul>",
+    "documentationURL": "https://airvisual.com/user/api",
+    "iconURL": "https://lh3.googleusercontent.com/fX4Ern5-xafB1Ikdkcj1jmTTscPSdGmFDr0__C3KyyWhaExuG5VSscj3lWAMOORQKCM=w300",
+    "supportedStates": [
+      "Good",
+      "Moderate",
+      "Unhealthy for Sensitive Groups",
+      "Unhealthy",
+      "Very Unhealthy",
+      "Hazardous"
+    ],
+    "requiredProperties": [
+      "city"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "location",
+        "dataType": "string"
+      },
+      {
+        "parameter": "temperature",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "atmospheric_pressure",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "relative_humidity",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "windspeed",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "AQI_US",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "latitude",
+        "dataType": "double"
+      },
+      {
+        "parameter": "longitude",
+        "dataType": "double"
+      }
+    ]
+  }
+}
