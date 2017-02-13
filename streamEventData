@@ -1,0 +1,27 @@
+{
+  "name": "streamEventData",
+  "version": "0.0.3",
+  "type": "sensor",
+  "script": "var streamdata = waylayUtil.getStreamData(options);\nvar eventKey = waylayUtil.getProperty(options, \"eventKey\");\nvar eventValue = waylayUtil.getProperty(options, \"eventValue\");\n\nconsole.log(\"streamdata\", streamdata)\nif(_.isEmpty(streamdata))\n    send(new Error(\"Not a streamdata\"));\nelse{\n  var state = streamdata[eventKey] == eventValue ? \"Triggered\" : \"Not Triggered\"\n  var  value = {\n        observedState: state,\n        rawData: { \n            streamData: streamdata\n        }\n    };\n    send(null, value);\n} ",
+  "metadata": {
+    "author": "",
+    "category": "Streaming",
+    "description": "streamData sensor, \nSensor triggers if the event(key,value) is found in the object. \n<br>\nFor instance, if the object is \n<pre>\n{ \n  \"hello\" : \"world\",\n  \"temperature\" : 21\n}\n</pre>\nand the <i>eventKey</i> is <i>hello</i> and the <i>eventValue</i> is <i>world</i>, \nsensor will return <i>Triggered state</i>\n<br>\n\nSensor also returns back the streamData as the rawData ",
+    "iconURL": "https://static.waylay.io/plugs/icons/down_arrow.png",
+    "supportedStates": [
+      "Triggered",
+      "Not Triggered"
+    ],
+    "requiredProperties": [
+      "eventKey",
+      "eventValue"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "streamData",
+        "dataType": "object"
+      }
+    ]
+  }
+}
