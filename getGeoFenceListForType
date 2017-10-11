@@ -1,0 +1,26 @@
+{
+  "name": "getGeoFenceListForType",
+  "version": "0.0.3",
+  "type": "sensor",
+  "script": "var waylayApiKey =  options.globalSettings.API_KEY\nvar waylayApiSecret = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain\nvar resourceTypeId\n\ntry{\n    resourceTypeId = waylayUtil.getRawData(options, options.requiredProperties.resourceTypeId)\n} catch(err){\n   resourceTypeId = options.requiredProperties.resourceTypeId || waylayUtil.getResource(options)\n}\n\nvar ops = {\n    url: \"https://\"+domain+\"/api/resources\",\n    auth: {\n        user: waylayApiKey,\n        pass: waylayApiSecret,\n        sendImmediately: true\n    },\n    qs :{ resourceTypeId }\n}\nconsole.log(ops)\nrequest(ops, function (error, response, body) {\n    if (!error && response.statusCode == 200) {\n        var resources = JSON.parse(body).values\n        resources = _.compact(_.map(resources, resource =>{\n            if(resource.geofence){\n                return {\n                    name : resource.name || resource.id,\n                    coordinates : _.map(resource.geofence, ref =>{\n                        return { lat: ref[0], long : ref[1]}\n                    }),\n                    radius: resource.radius\n                }\n            }\n        }))\n        send(null, {observedState : resources.length >0 ? \"Found\": \"Not Found\", rawData : {locations: resources}})\n    }\n    else {\n         send(new Error(response))\n    }\n})",
+  "metadata": {
+    "author": "",
+    "category": "Location",
+    "description": "genericGeoFence list of locations based on resource\ntype\nRaw data in format:\n\n<pre>\n[{\n    id: name,\n    coordinates : [{ lat: 51.04, long:3.7}](circle), polygon [{ lat: 51.04, long:3.7},{ lat: 52.04, long:3.7}] or polygon with multiple locations\n    radius: in metres, in case of circle\n}]\n</pre>\n\nfor radius \n<pre>\n[ { \"id\":\"Depo1\", \"radius\": 10000,    \"coordinates\": [{\"lat\" : 51.07, \"long\" : 3.51} ]  }  ]\n</pre>\nfor polygon\n<pre>\n[ {  \"id\":\"Depo1\", \"coordinates\": [{\"lat\" : 50.07, \"long\" : 3}, {\"lat\" : 50.07, \"long\" : 4}, {\"lat\" : 52.07, \"long\" : 3.5}] }]\nor\n[ {  \"id\": \"Depo1\", \"coordinates\": [{\"lat\": 51.07,\"long\": 3.51},{\"lat\": 52.07,\"long\": 4.51 }] } ]\n</pre>\n",
+    "iconURL": "https://static.waylay.io/icons/navigation.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "resourceTypeId"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "locations",
+        "dataType": "double"
+      }
+    ]
+  }
+}
