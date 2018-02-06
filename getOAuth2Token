@@ -1,0 +1,48 @@
+{
+  "name": "getOAuth2Token",
+  "version": "0.0.8",
+  "type": "sensor",
+  "script": "var user = waylayUtil.getProperty(options, \"user\") || waylayUtil.getResource(options)\nvar provider = waylayUtil.getProperty(options, \"provider\")\n\nwaylayUtil.getAuthTokens(options, user, provider)\n.then(tokens => {\n    console.log(JSON.stringify(tokens, null, 2))\n    tokens.user = user\n    send(null, {observedState : \"Found\" , rawData : tokens})\n})\n.catch(error => {\n    console.log(error)\n    if(error.name === \"NotFoundError\")\n        send(null, {observedState : \"Not Found\"})\n    else if (error.message.indexOf(\"Invalid provider\") > -1)\n        send(null, {observedState : \"Invalid Provider\"})\n    else\n        send(new Error(error))\n})\n",
+  "metadata": {
+    "author": "",
+    "category": "OAuth2",
+    "description": "getOAuth2Token sensor",
+    "iconURL": "https://static.waylay.io/plugs/icons/icon-oauth-2.svg",
+    "supportedStates": [
+      "Found",
+      "Not Found",
+      "Invalid Provider"
+    ],
+    "requiredProperties": [
+      "user",
+      "provider"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "access_token",
+        "dataType": "string"
+      },
+      {
+        "parameter": "refresh_token",
+        "dataType": "string"
+      },
+      {
+        "parameter": "scope",
+        "dataType": "string"
+      },
+      {
+        "parameter": "provider",
+        "dataType": "double"
+      },
+      {
+        "parameter": "expires_at",
+        "dataType": "double"
+      },
+      {
+        "parameter": "user",
+        "dataType": "double"
+      }
+    ]
+  }
+}
