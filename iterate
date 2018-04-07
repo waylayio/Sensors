@@ -1,13 +1,13 @@
 {
   "name": "iterate",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "sensor",
-  "script": "var stream = waylayUtil.getStreamData(options)\nconsole.log(\"stream \", stream)  \nvar value;\n\n//reset if hit from outside\nif(_.isEmpty(stream)){\n  value = waylayUtil.getCacheData(options, \"value\"); \n  console.log(\"cached value \", value)    \n  if(value === undefined)\n    value = parseInt(options.requiredProperties.startIndex);\n} else {\n    console.log(\"reset the value \", value)  \n    value = parseInt(options.requiredProperties.startIndex);\n}\n\nvar stopIndex = parseInt(options.requiredProperties.stopIndex);\nvar step = parseInt(options.requiredProperties.step);\n\n\nif(stopIndex === undefined || step === undefined || value === undefined){\n    send(new Error(\"Missing properties\"))\n} else {\n    value = parseInt(value)\n    value += step;\n    \n    if(value > stopIndex)\n        send(null, { observedState : \"Done\", rawData : { value:value} })\n    else \n        send(null, { observedState : \"Iterating\", rawData : { value: value} })\n\n}\n",
+  "script": "var stream = waylayUtil.getStreamData(options)\nvar value\n\n//reset if hit from outside\nif(_.isEmpty(stream)){\n  value = waylayUtil.getCacheData(options, \"value\")\n  console.log(\"cached value \", value)    \n  if(value === undefined)\n    value = parseInt(waylayUtil.getProperty(options, \"startIndex\")) || 0\n} else {\n    value = stream.value\n    console.log(\"value from the stream\", value)  \n    if(value === undefined)\n      value = parseInt(waylayUtil.getProperty(options, \"startIndex\")) || 10\n}\n\nvar stopIndex = parseInt(waylayUtil.getProperty(options, \"stopIndex\"))\nvar step = parseInt(waylayUtil.getProperty(options, \"step\")) || 1\n\n\nif(stopIndex === undefined || step === undefined || value === undefined){\n    send(new Error(\"Missing properties\"))\n} else {\n    value = parseInt(value)\n    value += step;\n \n    if(value > stopIndex)\n        send(null, { observedState : \"Done\", rawData : { value:value} })\n    else \n        send(null, { observedState : \"Iterating\", rawData : { value: value} })\n\n}\n",
   "metadata": {
     "author": "",
     "category": "Experimental",
-    "description": "Iterate sensor",
-    "iconURL": "http://www.nextappsolutions.com/wp-content/uploads/2014/01/icon-iterate-150x150.png",
+    "description": "Iterate sensor, \ncan be user to iterate over actuators or sensors\n\nIf used as a stream sensor, the initial value can be either \nreset or set to a new value. As long as the value has not \nreached the stop index, sensor is in Iterating state\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/iterate.png",
     "supportedStates": [
       "Iterating",
       "Done"
