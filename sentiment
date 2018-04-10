@@ -1,31 +1,31 @@
 {
-    "name": "sentiment",
-    "version": "0.0.1",
-    "type": "sensor",
-    "script": "var API_KEY = options.globalSettings.MASHAPE_KEY;\nif(options.requiredProperties.inputText && API_KEY) {\n    var inputText = waylayUtil.evaluateData(options, options.requiredProperties.inputText);\n    unirest.get(\"https://twinword-sentiment-analysis.p.mashape.com/analyze/?text=\"+inputText)\n    .header(\"X-Mashape-Key\", API_KEY)\n    .header(\"Accept\", \"application/json\")\n    .end(function (result) {\n      console.log(result.status, result.headers, result.body);\n      var res = result.body;\n      var value = {\n            observedState: res.type,\n            rawData : res\n           };\n      send(null, value);\n    });\n}\nelse{\n  send(new Error(\"Missing property\"));\n}\n",
-    "metadata": {
-        "author": "",
-        "category": "Social",
-        "description": "Sentiment analysis for the provided text.<br/>See <a href=\"https://www.twinword.com/api/sentiment-analysis.php\">twinword</a> for more info<br/>Requires a MASHAPE_KEY<br/>The inputText parameter can handle the waylay expression language.",
-        "iconURL": "https://static.waylay.io/plugs/icons/sentiment.png",
-        "supportedStates": [
-            "postive",
-            "negative",
-            "neutral"
-        ],
-        "requiredProperties": [
-            "inputText"
-        ],
-        "requiredRawData": [],
-        "rawData": [
-            {
-                "parameter": "score",
-                "dataType": "double"
-            },
-            {
-                "parameter": "ratio",
-                "dataType": "double"
-            }
-        ]
-    }
+  "name": "sentiment",
+  "version": "0.0.2",
+  "type": "sensor",
+  "script": "var API_KEY = options.globalSettings.MASHAPE_KEY;\nif(options.requiredProperties.inputText && API_KEY) {\n    var inputText = waylayUtil.template(options, options.requiredProperties.inputText)\n    unirest.get(\"https://twinword-sentiment-analysis.p.mashape.com/analyze/?text=\"+inputText)\n    .header(\"X-Mashape-Key\", API_KEY)\n    .header(\"Accept\", \"application/json\")\n    .end(function (result) {\n      console.log(result.status, result.headers, result.body);\n      var res = result.body;\n      var value = {\n            observedState: res.type,\n            rawData : res\n           };\n      send(null, value);\n    });\n}\nelse{\n  send(new Error(\"Missing property\"));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Social",
+    "description": "Sentiment analysis, input parameter is pre-processed with evaluate data function.",
+    "iconURL": "https://static.waylay.io/plugs/icons/sentiment.png",
+    "supportedStates": [
+      "postive",
+      "negative",
+      "neutral"
+    ],
+    "requiredProperties": [
+      "inputText"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "score",
+        "dataType": "double"
+      },
+      {
+        "parameter": "ratio",
+        "dataType": "double"
+      }
+    ]
+  }
 }
