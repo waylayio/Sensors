@@ -6,7 +6,7 @@
   "metadata": {
     "author": "Glenn",
     "category": "Experimental",
-    "description": "Airquality sensor based on the API provided by <a target=\"_blank\" href=\"https://airvisual.com/\">Air Visual</a><br>\nWe use the <a target=\"_blank\" href=\"https://developers.google.com/maps/documentation/geocoding/intro\">Google Geocode API</a><br> to retrieve the coördinates for the inputted city.\n<br/>\n\n<b>Properties</b>\n<ul>\n<li>city</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>latitude</li>\n<li>longitude</li>\n<li>location</li>\n<li>temperature</li>\n<li>atmospheric_pressure</li>\n<li>relative_humidity</li>\n<li>windspeed</li>\n<li>AQI_US</li>\n</ul>",
+    "description": "Airquality sensor based on the API provided by <a target=\"_blank\" href=\"https://airvisual.com/\">Air Visual</a> \nWe use the <a target=\"_blank\" href=\"https://developers.google.com/maps/documentation/geocoding/intro\">Google Geocode API</a> to retrieve the coordinates for the input city.\n<br/>\n\n<b>Properties</b>\n<ul>\n<li>city</li>\n</ul><br>\n\n<b>Raw Data</b>\n<ul>\n<li>latitude</li>\n<li>longitude</li>\n<li>location</li>\n<li>temperature</li>\n<li>atmospheric_pressure</li>\n<li>relative_humidity</li>\n<li>windspeed</li>\n<li>AQI_US</li>\n</ul>",
     "documentationURL": "https://airvisual.com/user/api",
     "iconURL": "https://static.waylay.io/plugs/icons/airvisual.png",
     "supportedStates": [
