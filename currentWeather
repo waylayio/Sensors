@@ -63,11 +63,11 @@
       },
       {
         "parameter": "name",
-        "dataType": "double"
+        "dataType": "string"
       },
       {
         "parameter": "condition",
-        "dataType": "double"
+        "dataType": "string"
       },
       {
         "parameter": "icon",
