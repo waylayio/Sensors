@@ -1,8 +1,8 @@
 {
   "name": "compositeSensor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "sensor",
-  "script": "var values = waylayUtil.getProperty(options, \"values\")\nvar sensor = waylayUtil.getProperty(options, \"sensor\")\nvar username =  options.globalSettings.API_KEY\nvar password = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain ||\"app.waylay.io\"\nvar url = \"https://\" + domain + \"/api/sensors/\" + sensor\n\nvar sensor = function(properties) {\n    return requestP.post({\"uri\": url, json: properties, auth: {user: username,password: password}})\n}\n\nvar list = []\n_.map(values, value => {\n    console.log(\"value\", value)\n    list.push(sensor({properties: value}))\n})\n\nvar values = []\nPromise.all(list)\n.then((args) => {\n    //console.log(args)\n    send(null, {observedState : \"done\", rawData : {values: args}})\n    }\n)\n.catch(err => send(new Error(err)))",
+  "script": "var values = waylayUtil.getProperty(options, \"values\")\nvar sensor = waylayUtil.getProperty(options, \"sensor\")\nvar username =  options.globalSettings.API_KEY\nvar password = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain ||\"app.waylay.io\"\nvar url = \"https://\" + domain + \"/api/sensors/\" + sensor\n\nvar sensor = function(properties) {\n    return requestP.post({\"uri\": url, json: properties, auth: {user: username,password: password}})\n}\n\nvar list = []\n_.map(values, value => {\n    console.log(\"value\", value)\n    value = _.mapValues(value, v => { \n    if(_.isString(v) && v.indexOf(\"{{\") > -1)\n        return waylayUtil.template(options, v)\n    else\n        return v\n    })\n    list.push(sensor({properties: value}))\n})\n\nvar values = []\nPromise.all(list)\n.then((args) => {\n    //console.log(args)\n    send(null, {observedState : \"done\", rawData : {values: args}})\n    }\n)\n.catch(err => send(new Error(err)))",
   "metadata": {
     "author": "",
     "category": "Waylay",
