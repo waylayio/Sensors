@@ -1,6 +1,6 @@
 {
   "name": "waylayGetMetadata",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "type": "sensor",
   "script": "var thing  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options)\nvar username =  options.globalSettings.API_KEY\nvar password = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain || \"app.waylay.io\"\nvar isTrue = true\ntry {\n  isTrue = JSON.parse(waylayUtil.getProperty(options, \"denormalized\") )\n} catch(err){\n    \n}\n\nif(thing && domain && username && password) {\n    var url = \"https://\"+ domain +\"/api/resources/\"+thing +\"?denormalized=\"+isTrue.toString();\n    var ops = {\n            url: url,\n            method: 'GET',\n            auth: {\n                user: username,\n                password: password\n            }\n    }\n    requestP(ops)\n    .then(response =>{\n        console.log(response)\n        var rawData = JSON.parse(response)\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        }\n        send(null, value);\n    })\n    .catch(err =>{\n        //console.log(err)\n        send(null, {observedState : \"Not Collected\"})\n    })\n}else{\n  send(new Error(\"Missing properties\"))\n}\n",
   "metadata": {
