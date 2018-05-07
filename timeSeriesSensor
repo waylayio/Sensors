@@ -1,12 +1,12 @@
 {
   "name": "timeSeriesSensor",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "type": "sensor",
-  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain || \"app.waylay.io\";\nvar metric = options.requiredProperties.metric;\n\nvar qs = {};\n\nif(options.requiredProperties.from && options.requiredProperties.from !==\"\"){\n    if(isNaN(options.requiredProperties.from))\n      qs.from = (moment(options.requiredProperties.from).unix() - 60*60)* 1000\n    else\n      qs.from = options.requiredProperties.from;\n}\n    \nif(options.requiredProperties.to && options.requiredProperties.to !==\"\"){\n    if(isNaN(options.requiredProperties.to))\n      qs.to = moment(options.requiredProperties.to).unix() * 1000\n    else\n     qs.to = options.requiredProperties.to;\n}\nif(options.requiredProperties.grouping && options.requiredProperties.grouping !==\"\")\n    qs.grouping = options.requiredProperties.grouping;\nif(options.requiredProperties.aggregate && options.requiredProperties.aggregate !== \"\")\n    qs.aggregate = options.requiredProperties.aggregate;\n//console.log(qs)\n\nif(metric && domain && username && password) {\n    var url = \"https://data.waylay.io/resources/\"+ resource +\"/series/\"+metric +\"?domain=\" + domain;\n    var options = {\n        url: url,\n        method: 'GET',\n        qs: qs, \n        auth: {\n            user: username,\n            password: password\n      }\n    };\n    \n    request(options, function (error, response, body) {\n      console.log(response)\n      if (!error && response.statusCode == 200) {\n        //console.log(body);\n        var data = JSON.parse(body);\n        console.log(data);\n        var value = {\n            observedState: \"Collected\",\n            rawData: data\n        };\n        send(null, value);\n        }\n    else {\n         send(null, {observedState : \"Not Collected\"});\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing property resource\"));\n}",
+  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\nvar metric = waylayUtil.getProperty(options, \"metric\")\n\nvar qs = {}\n\n// in case input params is a data as a string\nif(options.requiredProperties.from && options.requiredProperties.from !==\"\"){\n    if(isNaN(options.requiredProperties.from))\n      qs.from = (moment(options.requiredProperties.from).unix() - 60*60)* 1000\n    else\n      qs.from = options.requiredProperties.from;\n}\n    \nif(options.requiredProperties.to && options.requiredProperties.to !==\"\"){\n    if(isNaN(options.requiredProperties.to))\n      qs.to = moment(options.requiredProperties.to).unix() * 1000\n    else\n     qs.to = options.requiredProperties.to;\n}\n\nif(options.requiredProperties.grouping && options.requiredProperties.grouping !==\"\")\n    qs.grouping = waylayUtil.getProperty(options, \"grouping\")\nif(options.requiredProperties.aggregate && options.requiredProperties.aggregate !== \"\")\n    qs.aggregate = waylayUtil.getProperty(options, \"aggregate\")\nconsole.log(qs)\n\n//waylay.data.baseUrl = 'https://data-staging.waylay.io'\n\nwaylay.data.getMetricSeries(resource, metric, qs)\n.then(response=>{\n    send(null, {observedState : \"Collected\", rawData : response})\n})\n.catch(err=> {\n    console.log(err)\n     send(null, {observedState : \"Not Collected\"})\n})",
   "metadata": {
     "author": "",
     "category": "Waylay",
-    "description": "Gives back the time series data.\n</pre>\nfrom (epoch time in milliseconds). It can be omitted, then it will take last hour.\nto (epoch time in milliseconds). It can be omitted, then it will current time.\nYou can get data on which already grouping and/or aggregation is computed. \n</pre>\nAggregation:\n<ul>\n<li>mean</li> \n<li>medium</li>  \n<li>min</li> \n<li>max</li> \n<li>sum</li> \n</ul>\nGrouped by: \n<ul>\n<li>none (just skip in the query)</li>\n<li>auto</li>\n<li>second</li>\n<li>minute</li>\n<li>hour</li>\n<li>day</li>\n<li>week</li>\n</ul>\n\n",
+    "description": "Gives back the time series data.\nResource is etiher provided from the input field, raw data or from the resource \nassoisated with a node to which this sensor is attached.\nAs from version 1.1.0. it uses waylay nmp package (sandbox 0.14.0)\n\nYou can specify from (epoch time in milliseconds) and to (it can be omitted, then it will take the current time).\nIf from is omitted it will query all data.\nYou can get data on which already grouping and/or aggregation is computed. \nAggregation:\n<ul>\n<li>mean</li> \n<li>medium</li>  \n<li>min</li> \n<li>max</li> \n<li>sum</li> \n</ul>\nGrouped by: \n<ul>\n<li>none (just skip in the query)</li>\n<li>auto</li>\n<li>second</li>\n<li>minute</li>\n<li>hour</li>\n<li>day</li>\n<li>week</li>\n</ul>\n\n",
     "documentationURL": "https://docs.waylay.io/Submitting-and-fetching-data.html#Gettingrawtimeseriesdata",
     "iconURL": "https://static.waylay.io/plugs/icons/timeseries.png",
     "supportedStates": [
@@ -19,8 +19,7 @@
       "from",
       "to",
       "aggregate",
-      "grouping",
-      "domain"
+      "grouping"
     ],
     "requiredRawData": [],
     "rawData": [
@@ -34,4 +33,5 @@
       }
     ]
   }
+}
 }
