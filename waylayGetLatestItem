@@ -1,12 +1,12 @@
 {
   "name": "waylayGetLatestItem",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "type": "sensor",
-  "script": "var thing  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \nvar username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain;\n\nif(thing && domain && username && password) {\n    var url = \"https://data.waylay.io/resources/\"+ thing +\"/current?domain=\"+domain;\n     var options = {\n                    url: url,\n                    method: 'GET',\n                    auth: {\n                    user: username,\n                    password: password\n                  }\n    };\n    request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        console.log(body);\n        var rawData = JSON.parse(body);\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(response);\n        send(null, {observedState : \"Not Collected\"});\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing properties\"));\n}\n",
+  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\n//waylay.data.baseUrl = 'https://data-staging.waylay.io'\n\nwaylay.data.getLatestDocument(resource)\n.then(response=>{\n    send(null, {observedState : \"Collected\", rawData : response})\n})\n.catch(err=> {\n    console.log(err)\n     send(null, {observedState : \"Not Collected\"})\n})",
   "metadata": {
     "author": "",
     "category": "Waylay",
-    "description": "waylay sensor that returns the latest data of the resource stored in the Cloud Cache.\n\n<br>\nFetches the statistical values and provide it as the rawData for the waylay platform, \nfor more info, please check documentation.\n\nInput parameters are:\n<ul>\n<li>resource</li>\n<li>domain</li>\n</ul>\nIf resource is NOT defined as the input parameter, sensor takes as a resource what is defined as a resource on the node or task level.\n<br>\nDomain is a domain in which your platfrom is hosted",
+    "description": "waylay sensor that returns the latest data of the resource stored in the Cloud Cache.\nResource is etiher provided from the input field, raw data or from the resource \nassoisated with a node to which this sensor is attached.\nAs from version 1.1.0. it uses waylay nmp package (sandbox 0.14.0)\n",
     "documentationURL": "http://docs.waylay.io/Submitting-and-fetching-data.html#Retrievingdata",
     "iconURL": "https://static.waylay.io/plugs/icons/waylayGetLatestItem.png",
     "supportedStates": [
@@ -14,8 +14,7 @@
       "Not Collected"
     ],
     "requiredProperties": [
-      "resource",
-      "domain"
+      "resource"
     ],
     "requiredRawData": [],
     "rawData": []
