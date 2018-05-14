@@ -1,8 +1,8 @@
 {
   "name": "waylayGetLatestItem",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "sensor",
-  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\n//waylay.data.baseUrl = 'https://data-staging.waylay.io'\n\nwaylay.data.getLatestDocument(resource)\n.then(response=>{\n    send(null, {observedState : \"Collected\", rawData : response})\n})\n.catch(err=> {\n    console.log(err)\n     send(null, {observedState : \"Not Collected\"})\n})",
+  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \nwaylay.data.baseUrl =   options.globalSettings.waylay_data ||  \"https://data.waylay.io\"\n\n\nwaylay.data.getLatestDocument(resource)\n.then(response=>{\n    send(null, {observedState : \"Collected\", rawData : response})\n})\n.catch(err=> {\n    console.log(err)\n     send(null, {observedState : \"Not Collected\"})\n})",
   "metadata": {
     "author": "",
     "category": "Waylay",
