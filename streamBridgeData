@@ -1,8 +1,8 @@
 {
   "name": "streamBridgeData",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "sensor",
-  "script": "var previousState = waylayUtil.getCacheData(options, \"state\")\nvar newState = \"toggle1\"\nif(previousState === undefined || previousState === \"toggle1\"){\n    newState = \"toggle2\"\n}\n\nvar streamdata = waylayUtil.getStreamData(options)\nvar id = waylayUtil.getResource(options)\n\nif(_.isEmpty(streamdata))\n    send(new Error(\"No Streamdata\"));\nelse {\n    send(null, \n        {\n            observedState: newState,\n            rawData: { streamdata, id }\n        })\n}",
+  "script": "var previousState = waylayUtil.getCacheData(options, \"state\")\nvar newState = \"toggle1\"\nif(previousState === undefined || previousState === \"toggle1\"){\n    newState = \"toggle2\"\n}\n\nvar streamData = waylayUtil.getStreamData(options)\nvar id = waylayUtil.getResource(options)\n\nif(_.isEmpty(streamdata))\n    send(new Error(\"No Streamdata\"));\nelse {\n    send(null, \n        {\n            observedState: newState,\n            rawData: { streamData, id }\n        })\n}",
   "metadata": {
     "author": "",
     "category": "Streaming",
