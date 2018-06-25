@@ -1,8 +1,8 @@
 {
   "name": "getGeoFenceListForType",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "sensor",
-  "script": "var waylayApiKey =  options.globalSettings.API_KEY\nvar waylayApiSecret = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain\nvar resourceTypeId\nvar customer\n\ntry{\n    resourceTypeId = waylayUtil.getRawData(options, options.requiredProperties.resourceTypeId)\n} catch(err){\n   resourceTypeId = options.requiredProperties.resourceTypeId\n}\n\ntry{\n    customer = waylayUtil.getRawData(options, options.requiredProperties.customer)\n} catch(err){\n   customer = options.requiredProperties.customer ===\"\" ? undefined: \"\"\n}\n\nvar ops = {\n    url: \"https://\"+domain+\"/api/resources\",\n    auth: {\n        user: waylayApiKey,\n        pass: waylayApiSecret,\n        sendImmediately: true\n    },\n    qs :{ resourceTypeId, customer }\n}\nconsole.log(ops)\nrequest(ops, function (error, response, body) {\n    if (!error && response.statusCode == 200) {\n        var resources = JSON.parse(body).values\n        resources = _.compact(_.map(resources, resource =>{\n            if(resource.geofence){\n                return {\n                    name : resource.name || resource.id,\n                    coordinates : _.map(resource.geofence, ref =>{\n                        return { lat: ref[0], long : ref[1]}\n                    }),\n                    radius: resource.radius\n                }\n            }\n        }))\n        send(null, {observedState : resources.length >0 ? \"Found\": \"Not Found\", rawData : {locations: resources}})\n    }\n    else {\n         send(new Error(response))\n    }\n})",
+  "script": "var waylayApiKey =  options.globalSettings.API_KEY\nvar waylayApiSecret = options.globalSettings.API_PASS\nvar domain = options.requiredProperties.domain || options.globalSettings.waylay_domain\nvar resourceTypeId = waylayUtil.getProperty(options, \"resourceTypeId\")\nvar customer = waylayUtil.getProperty(options, \"customer\")\n\n//when running from the test, default value is empty string\nif(customer === \"\")\n    customer = undefined\n\nvar ops = {\n    url: \"https://\"+domain+\"/api/resources\",\n    auth: {\n        user: waylayApiKey,\n        pass: waylayApiSecret,\n        sendImmediately: true\n    },\n    qs :{ resourceTypeId, customer }\n}\nconsole.log(ops)\nrequest(ops, function (error, response, body) {\n    if (!error && response.statusCode == 200) {\n        var resources = JSON.parse(body).values\n        resources = _.compact(_.map(resources, resource =>{\n            if(resource.geofence){\n                return {\n                    name: resource.name || resource.id,\n                    coordinates: _.map(resource.geofence, ref =>{\n                        return { lat: ref[0], long : ref[1]}\n                    }),\n                    radius: resource.radius\n                }\n            }\n        }))\n        send(null, {observedState : resources.length >0 ? \"Found\": \"Not Found\", rawData : {locations: resources}})\n    }\n    else {\n         send(new Error(response))\n    }\n})",
   "metadata": {
     "author": "",
     "category": "Location",
@@ -20,7 +20,7 @@
     "rawData": [
       {
         "parameter": "locations",
-        "dataType": "double"
+        "dataType": "object"
       }
     ]
   }
