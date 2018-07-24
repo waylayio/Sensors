@@ -1,0 +1,21 @@
+{
+  "name": "door",
+  "version": "1.0.6",
+  "type": "sensor",
+  "script": " var data = waylayUtil.getStreamData(options, options.requiredProperties.item) || options.requiredProperties.item\n try {\n    data = waylayUtil.getRawData(options, options.requiredProperties.item)\n } catch (err){\n    console.log(\"input argument is not in the raw data\");\n }\n \n if(data === undefined){\n    send(new Error(\"input argument not found\"))\n }\n else{\n    var openValue = data.toLowerCase().indexOf(\"open\") > -1\n    var closedValue = data.toLowerCase().indexOf(\"close\") > -1\n    if(!openValue && !closedValue){\n        send(new Error(\"Not found whether it is open or closed\"))\n    } else {\n        send(null, { observedState : openValue ? \"open\":\"closed\"})\n    }\n }\n",
+  "metadata": {
+    "author": "",
+    "category": "Home",
+    "description": "This sensor can be used in case you want either push the door state using a Broker \n- via getStreamData call, or if the state of the door comes from another node, \nvia getRawData. \n\nThe sensor will return back if the door is open or closed. If none of these is found\nit will throw the exception.\n\nInput argument (item) can be:\n<ul>\n<li>string like open/close</li>\n<li>rawData which holds open/close string</li>\n<li>streamData parameter that holds open/close string</li>\n</ul>\n\nExample: use as the item \"door\" and then push this data:\n\n{\n \"door\" : \"open\"\n}",
+    "iconURL": "https://static.waylay.io/plugs/icons/door.png",
+    "supportedStates": [
+      "open",
+      "closed"
+    ],
+    "requiredProperties": [
+      "item"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
