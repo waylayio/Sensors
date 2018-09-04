@@ -1,0 +1,40 @@
+{
+  "name": "inactivitySensor",
+  "version": "1.1.0",
+  "type": "sensor",
+  "script": "waylay.data.baseUrl = options.globalSettings.waylay_data || 'https://data.waylay.io'\n\nvar resource = waylayUtil.getProperty(options, 'resource') || waylayUtil.getResource(options) || ''\nvar metric = waylayUtil.getProperty(options, 'metric') || ''\nvar timeWindowSpec = waylayUtil.getProperty(options, 'window') || 1800\n\nif ( typeof timeWindowSpec === 'string' && timeWindowSpec.indexOf('P') > -1 ) {\n    var timeWindow = moment.duration(timeWindowSpec)\n} else {\n    var timeWindow = moment.duration( parseInt(timeWindowSpec), 'seconds' )\n}\nif ( !timeWindow.isValid() || timeWindow.asSeconds() < 1 ) {\n     send(new Error(\"Invalid time window: \"+timeWindowSpec+\" ... \"+timeWindow.asSeconds() ) )\n}\n\nvar now = moment()\nvar since = moment(now).subtract(timeWindow)\n\nconst sendResult = function (message) {\n  var value = {\n    observedState: message.timestamp > since.unix() * 1000 ? 'Active' : 'Inactive',\n    rawData: {\n      lastMessage: message,\n      window: timeWindow,\n      since: since,\n      asOf: now\n    }\n  }\n  send(null, value)\n}\n\nconst sendError = function(err) {\n  console.error(err)\n  send(err)\n}\n\nif (metric === '') {\n  waylay.data.getLatestDocument(resource)\n    .then( sendResult, sendError )\n}\n\nif (resource !== '' && metric !== '') {\n  waylay.data.getLastMetric(resource, metric)\n    .then( sendResult, sendError)\n} else {\n    send(new Error(\"Missing input arguments\"))\n}\n",
+  "metadata": {
+    "author": "Dylan & Thomas",
+    "category": "TS Analytics",
+    "description": "checks for recent activity on a resource\n\n<p>Checks the timestamp of the most recent data in the <em>Time Series Database</em> or <em>Persisted Cloud Cache</em> against a given data window</p>\n\n<p><strong>this functionality requires an active TS analytics license for your Waylay tenant</strong></p>\n\n<h5>Properties</h5>\n<ul>\n<li><code>resource</code> waylay resource, defaults to the resource of the task</li>\n<li><code>metric</code> if given, checks the timeseries database for activity on this metric. Otherwise the message cache of the resource is checked.  (optional) </li>\n<li><code>window</code> timewindow in seconds or as <a href='https://en.wikipedia.org/wiki/ISO_8601#Durations'>iso8601 duration expression</a> such as 'PT1H30M' for 1 hour and 30 minutes.  (optional, default <code>1800</code>, i.e, 30 minutes) </li>\n</ul>\n\n<h5>States</h5>\n<ul>\n<li><code>Active</code> if a message or metric event with a timestamp within the window was found in storage</li>\n<li><code>Inactive</code> otherwise</li>\n</ul>\n\n<h5>Data returned</h5>\n<ul>\n<li><code>lastMessage</code> if a message or metric event with a timestamp within the window was found in storage</li>\n<li><code>window</code> the time window used</li>\n<li><code>since</code> the begin timestamp of the window that was checked</li>\n<li><code>asOf</code> the <em>now</em> timestamp at which this check was performed</li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/inactivity.png",
+    "supportedStates": [
+      "Inactive",
+      "Active"
+    ],
+    "requiredProperties": [
+      "resource",
+      "metric",
+      "window"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "lastMessage",
+        "dataType": "obj"
+      },
+      {
+        "parameter": "window",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "since",
+        "dataType": "string"
+      },
+      {
+        "parameter": "asOf",
+        "dataType": "string"
+      }
+    ]
+  }
+}
