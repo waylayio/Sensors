@@ -1,6 +1,6 @@
 {
   "name": "getWaylayAlarm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "sensor",
   "script": "const source  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options)\n//const status = waylayUtil.getProperty(options, \"status\") \n\nwaylay.alarms.search({source})\n.then(response=>{\n    //console.log(response)\n    if(response.total  < 1 ){\n        send(null, {observedState : \"Not Found\"})\n    } else {\n        var alarm = _.maxBy(response.alarms, alarm => {\n            return moment(alarm.creationTime).unix()  \n        })\n        send(null, {observedState : alarm.status, rawData : { \n            id: alarm.id,\n            severity: alarm.severity, \n            count: alarm.count,\n            creationTime: alarm.creationTime,\n            timestamp: moment(alarm.creationTime).unix(),\n            type: alarm.type,\n            text: alarm.text,\n            self: alarm.self,\n            status: alarm.status,\n            resource: source\n        }})\n    }\n})\n.catch(err =>{\n    //send(new Error(err))\n    console.log(err)\n    send(null, {observedState : \"Not Found\"})\n})",
   "metadata": {
@@ -11,7 +11,8 @@
     "supportedStates": [
       "ACTIVE",
       "ACKNOWLEDGED",
-      "CLEARED"
+      "CLEARED",
+      "Not Found"
     ],
     "requiredProperties": [
       "resource"
