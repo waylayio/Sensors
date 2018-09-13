@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "Waylay",
-    "description": "Sensor gives back alarms for a given resource.\nBy defauult it searches for ACTIVE alarms.\nExample:\n<pre>\n{\n  \"id\": \"39a83d47-41c2-4fa6-8664-7d9beb117142\",\n  \"severity\": \"WARNING\",\n  \"count\": 1,\n  \"creationTime\": \"2018-08-09T12:49:47.040Z\",\n  \"timestamp\": 1533818987,\n  \"type\": \"test\",\n  \"text\": \"alarm\",\n  \"self\": \"/alarm/alarms/39a83d47-41c2-4fa6-8664-7d9beb117142\",\n  \"status\": \"ACTIVE\",\n  \"resource\": \"testresource\"\n}\n</pre>",
+    "description": "Sensor gives back alarms for a given resource.\nExample:\n<pre>\n{\n  \"id\": \"39a83d47-41c2-4fa6-8664-7d9beb117142\",\n  \"severity\": \"WARNING\",\n  \"count\": 1,\n  \"creationTime\": \"2018-08-09T12:49:47.040Z\",\n  \"timestamp\": 1533818987,\n  \"type\": \"test\",\n  \"text\": \"alarm\",\n  \"self\": \"/alarm/alarms/39a83d47-41c2-4fa6-8664-7d9beb117142\",\n  \"status\": \"ACTIVE\",\n  \"resource\": \"testresource\"\n}\n</pre>",
     "iconURL": "https://s3.eu-central-1.amazonaws.com/static.waylay.io/plugs/icons/alarm.png",
     "supportedStates": [
       "ACTIVE",
