@@ -1,0 +1,47 @@
+{
+  "name": "seasonalityAnomalySensor",
+  "version": "1.0.1",
+  "type": "sensor",
+  "script": "waylay.data.baseUrl =   options.globalSettings.waylay_data ||  \"https://data.waylay.io\"\nconst resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \nconst metric = waylayUtil.getProperty(options, \"metric\")\nconst pastMinutes = waylayUtil.getProperty(options, \"pastMinutes\") || 60\n//weekDay or day\nconst seasonalityType = waylayUtil.getProperty(options, \"seasonalityType\") || 'weekDay'\nconst slots = waylayUtil.getProperty(options, \"slots\") || 7\nconst aggregateType = waylayUtil.getProperty(options, \"aggregateType\") || 'mean'\nvar boundary = waylayUtil.getProperty(options, \"boundary\") || 10\n\nvar percentageFlag = waylayUtil.getProperty(options, \"percentageFlag\") || true\n\nif(percentageFlag === 'false')\n    percentageFlag = false\nelse\n    percentageFlag = !!percentageFlag\n\nvar qs = {}\nqs.aggregate = aggregateType\n\nvar from = moment().subtract(parseInt(pastMinutes), 'minutes')\nvar to = moment()\nvar qs = {from: from.unix() * 1000, until: to.unix() * 1000, aggregate: aggregateType, grouping: 'hour'}\n\nconsole.log('seasonalityType',seasonalityType)\n\nvar promises = []\nfor(i =0; i < slots; i ++) {\n    var k = i + 1\n    if(seasonalityType == 'weekDay')\n        k = i * 7 + 1\n    var from = moment().subtract( k * 1440 + parseInt(pastMinutes), 'minutes')\n    var to = moment().subtract(k, 'days')\n    //console.log('slots:', from.toDate() + '/' + to.toDate())\n    var q = {\n        from: from.unix() * 1000, \n        until: to.unix() * 1000, \n        aggregate: aggregateType,\n        grouping: 'hour'\n    }\n    promises.push(waylay.data.getMetricSeries(resource, metric, q))\n}\n\nvar totalSum = 0\n\nPromise.all(promises)\n.then((responses) => {\n    _.each(responses, response =>{\n        var sum_x = 0\n        //console.log('query', response.query)\n        _.each(response.series, data =>{\n            sum_x += data[1]\n        })\n        if(response.series.length){\n            sum_x = sum_x / response.series.length \n        }\n        totalSum += sum_x\n        console.log(new Date(response.query.from)+ '/' + new Date(response.query.until), sum_x)\n        console.log('data length', response.series.length )\n    })\n    \n    totalSum = totalSum/responses.length\n    console.log(\"totalSum\", totalSum)\n    \n    waylay.data.getMetricSeries(resource, metric, qs)\n    .then(response=>{\n        var sum = 0\n        //console.log(\"response\", response)\n         _.each(response.series, data =>{\n            sum += data[1]\n        })\n        if(response.series.length)\n            sum = sum / response.series.length\n        console.log(\"current slot:\" + new Date(qs.from) + '/' + new Date(qs.until) , sum)\n        console.log('data length', response.series.length )\n        var state = 'Below' \n        var delta = sum - totalSum \n        if(!percentageFlag) {\n            if(sum > totalSum + boundary)\n                state = \"Above\"\n            else if(sum > totalSum - boundary)\n                state = \"In Range\"   \n        } else {\n            boundary = boundary / 100\n            delta = Math.abs((sum - totalSum)/totalSum)\n            if(sum < totalSum) {\n                if(delta > boundary)\n                    state = 'Below' \n                else\n                   state = \"In Range\"  \n            } else if(sum > totalSum) {\n                if(delta > boundary)\n                    state = 'Above' \n                else\n                   state = \"In Range\"  \n            } else {\n                state = \"In Range\"\n            }\n        }\n        send(null, {observedState : state, rawData : {totalSum, sum, delta, qs}})\n    }).catch(err=>{\n        send(new Error(err))\n    })\n}).catch(err=>{\n    send(new Error(err))\n})\n\n\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Seasonality Anomaly Sensor\n<br>\nFor a given metric, it goes back in time and compares the current series value to the past series values.<br>\nseasonalityType: This setting controls whether the search goes back for the same time slots X (which is slots input) days back,\nor X weekdays back (e.g. go back X Mondays, Tuesdays etc...), depending on the day in a week in which sensor executes.\n<br>\nDefault is weekDay. If you put days, it will just go back in time, for the past X days.\n<br>\npercentageFlag is by default true, meaning the boundary (change) will be taken into account\nas the percentage change between current slot and the past data.\n<br>\nslots: default value is 7<br>\npastMinutes: default value is 60 minutes.<br>\naggregateType: default value is mean.<br>\nboundary: by default 10<br>\n\nAggregation types:\n<ul>\n<li>mean</li> \n<li>medium</li>  \n<li>min</li> \n<li>max</li> \n<li>sum</li> \n<li>count</li> \n</ul>\n\n",
+    "documentationURL": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/seasonality.png",
+    "supportedStates": [
+      "In Range",
+      "Above",
+      "Below"
+    ],
+    "requiredProperties": [
+      "resource",
+      "metric",
+      "aggregateType",
+      "pastMinutes",
+      "seasonalityType",
+      "slots",
+      "boundary",
+      "percentageFlag"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "totalSum",
+        "dataType": "double"
+      },
+      {
+        "parameter": "sum",
+        "dataType": "double"
+      },
+      {
+        "parameter": "delta",
+        "dataType": "object"
+      },
+      {
+        "parameter": "qs",
+        "dataType": "double"
+      }
+    ]
+  }
+}
