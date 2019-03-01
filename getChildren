@@ -1,0 +1,30 @@
+{
+  "name": "getChildren",
+  "version": "0.0.10",
+  "type": "sensor",
+  "script": "var thing  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options)\n\nconsole.log(\"thing \" + thing)\n\nwaylay.resources.children(thing)\n.then(response=>{\n    //console.log(response)\n    var rawData = Object.assign({}, response, { childIds: response.values.map( val => val.id )})\n    console.log(\"rawData \" + JSON.stringify(rawData))\n    send(null, {observedState : \"Collected\" , rawData })\n})\n.catch(err =>{\n    //send(new Error(err))\n    console.log(err.response.body)\n    console.log(err)\n    \n    send(null, {observedState : \"Not Collected\"})\n})\n\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Retrieves the children of a resource.\n\n<p>\nStates:\n<ul>\n<li>Collected: the list of children was successfully collected</li>\n<li>Not Collected: the list of children was not successfully collected</li>\n</ul>\n</p>\n\n<p>\nInput properties:\n<ul>\n<li>resource</li>\n</ul>\n</p>\n\n<p>\nRaw data:\n<ul>\n<li>values: the array with the children</li>\n<li>childIds: the array with the ids of the children</li>\n</ul>\n</p>",
+    "iconURL": "https://static.waylay.io/plugs/icons/getChildren.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "values",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "childIds",
+        "dataType": "string[]"
+      }
+    ]
+  }
+}
