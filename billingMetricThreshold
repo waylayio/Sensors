@@ -1,1 +1,30 @@
-{"name":"billingMetricThreshold","version":"0.0.4","type":"sensor","script":"/*\n * ⚠️ Sensors should never throw exceptions, instead send an error back.\n *\n * ref: https://nodejs.org/api/errors.html#errors_error_first_callbacks\n */\nconst url = options.globalSettings.waylay_stats || 'https://stats.waylay.io'\nconst timeZone = waylayUtil.getProperty(options, \"timeZone\") || 'Europe/Brussels'\nconst token = options.globalSettings.waylayToken\nconst threshold = waylayUtil.getProperty(options, \"threshold\")\nconst service = waylayUtil.getProperty(options, \"service\")\nconst metricName = waylayUtil.getProperty(options, \"metric\")\n\n\nvar from = moment().tz(timeZone).startOf('month')\nvar until = moment().tz(timeZone)\n\nif (until.tz() === undefined) {\n    send(new Error(\"Unknown timezone: \" + timeZone))\n} else {\n    console.log('Getting metrics from ' + from.format() + ' until ' + until.format())\n\n    requestP({url : url + '/metrics/'+service, auth: { bearer: token }, qs: { from: from.valueOf(), until: until.valueOf() }, json: true})\n    .then( function (response) {\n        var metric = response.results[metricName]\n        if (metric) {\n            var consumption = metric.perMonth.aggregated\n            console.log('Consumption ' + consumption)\n            var state = consumption < threshold ? 'BELOW' : (consumption > threshold ? 'ABOVE' : 'EQUAL')\n            send(null, { observedState: state, rawData: { consumption: consumption }});\n        } else {\n            send(new Error('Metric ' + metricName + ' not found for service ' + service))\n        }\n    })\n    .catch(function (err){\n        send(err)\n    })\n}\n\n\n","metadata":{"author":"","category":"Waylay","description":"Sensor to check Waylay billing metrics.\n\nSupported services and metrics are:\n<ul>\n<li>sandbox: executions</li>\n<li>engine: executions</li>\n<li>broker: messages</li>\n</ul>","iconURL":"https://static.waylay.io/logos/waylay/waylay-vector-logo-164.png","supportedStates":["BELOW","EQUAL","ABOVE"],"requiredProperties":["threshold","service","metric","timeZone"],"requiredRawData":[],"rawData":[{"parameter":"consumption","dataType":"double"}]}}
+{
+  "name": "billingMetricThreshold",
+  "version": "0.0.5",
+  "type": "sensor",
+  "script": "/*\n * ⚠️ Sensors should never throw exceptions, instead send an error back.\n *\n * ref: https://nodejs.org/api/errors.html#errors_error_first_callbacks\n */\nconst url = options.globalSettings.waylay_stats || 'https://stats.waylay.io'\nconst timeZone = waylayUtil.getProperty(options, \"timeZone\") || 'Europe/Brussels'\nconst token = options.globalSettings.waylayToken\nconst threshold = waylayUtil.getProperty(options, \"threshold\")\nconst service = waylayUtil.getProperty(options, \"service\")\nconst metricName = waylayUtil.getProperty(options, \"metric\")\n\n\nvar from = moment().tz(timeZone).startOf('month')\nvar until = moment().tz(timeZone)\n\nif (until.tz() === undefined) {\n    send(new Error(\"Unknown timezone: \" + timeZone))\n} else {\n    console.log('Getting metrics from ' + from.format() + ' until ' + until.format())\n\n    requestP({url : url + '/metrics/'+service, auth: { bearer: token }, qs: { from: from.valueOf(), until: until.valueOf() }, json: true})\n    .then( function (response) {\n        var metric = response.results[metricName]\n        if (metric) {\n            var consumption = metric.perMonth.aggregated\n            console.log('Consumption ' + consumption)\n            var state = consumption < threshold ? 'BELOW' : (consumption > threshold ? 'ABOVE' : 'EQUAL')\n            send(null, { observedState: state, rawData: { consumption: consumption }});\n        } else {\n            send(new Error('Metric ' + metricName + ' not found for service ' + service))\n        }\n    })\n    .catch(function (err){\n        send(err)\n    })\n}\n\n\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Sensor to check Waylay billing metrics.\n\n<p>\nSupported services and metrics are:\n<ul>\n<li>sandbox: executions</li>\n<li>engine: executions</li>\n<li>broker: messages</li>\n</ul>\n</p>\n\n<p>\nRequired parameters:\n<ul>\n<li>threshold</li>\n<li>service: one of sandbox, engine or broker</li>\n<li>metric: executions or messages (see above)</li>\n<li>timeZone: timezone to use to determine begin of month</li>\n</ul>\n</p>\n\n<p>\nIf the specified metric could be successfully retrieved,\nthe value is added as consumption in the rawData\n</p>",
+    "iconURL": "https://static.waylay.io/logos/waylay/waylay-vector-logo-164.png",
+    "supportedStates": [
+      "BELOW",
+      "EQUAL",
+      "ABOVE"
+    ],
+    "requiredProperties": [
+      "threshold",
+      "service",
+      "metric",
+      "timeZone"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "consumption",
+        "dataType": "double"
+      }
+    ]
+  }
+}
