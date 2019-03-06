@@ -1,0 +1,39 @@
+{
+    "dependencies": {
+        "@waylay/client": "1.13.0"
+    },
+    "metadata": {
+        "author": "",
+        "category": "Waylay",
+        "description": "<p>Queries time series data, aggregating a single metric over\none or more resources.</p>\n\n<p>The resources field can be a string or an array of strings. \nIt is populated with the task resource by default.</p>\n\n<p>The time range to be queried is specified via the\n<tt>from</tt>, <tt>to</tt>, and <tt>window</tt> parameters.\nAt least <tt>from</tt> or <tt>window</tt> must be specified, and\na maximum of two of these parameters may be specified. </p>\n\n<p><tt>from</tt> and <tt>to</tt> can be specified as millisecond-based\ntimestamps, or as ISO-8601 datetime strings. <tt>window</tt> should\nbe specified as an ISO-8601 duration.</p>\n\n<p><tt>aggregates</tt> is a list of aggregation operations to be performed.\nIt can either be a single string, or an array of strings. Available\naggregation operations are described in the <a href=\"https://docs.waylay.io/api/broker-and-storage/#time-series-data\">API documentation</a>, and\nthey include at least the following:\n<ul>\n  <li>mean</li>\n  <li>median</li>\n  <li>min</li>\n  <li>max</li>\n  <li>sum</li>\n  <li>count</li>\n  <li>first</li>\n  <li>last</li>\n  <li>std</li>\n  <li>percentile(n), where 0 < n <= 1</li>\n</ul>\n</p>\n\n<p>The <tt>grouping</tt> parameter specifies the time\nperiods in which values are aggregated, and it is \nspecified as an ISO-8601 duration.</p>\n\n<p>The rawData output consists of an object with a field named\n<tt>series</tt> that contains an array of rows. Each row array\nhas the aggregation bucket timestamp as first value,\nfollowed by an aggregate value for each of the requested aggregates.</p>\n",
+        "iconURL": "https://dummyimage.waylay.io/160&text=crossResourceTimeSeriesSensor",
+        "rawData": [
+            {
+                "dataType": "object",
+                "parameter": "query"
+            },
+            {
+                "dataType": "array[]",
+                "parameter": "series"
+            }
+        ],
+        "requiredProperties": [
+            "resources",
+            "metric",
+            "from",
+            "until",
+            "aggregates",
+            "grouping",
+            "window"
+        ],
+        "requiredRawData": [],
+        "supportedStates": [
+            "Collected",
+            "Not Collected"
+        ]
+    },
+    "name": "crossResourceTimeSeriesSensor",
+    "script": "var metric = waylayUtil.getProperty(options, \"metric\")\nvar resources = _.castArray(waylayUtil.getProperty(options, \"resources\") || waylayUtil.getResource(options))\nvar query = {}\n\n// Note: this (and the explicit dependency on @waylay/client@1.13.0) can be removed\n// once the internal version of waylay-js is bumped\nconst Waylay = require(\"@waylay/client\")\nconst waylayClient = new Waylay({\n    token: options.globalSettings.waylayToken,\n    domain: 'staging.waylay.io'\n})\nwaylayClient.data.baseUrl =   options.globalSettings.waylay_data ||  \"https://data.waylay.io\"\n\nif(options.requiredProperties.from && options.requiredProperties.from !==\"\"){\n    query.from = options.requiredProperties.from\n}\n    \nif(options.requiredProperties.until && options.requiredProperties.until !==\"\"){\n    query.until = options.requiredProperties.until\n}\n\nif(options.requiredProperties.window && options.requiredProperties.window !==\"\"){\n    query.window = options.requiredProperties.window\n}\n \nquery.grouping = waylayUtil.getProperty(options, \"grouping\")\nquery.aggregates = _.castArray(waylayUtil.getProperty(options, \"aggregates\"))\nquery.resources = resources\nquery.metric = metric\n\nif (query.from && query.until && query.window) {\n    console.log(\"A maximum of 2 of 'from', 'until', and 'window' may be supplied\")\n    send(null, {observedState: \"Not Collected\"})\n}\n\n\nwaylayClient.data.queryTimeSeries(query)\n.then(response=>{\n    send(null, {observedState : \"Collected\", rawData : response})\n})\n.catch(err=> {\n    console.log(err)\n     send(null, {observedState : \"Not Collected\"})\n})",
+    "type": "sensor",
+    "version": "0.0.5"
+}
