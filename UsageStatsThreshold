@@ -7,7 +7,7 @@
     "author": "",
     "category": "Waylay",
     "description": "Sensor to check Waylay usage metrics.\n\n<p>\nSupported services and metrics are:\n<ul>\n<li>sandbox: executions</li>\n<li>nativePlug: executions</li>\n<li>broker: messages</li>\n<li>webscripts: executions</li>\n<li>resources: count</li>\n</ul>\n</p>\n\n<p>\nRequired parameters:\n<ul>\n<li>threshold</li>\n<li>service: one of <code>sandbox</code>, <code>nativePlug</code>, <code>broker</code>, <code>webscripts</code>, <code>resources</code></li>\n<li>metric: <code>executions</code>, <code>messages</code> or <code>count</code>(see above)</li>\n<li>timeZone: timezone to use to determine begin of month</li>\n</ul>\n</p>\n\n<p>\nIf the specified metric could be successfully retrieved,\nthe value is added as consumption in the rawData\n</p>",
-    "iconURL": "https://static.waylay.io/logos/waylay/waylay-vector-logo-164.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/waylay.png",
     "supportedStates": [
       "BELOW",
       "EQUAL",
