@@ -1,12 +1,12 @@
 {
   "name": "waylayGetMetadata",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "type": "sensor",
-  "script": "var thing  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options)\nvar metadata = options.rawData[options.task.NODE_NAME]\nvar cached = !!waylayUtil.getProperty(options, \"cache\") \nconsole.log(\"cached\", cached)\nif(cached && !_.isEmpty(metadata)) {\n    console.log(\"fetching data from the cache\", metadata)\n    send(null, {observedState : \"Collected\" , rawData : metadata})\n} else {\n    waylay.resources.get(thing)\n.then(response=>{\n    console.log(response)\n    send(null, {observedState : \"Collected\" , rawData: response })\n    })\n    .catch(err =>{\n        //send(new Error(err))\n        console.log(err)\n        send(null, {observedState : \"Not Collected\"})\n    })\n}\n\n\n",
+  "script": "var thing  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options)\n\nwaylay.resources.get(thing)\n.then(response=>{\n    console.log(response)\n    send(null, {observedState : \"Collected\" , rawData : response})\n})\n.catch(err =>{\n    //send(new Error(err))\n    console.log(err)\n    send(null, {observedState : \"Not Collected\"})\n})",
   "metadata": {
     "author": "",
     "category": "Waylay",
-    "description": "This sensors fetches data from metadata, based on the input which \nis etiher provided from the input field, raw data or from the resource \nassoisated with a node to which this sensor is attached.\nIf you put cache flag to true, it will fetch metadata only once.\nAs from version 1.0.0. it uses waylay nmp package (sandbox 0.14.0)\n",
+    "description": "This sensors fetches data from metadata, based on the input which \nis etiher provided from the input field, raw data or from the resource \nassoisated with a node to which this sensor is attached.\nAs from version 1.0.0. it uses waylay nmp package (sandbox 0.14.0)\n",
     "documentationURL": "http://docs.waylay.io/Submitting-and-fetching-data.html#Gettingmetadataforaresource",
     "iconURL": "https://static.waylay.io/plugs/icons/meta.png",
     "supportedStates": [
@@ -14,8 +14,7 @@
       "Not Collected"
     ],
     "requiredProperties": [
-      "resource",
-      "cache"
+      "resource"
     ],
     "requiredRawData": [],
     "rawData": []
