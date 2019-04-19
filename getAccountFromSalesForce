@@ -1,13 +1,13 @@
 {
   "name": "getAccountFromSalesForce",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "type": "sensor",
-  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar id = waylayUtil.getProperty(options, \"name\")\n\nif(user === undefined || token === undefined || id === undefined) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) {\n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Account\").find({ \n                      Name : id\n                  }, function(err, ret) {\n                    if (err) { \n                       console.error(err) \n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n",
+  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar id = waylayUtil.getProperty(options, \"name\") || waylayUtil.getResource(options)\n\nif(user === undefined || token === undefined || id === undefined) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) {\n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Account\").find({ \n                      Name : id\n                  }, function(err, ret) {\n                    if (err) { \n                       console.error(err) \n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n",
   "metadata": {
     "author": "",
     "category": "SalesForce",
-    "description": "Example of asset sensor for SalesForce\n",
-    "iconURL": "https://static.waylay.io/plugs/icons/customer.png",
+    "description": "Example of asset sensor for SalesForce, example of the return object\n<pre>\n{\n  \"attributes\": {\n    \"type\": \"Account\",\n    \"url\": \"/services/data/v34.0/sobjects/Account/0011i00000A2MktAAF\"\n  },\n  \"Id\": \"0011i00000A2MktAAF\",\n  \"IsDeleted\": false,\n  \"MasterRecordId\": null,\n  \"Name\": \"SmartEngineCompanyX\",\n  \"Type\": \"Customer - Direct\",\n  \"ParentId\": null,\n  \"BillingStreet\": null,\n  \"BillingCity\": null,\n  \"BillingState\": null,\n  \"BillingPostalCode\": null,\n  \"BillingCountry\": null,\n  \"BillingLatitude\": null,\n  \"BillingLongitude\": null,\n  \"BillingAddress\": null,\n  \"ShippingStreet\": null,\n  \"ShippingCity\": null,\n  \"ShippingState\": null,\n  \"ShippingPostalCode\": null,\n  \"ShippingCountry\": null,\n  \"ShippingLatitude\": null,\n  \"ShippingLongitude\": null,\n  \"ShippingAddress\": null,\n  \"Phone\": null,\n  \"Fax\": null,\n  \"AccountNumber\": null,\n  \"Website\": null,\n  \"PhotoUrl\": \"/services/images/photo/0011i00000A2MktAAF\",\n  \"Sic\": null,\n  \"Industry\": \"Machinery\",\n  \"AnnualRevenue\": null,\n  \"NumberOfEmployees\": null,\n  \"Ownership\": \"Private\",\n  \"TickerSymbol\": null,\n  \"Description\": null,\n  \"Rating\": \"Hot\",\n  \"Site\": \"Ghent\",\n  \"OwnerId\": \"0051i000000fYz5AAE\",\n  \"CreatedDate\": \"2019-04-17T13:11:06.000+0000\",\n  \"CreatedById\": \"0051i000000fYz5AAE\",\n  \"LastModifiedDate\": \"2019-04-17T14:27:21.000+0000\",\n  \"LastModifiedById\": \"0051i000000fYz5AAE\",\n  \"SystemModstamp\": \"2019-04-17T14:49:03.000+0000\",\n  \"LastActivityDate\": \"2019-04-17\",\n  \"LastViewedDate\": \"2019-04-19T10:02:27.000+0000\",\n  \"LastReferencedDate\": \"2019-04-19T10:02:27.000+0000\",\n  \"Jigsaw\": null,\n  \"JigsawCompanyId\": null,\n  \"CleanStatus\": \"Pending\",\n  \"AccountSource\": null,\n  \"DunsNumber\": null,\n  \"Tradestyle\": null,\n  \"NaicsCode\": null,\n  \"NaicsDesc\": null,\n  \"YearStarted\": null,\n  \"SicDesc\": null,\n  \"DandbCompanyId\": null,\n  \"CustomerPriority__c\": \"High\",\n  \"SLA__c\": \"Gold\",\n  \"Active__c\": \"Yes\",\n  \"NumberofLocations__c\": null,\n  \"UpsellOpportunity__c\": null,\n  \"SLASerialNumber__c\": null,\n  \"SLAExpirationDate__c\": null,\n  \"Segment__c\": null\n}\n</pre>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/get-account-from-salesforce.png",
     "supportedStates": [
       "Found",
       "Not Found"
@@ -42,7 +42,27 @@
         "dataType": "string"
       },
       {
+        "parameter": "Id",
+        "dataType": "string"
+      },
+      {
         "parameter": "OwnerId",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Site",
+        "dataType": "string"
+      },
+      {
+        "parameter": "ShippingLatitude",
+        "dataType": "double"
+      },
+      {
+        "parameter": "ShippingLongitude",
+        "dataType": "double"
+      },
+      {
+        "parameter": "ShippingAddress",
         "dataType": "string"
       }
     ]
