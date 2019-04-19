@@ -1,13 +1,13 @@
 {
   "name": "getAssetFromSalesForce",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "type": "sensor",
-  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar id = waylayUtil.getProperty(options, \"id\") || waylayUtil.getResource(options)\n\n\nif(user === undefined || token === undefined || id === undefined) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) { \n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Asset\").find({ \n                      SerialNumber : id\n                  }, function(err, ret) {\n                    if (err) { \n                       console.error(err)\n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n",
+  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar id = waylayUtil.getProperty(options, \"serialNumber\") || waylayUtil.getResource(options)\n\n\nif(user === undefined || token === undefined || id === undefined) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) { \n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Asset\").find({ \n                      SerialNumber : \"\"+id\n                  }, function(err, ret) {\n                    if (err) { \n                       console.error(err)\n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n\n",
   "metadata": {
     "author": "",
     "category": "SalesForce",
-    "description": "Example of asset sensor for SalesForce\n",
-    "iconURL": "https://static.waylay.io/plugs/icons/asset_sensor.png",
+    "description": "Example of asset sensor for SalesForce, raw Data example:\n\n<pre>\n \"Id\": \"02i1i000000h1OnAAI\",\n  \"ContactId\": null,\n  \"AccountId\": \"0011i00000A2MktAAF\",\n  \"Product2Id\": \"01t1i000000eMAjAAM\",\n  \"IsCompetitorProduct\": false,\n  \"CreatedDate\": \"2019-04-17T14:23:53.000+0000\",\n  \"CreatedById\": \"0051i000000fYz5AAE\",\n  \"LastModifiedDate\": \"2019-04-17T14:23:53.000+0000\",\n  \"LastModifiedById\": \"0051i000000fYz5AAE\",\n  \"SystemModstamp\": \"2019-04-17T14:23:53.000+0000\",\n  \"IsDeleted\": false,\n  \"Name\": \"EngineX\",\n  \"SerialNumber\": \"12345\",\n  \"InstallDate\": \"2019-04-16\",\n  \"PurchaseDate\": \"2019-04-04\",\n  \"UsageEndDate\": null,\n  \"Status\": \"Installed\",\n  \"Price\": 10000,\n  \"Quantity\": 1,\n  \"Description\": null,\n  \"OwnerId\": \"0051i000000fYz5AAE\",\n  \"LastViewedDate\": \"2019-04-18T16:09:03.000+0000\",\n  \"LastReferencedDate\": \"2019-04-18T16:09:03.000+0000\"\n  </pre>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/get-asset-from-salesforce.png",
     "supportedStates": [
       "Found",
       "Not Found"
@@ -48,6 +48,18 @@
       {
         "parameter": "Description",
         "dataType": "string"
+      },
+      {
+        "parameter": "OwnerId",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Name",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Quantity",
+        "dataType": "double"
       },
       {
         "parameter": "OwnerId",
