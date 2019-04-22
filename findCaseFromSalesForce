@@ -1,0 +1,113 @@
+{
+  "name": "findCaseFromSalesForce",
+  "version": "0.0.1",
+  "type": "sensor",
+  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar caseObject = { }\n\ncaseObject.AssetId = waylayUtil.getProperty(options, \"AssetId\") || waylayUtil.getResource(options)\ncaseObject.Subject = waylayUtil.getProperty(options, \"Subject\")\ncaseObject.Status = waylayUtil.getProperty(options, \"Status\")\ncaseObject.Priority = waylayUtil.getProperty(options, \"Priority\")\ncaseObject.AccountId = waylayUtil.getProperty(options, \"AccountId\")\ncaseObject.Reason = waylayUtil.getProperty(options, \"Reason\")\ncaseObject.OwnerId = waylayUtil.getProperty(options, \"OwnerId\")\ncaseObject.Product__c = waylayUtil.getProperty(options, \"Product__c\")\n\ncaseObject = _.reduce(caseObject, (acc, v, k) => {\n    if (v) {\n        acc[k] = v   \n    }\n    return acc\n}, {})\n\nif(user === undefined || token === undefined ) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) { \n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Case\").find(caseObject, function(err, ret) {\n                    if (err) { \n                       console.error(err)\n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n\n",
+  "metadata": {
+    "author": "",
+    "category": "SalesForce",
+    "description": "Case sensor for SalesForce, AssetId can be waylay resource as well\n\nraw Data example:\n\n<pre>\n {\n  \"attributes\": {\n    \"type\": \"Case\",\n    \"url\": \"/services/data/v34.0/sobjects/Case/5001i0000066cOoAAI\"\n  },\n  \"Id\": \"5001i0000066cOoAAI\",\n  \"IsDeleted\": false,\n  \"CaseNumber\": \"00027027\",\n  \"ContactId\": \"0031i000006vlJOAAY\",\n  \"AccountId\": \"0011i00000A2MktAAF\",\n  \"AssetId\": null,\n  \"ParentId\": null,\n  \"SuppliedName\": null,\n  \"SuppliedEmail\": null,\n  \"SuppliedPhone\": null,\n  \"SuppliedCompany\": null,\n  \"Type\": \"Mechanical\",\n  \"Status\": \"New\",\n  \"Reason\": \"Performance\",\n  \"Origin\": \"Web\",\n  \"Subject\": \"another issue\",\n  \"Priority\": \"Medium\",\n  \"Description\": null,\n  \"IsClosed\": false,\n  \"ClosedDate\": null,\n  \"IsEscalated\": false,\n  \"OwnerId\": \"0051i000000fYz5AAE\",\n  \"CreatedDate\": \"2019-04-17T14:30:32.000+0000\",\n  \"CreatedById\": \"0051i000000fYz5AAE\",\n  \"LastModifiedDate\": \"2019-04-17T14:40:38.000+0000\",\n  \"LastModifiedById\": \"0051i000000fYz5AAE\",\n  \"SystemModstamp\": \"2019-04-17T14:40:38.000+0000\",\n  \"LastViewedDate\": \"2019-04-19T09:05:31.000+0000\",\n  \"LastReferencedDate\": \"2019-04-19T09:05:31.000+0000\",\n  \"EngineeringReqNumber__c\": null,\n  \"Product__c\": \"GC1040\",\n  \"PotentialLiability__c\": null,\n  \"CSAT__c\": null,\n  \"Case_ExternalId__c\": null,\n  \"FCR__c\": false,\n  \"Product_Family_KB__c\": null,\n  \"SLAViolation__c\": null,\n  \"SLA_Type__c\": null\n}\n</pre>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/get-case-from-salesforce.png",
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ],
+    "requiredProperties": [
+      "AssetId",
+      "Subject",
+      "Status",
+      "Priority",
+      "AccountId",
+      "Reason",
+      "OwnerId",
+      "Product__c"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "Id",
+        "dataType": "string"
+      },
+      {
+        "parameter": "CaseNumber",
+        "dataType": "string"
+      },
+      {
+        "parameter": "ContactId",
+        "dataType": "string"
+      },
+      {
+        "parameter": "AccountId",
+        "dataType": "integer"
+      },
+      {
+        "parameter": "InstallDate",
+        "dataType": "string"
+      },
+      {
+        "parameter": "AssetId",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SuppliedName",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SuppliedEmail",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SuppliedPhone",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SuppliedCompany",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Status",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Subject",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Priority",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Description",
+        "dataType": "string"
+      },
+      {
+        "parameter": "IsClosed",
+        "dataType": "boolean"
+      },
+      {
+        "parameter": "IsEscalated",
+        "dataType": "boolean"
+      },
+      {
+        "parameter": "CreatedDate",
+        "dataType": "string"
+      },
+      {
+        "parameter": "CreatedById",
+        "dataType": "string"
+      },
+      {
+        "parameter": "Product__c",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SLAViolation__c",
+        "dataType": "string"
+      },
+      {
+        "parameter": "SLA_Type__c",
+        "dataType": "string"
+      }
+    ]
+  }
+}
