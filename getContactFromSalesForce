@@ -1,8 +1,8 @@
 {
   "name": "getContactFromSalesForce",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "sensor",
-  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar id = waylayUtil.getProperty(options, \"name\") || waylayUtil.getResource(options)\n\n\nif(user === undefined || token === undefined || id === undefined) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) { \n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Contact\").find({ \n                      Name : \"\"+id\n                  }, function(err, ret) {\n                    if (err) { \n                       console.error(err)\n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n\n",
+  "script": "var user = options.globalSettings.salesForceUser\nvar token = options.globalSettings.salesForceToken\nvar caseObject = { }\n\ncaseObject.Id = waylayUtil.getProperty(options, \"Id\")\ncaseObject.Name = waylayUtil.getProperty(options, \"Name\")\ncaseObject.Email = waylayUtil.getProperty(options, \"Email\")\n\ncaseObject = _.reduce(caseObject, (acc, v, k) => {\n    if (v) {\n        acc[k] = v   \n    }\n    return acc\n}, {})\n\nif(caseObject.Name)\n    caseObject.Name = \"\" +caseObject.Name\n\nconsole.log(\"caseObject\", caseObject)\nif(user === undefined || token === undefined ) {\n    send(new Error(\"token or user not defined\"))\n}\nelse {\n    try{\n        var conn = new jsforce.Connection()\n        conn.login(user, token, function(err, res){\n            if (err) { \n              console.error(err)\n              send(new Error(err))\n            } else{\n                 conn.sobject(\"Contact\").find(caseObject, function(err, ret) {\n                    if (err) { \n                       console.error(err)\n                       send(new Error(err))\n                    } else {\n                        if(ret.length > 0)\n                            send(null, { observedState : \"Found\", rawData : ret[0]})\n                        else\n                            send(null, { observedState : \"Not Found\"})\n                    }\n                  });\n            }\n        });\n    }\n    catch(err){\n        console.error(err)\n        send(new Error(err))\n    }\n}\n\n",
   "metadata": {
     "author": "",
     "category": "SalesForce",
@@ -13,7 +13,9 @@
       "Not Found"
     ],
     "requiredProperties": [
-      "name"
+      "Id",
+      "Name",
+      "Email"
     ],
     "requiredRawData": [],
     "rawData": [
