@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "Waylay",
-    "description": "Get latest message between two consecutive collections. \nFirst time gives all messages stored int the cloud cache\n",
+    "description": "Get latest message between two consecutive collections. \nFirst time gives all messages stored in the cloud cache\n",
     "iconURL": "https://static.waylay.io/plugs/icons/inventory.png",
     "supportedStates": [
       "Done",
