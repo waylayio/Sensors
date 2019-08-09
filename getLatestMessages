@@ -1,0 +1,42 @@
+{
+  "name": "getLatestMessages",
+  "version": "1.0.6",
+  "type": "sensor",
+  "script": "const { parse } = require('json2csv')\nvar lastExecution = waylayUtil.getCacheData(options, \"lastExecution\") || 0\nconst now = moment().unix() * 1000\nvar resource = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\n//const fields = ['field1', 'field2', 'field3']\n\nwaylay.data.getSeries(resource)\n.then(data=>{\n    data = _.filter(data, function(o) { return o.timestamp > lastExecution})\n    var count = data.length\n    if(count === 0) {\n        send(null, { observedState : \"Empty\", rawData : { lastExecution, count}}) \n    } else {\n        const csv = parse(data)\n        lastExecution = now\n        console.log(now) \n        send(null, { observedState : \"Done\", rawData : {data, csv, lastExecution, count}})   \n    }\n}).catch(err =>{\n  send(new Error(err))\n})\n",
+  "metadata": {
+    "author": "",
+    "category": "Waylay",
+    "description": "Get latest message between two consecutive collections. \nFirst time gives all messages stored int the cloud cache\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/inventory.png",
+    "supportedStates": [
+      "Done",
+      "Empty",
+      "Not Done"
+    ],
+    "requiredProperties": [
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "data",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "csv",
+        "dataType": "string"
+      },
+      {
+        "parameter": "lastExecution",
+        "dataType": "double"
+      },
+      {
+        "parameter": "count",
+        "dataType": "double"
+      }
+    ]
+  },
+  "dependencies": {
+    "json2csv": "4.5.2"
+  }
+}
