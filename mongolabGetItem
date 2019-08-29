@@ -7,7 +7,7 @@
     "author": "",
     "category": "Database",
     "description": "Generic mongolab that returns back the item in the database.\nShould be replace with more specific one for your use case.\nYou need API mongoKey.\n\nInput parameters are:\n<ul>\n<li>identifier(key) which will be used to match the entry in the collection</li>\n<li>item (value), or you can as well provide here another sensor name that has an item in rawData response</li>\n<li>database</li>\n</ul>\n",
-    "iconURL": "https://static.waylay.io/icons/mongolab.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/mongolab.png",
     "supportedStates": [
       "Found",
       "Not Found"

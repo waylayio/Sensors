@@ -7,7 +7,7 @@
     "author": "Veselin Pizurica",
     "category": "Location",
     "description": "genericGeoFence calculator based on the runtime location.\n\nInput data:\n<pre>\n[{\n    id: name,\n    coordinates : [{ lat: 51.04, long:3.7}](circle), polygon [{ lat: 51.04, long:3.7},{ lat: 52.04, long:3.7}] or polygon with multiple locations\n    radius: in metres, in case of circle\n}]\n</pre>\n\nfor radius \n<pre>\n[ { \"id\":\"Depo1\", \"radius\": 10000,    \"coordinates\": [{\"lat\" : 51.07, \"long\" : 3.51} ]  }  ]\n</pre>\nfor polygon\n<pre>\n[ {  \"id\":\"Depo1\", \"coordinates\": [{\"lat\" : 50.07, \"long\" : 3}, {\"lat\" : 50.07, \"long\" : 4}, {\"lat\" : 52.07, \"long\" : 3.5}] }]\nor\n[ {  \"id\": \"Depo1\", \"coordinates\": [{\"lat\": 51.07,\"long\": 3.51},{\"lat\": 52.07,\"long\": 4.51 }] } ]\n</pre>\n\nRaw data:\n<ul>\n<li>latitude</li>\n<li>longitude</li>\n<li>location</li>\n<li>oldLocation, if it is out, provides the previous geofence location (only once)</li>\n<li>distance (if circle)</li>\n</ul>\n",
-    "iconURL": "https://static.waylay.io/icons/geoFence.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/geoFence.png",
     "supportedStates": [
       "IN",
       "OUT"

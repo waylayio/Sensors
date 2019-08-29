@@ -7,7 +7,7 @@
     "author": "Veselin Pizurica",
     "category": "Location",
     "description": "isObjectMoving checks two consecutive locations to verify if the object is \nmoving or not.",
-    "iconURL": "http://static.waylay.io/icons/tracking.png",
+    "iconURL": "http://static.waylay.io/plugs/icons/tracking.png",
     "supportedStates": [
       "Moving",
       "Not Moving"

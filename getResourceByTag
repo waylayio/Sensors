@@ -8,7 +8,7 @@
     "category": "Waylay",
     "description": "Waylay sensor that fetches resources by tag.",
     "documentationURL": "https://docs.waylay.io/api/rest/#query-resources",
-    "iconURL": "https://static.waylay.io/icons/tag.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/tag.png",
     "supportedStates": [
       "Collected",
       "Not Collected"

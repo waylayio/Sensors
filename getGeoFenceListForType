@@ -7,7 +7,7 @@
     "author": "",
     "category": "Location",
     "description": "genericGeoFence list of locations based on resource\ntype\nRaw data in format:\n\n<pre>\n[{\n    id: name,\n    coordinates : [{ lat: 51.04, long:3.7}](circle), polygon [{ lat: 51.04, long:3.7},{ lat: 52.04, long:3.7}] or polygon with multiple locations\n    radius: in metres, in case of circle\n}]\n</pre>\n\nfor radius \n<pre>\n[ { \"id\":\"Depo1\", \"radius\": 10000,    \"coordinates\": [{\"lat\" : 51.07, \"long\" : 3.51} ]  }  ]\n</pre>\nfor polygon\n<pre>\n[ {  \"id\":\"Depo1\", \"coordinates\": [{\"lat\" : 50.07, \"long\" : 3}, {\"lat\" : 50.07, \"long\" : 4}, {\"lat\" : 52.07, \"long\" : 3.5}] }]\nor\n[ {  \"id\": \"Depo1\", \"coordinates\": [{\"lat\": 51.07,\"long\": 3.51},{\"lat\": 52.07,\"long\": 4.51 }] } ]\n</pre>\n",
-    "iconURL": "https://static.waylay.io/icons/navigation.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/navigation.png",
     "supportedStates": [
       "Found",
       "Not Found"
