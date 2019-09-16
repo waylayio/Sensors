@@ -8,7 +8,7 @@
     "category": "Waylay",
     "description": "Gives back the time in seconds (totalTime) that values were above the threshold\nInput arguments are:\n<ul>\n<li>resource</li>\n<li>metric</li>\n<li>hours, past number of hours, default 1 hour</li>\n<li>threshold, default value is 0</li>\n<ul>\n",
     "documentationURL": "",
-    "iconURL": "http://static.waylay.io/plugs/icons/timer.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/timer.png",
     "supportedStates": [
       "Collected",
       "Not Collected"
