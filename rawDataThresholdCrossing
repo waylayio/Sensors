@@ -1,29 +1,29 @@
 {
-    "name": "rawDataThresholdCrossing",
-    "version": "1.0.5",
-    "type": "sensor",
-    "script": "\n/*var options = __.extend(options, { \n    rawData : {\n        \"hello\" : {   \n            randomValue: 5,\n            state: \"True\" \n        }\n    }\n});*/\n\n  \nconsole.log(\"rawData sensor\");\nconsole.log(options);\nvar param = options.requiredProperties.parameter;\nvar node = options.requiredProperties.node;\nif(node !== undefined && param !== undefined && options.requiredProperties.threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.evaluateData(options, node + \".\" + param);\n      console.log(rawValue);\n      if(isNaN(rawValue))\n        throw(new Error(\"Not a number: \" + rawValue));\n      var state = \"Equal\";\n      if(rawValue > options.requiredProperties.threshold)\n        state = \"Above\"; \n      else if(rawValue < options.requiredProperties.threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
-    "metadata": {
-        "author": "",
-        "category": "Functions",
-        "description": "Raw threshold crossing sensor.\n\nInput parameters are:\n<ul>\n<li>node name for which we want to compute formula</li>\n<li>parameter</li>\n<li>threshold</li>\n</ul>",
-        "iconURL": "https://static.waylay.io/plugs/icons/threshold.png",
-        "supportedStates": [
-            "Below",
-            "Equal",
-            "Above"
-        ],
-        "requiredProperties": [
-            "node",
-            "threshold",
-            "parameter"
-        ],
-        "requiredRawData": [],
-        "rawData": [
-            {
-                "parameter": "value",
-                "dataType": "double"
-            }
-        ]
-    }
+  "name": "rawDataThresholdCrossing",
+  "version": "1.0.7",
+  "type": "sensor",
+  "script": "\n\nvar param = waylayUtil.getProperty(options, \"parameter\");\nvar node = waylayUtil.getProperty(options, \"node\");\nvar threshold = waylayUtil.getProperty(options, \"threshold\");\n\nif(node !== undefined && param !== undefined && threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.evaluateData(options, node + \".\" + param);\n      console.log(rawValue);\n      if(isNaN(rawValue))\n        throw(new Error(\"Not a number: \" + rawValue));\n      var state = \"Equal\";\n      if(rawValue > threshold)\n        state = \"Above\"; \n      else if(rawValue < threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
+  "metadata": {
+    "author": "",
+    "category": "Functions",
+    "description": "Raw threshold crossing sensor.\n\nInput parameters are:\n<ul>\n<li>node name for which we want to compute formula</li>\n<li>parameter</li>\n<li>threshold</li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/threshold.png",
+    "supportedStates": [
+      "Below",
+      "Equal",
+      "Above"
+    ],
+    "requiredProperties": [
+      "node",
+      "threshold",
+      "parameter"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "value",
+        "dataType": "double"
+      }
+    ]
+  }
 }
