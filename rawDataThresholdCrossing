@@ -1,8 +1,8 @@
 {
   "name": "rawDataThresholdCrossing",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "type": "sensor",
-  "script": "\n\nvar param = waylayUtil.getProperty(options, \"parameter\");\nvar node = waylayUtil.getProperty(options, \"node\");\nvar threshold = waylayUtil.getProperty(options, \"threshold\");\n\nif(node !== undefined && param !== undefined && threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.evaluateData(options, node + \".\" + param);\n      console.log(rawValue);\n      if(isNaN(rawValue))\n        throw(new Error(\"Not a number: \" + rawValue));\n      var state = \"Equal\";\n      if(rawValue > threshold)\n        state = \"Above\"; \n      else if(rawValue < threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
+  "script": "\n\nvar param = options.requiredProperties.parameter;\nvar node = options.requiredProperties.node;\nvar threshold = waylayUtil.getProperty(options, \"threshold\");\n\nif(node !== undefined && param !== undefined && threshold !== undefined) {\n    try{\n      var rawValue =  waylayUtil.evaluateData(options, node + \".\" + param);\n      console.log(rawValue);\n      if(isNaN(rawValue))\n        throw(new Error(\"Not a number: \" + rawValue));\n      var state = \"Equal\";\n      if(rawValue > threshold)\n        state = \"Above\"; \n      else if(rawValue < threshold)\n        state = \"Below\"; \n      var value = {\n        observedState: state,\n        rawData:  {  value: rawValue }  \n      };\n      send(null, value);\n    } catch(err){\n        send(new Error(err));\n    }\n} else{\n  send(new Error(\"Missing properties\"));\n}\n",
   "metadata": {
     "author": "",
     "category": "Functions",
