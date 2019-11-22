@@ -1,0 +1,34 @@
+{
+  "name": "Delay",
+  "version": "1.0.2",
+  "type": "sensor",
+  "script": "var delay = options.requiredProperties.delay;\nvar startTime = new Date();\nif(delay === undefined)\n  delay = 1;\n\nvar myVar = setTimeout(function(){myTimer()}, delay * 1000);\n\nfunction myTimer() {\n    var d = new Date();\n    value = {\n        observedState: \"ON\",\n        rawData: {\n            startTime: startTime.getTime(),\n            endTime: d.getTime(),\n            executionTime: d.getTime() - startTime.getTime()\n        }\n    }\n    send(null, value)\n}\n",
+  "metadata": {
+    "description": "Delay sensor. \n<br>\nInput paramter is delay in seconds, after which sensor will be in ON state.\n<br>\nRaw Data:\n<ul>\n<li>startTime, in UTC milis</li>\n<li>endTime, in UTC milis</li>\n<li>executionTime, in milis</li>\n</ul>",
+    "rawData": [
+      {
+        "parameter": "startTime",
+        "dataType": "long"
+      },
+      {
+        "parameter": "endTIme",
+        "dataType": "double"
+      },
+      {
+        "parameter": "executionTime",
+        "dataType": "double"
+      }
+    ],
+    "requiredProperties": [
+      "delay"
+    ],
+    "supportedStates": [
+      "ON",
+      "OFF"
+    ],
+    "category": "Experimental",
+    "author": "Waylay",
+    "iconURL": "https://static.waylay.io/plugs/icons/delay.png",
+    "requiredRawData": []
+  }
+}
