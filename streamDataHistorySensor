@@ -1,8 +1,8 @@
 {
   "name": "streamDataHistorySensor",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "sensor",
-  "script": "// Maintains a short-term history of stream data\nvar historySize = waylayUtil.getProperty(options, \"historySize\") || 50\nvar streamData = waylayUtil.getStreamData(options)\nvar history = waylayUtil.getCacheData(options, \"history\") || new Array()\nif (streamData.wca_message_type === 'CYCLE_HISTORY') {\n    console.log(\"Adding streamData: \", streamData)\n    history.unshift(streamData)\n    history = history.slice(0, historySize)\n    console.log('array', history)\n    send(null, {observedState : \"Stored\", rawData : {history}})\n} else {\n    // This isn't a cycle_history message, so we just skip it\n    send(null, {observedState: \"Not Stored\"})\n}\n",
+  "script": "// Maintains a short-term history of stream data\nvar historySize = waylayUtil.getProperty(options, \"historySize\") || 50\nvar streamData = waylayUtil.getStreamData(options)\nvar history = waylayUtil.getCacheData(options, \"history\") || new Array()\nif (streamData !== undefined) {\n    console.log(\"Adding streamData: \", streamData)\n    history.unshift(streamData)\n    history = history.slice(0, historySize)\n    console.log('array', history)\n    send(null, {observedState : \"Stored\", rawData : {history}})\n} else {\n    // This isn't a cycle_history message, so we just skip it\n    send(null, {observedState: \"Not Stored\"})\n}\n",
   "metadata": {
     "author": "Waylay",
     "category": "Streaming",
