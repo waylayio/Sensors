@@ -1,0 +1,31 @@
+{
+  "name": "getLastValueFromTS",
+  "version": "1.0.4",
+  "type": "sensor",
+  "script": "var resource  = waylayUtil.getProperty(options, \"resource\") || waylayUtil.getResource(options) \n\nvar metric = waylayUtil.getProperty(options, \"metric\")\n\nwaylay.data.baseUrl = options.globalSettings.waylay_data ||  \"https://data.waylay.io\"\nwaylay.data.getLastMetric(resource, metric)\n.then(data => {\nif(data){\n    \n    let rawData = {\n        lastvalue:  data[metric][0],\n        lasttimestamp:  data.timestamp\n    }\n    console.log('Data', data[metric], moment(data.timestamp).tz(\"Europe/Brussels\").format( 'Do MMMM YYYY, hh:mm:ss' ))\n    var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n    }\n    send(null, value)\n\n    \n} else {\n            send(null, {observedState : \"Not Collected\"})\n}\n})\n.catch(err=> {\n    console.log(err.message)\n     send(new Error(err))\n})\n      \n",
+  "metadata": {
+    "author": "Waylay",
+    "category": "Waylay",
+    "description": "Get the last value and last timestamp as double from the time series database. \nResource is etiher provided from the input field, raw data or from the resource \nassociated with a node to which this sensor is attached.\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/graph-circle.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource",
+      "metric"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "lastvalue",
+        "dataType": "double"
+      },
+      {
+        "parameter": "lasttimestamp",
+        "dataType": "double"
+      }
+    ]
+  }
+}
