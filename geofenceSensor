@@ -1,0 +1,24 @@
+{
+  "name": "geofenceSensor",
+  "version": "1.0.1",
+  "type": "sensor",
+  "script": "/* EXAMPLE ARRAY OF GEOFENCES\n    [\n        { \"id\":\"Antwerp\", \"type\": \"circle\", \"coordinates\": [51.2194, 4.4025], \"radius\": 10000 },\n        { \"id\":\"Ghent\", \"type\": \"polygon\", \"coordinates\": [ [51.089091, 3.606198], [51.110157, 3.869108], [50.995344, 3.878717], [50.995685, 3.628888] ] }\n    ]\n*/\n\nasync function main () {\n    var location = await getResourcePosition()\n    var geofences = getGeofences()\n    \n    var results = _.map(geofences, function(geofence) {\n        return checkGeofence(geofence, location.latitude, location.longitude)\n    })\n\n    var someInside = _.some(results, function(result) {\n        return result.inside\n    })\n\n    send(null, {\n        observedState: someInside ? 'IN' : 'OUT',\n        rawData: { \n            device: location,\n            results: results\n        }\n    })\n}\n\nfunction getGeofences () {\n    try {\n        var geofences =  waylayUtil.getProperty(options, 'geofences')\n        \n        if(_.isEmpty(geofences)) {\n            throw new Error('No geofences provided')\n        }\n        \n        return geofences\n    } catch (error) {\n        send(new Error(error))\n    }\n}\n\nasync function getResourcePosition () {\n        var resourceId =  waylayUtil.getProperty(options, 'resource')\n        var latMetricName =  waylayUtil.getProperty(options, 'latMetricName')\n        var longMetricName =  waylayUtil.getProperty(options, 'longMetricName')\n\n        if (!resourceId || !latMetricName || !longMetricName) {\n            throw new Error('Provide resourceId, latMetricName and longMetricName')\n        }\n\n        try {\n            var lat = await waylay.data.getLastMetric(resourceId, latMetricName)\n            var long = await waylay.data.getLastMetric(resourceId, longMetricName)\n            \n            var latitude = lat[latMetricName][0]\n            var longitude = long[longMetricName][0]\n            \n            return { latitude, longitude }\n        } catch (error) {\n            throw new Error(`Unable to fetch latest values for ${latMetricName} and/or ${longMetricName}. Do these metrics exist on the resource?`)\n        }\n}\n\nfunction checkGeofence (geofence, latitude, longitude) {\n    var inside = geofence.type === 'circle'\n        ? isInsideCircle(geofence, latitude, longitude)\n        : isInsidePolygon(geofence, latitude, longitude)\n\n    return {\n        inside: inside,\n        geofence: geofence\n    }\n}\n\nfunction isInsideCircle (circle, latitude, longitude) {\n    var circleLat = circle.coordinates[0]\n    var circleLon = circle.coordinates[1]\n    var radius = circle.radius\n    \n    if(!circleLat || !circleLon || !radius) {\n        send(new Error('Required props for a circle are coordinates[0], coordinates[1], radius'))\n    }\n    \n    var distance = waylayUtil.getDistance(latitude, longitude, circleLat, circleLon)\n    distance = parseFloat(distance) * 1000 //meters\n    return distance <= radius\n}\n\nfunction isInsidePolygon (polygon, latitude, longitude) {\n    const poly = _.map(polygon.coordinates, function(p) {\n        return { lat: p[0], long: p[1] }\n    })\n    \n    var i, j\n    var inside = false\n    for (i = 0, j = poly.length - 1; i < poly.length; j = i++) {\n        if(((poly[i].long > longitude) != (poly[j].long > longitude)) && (latitude < (poly[j].lat-poly[i].lat) * (longitude-poly[i].long) / (poly[j].long-poly[i].long) + poly[i].lat)) {\n            inside = !inside\n        }\n    }\n    return inside\n}\n\nmain().catch(send)\n\n\n\n",
+  "metadata": {
+    "author": "Waylay",
+    "category": "Location",
+    "description": "This sensor will return\n<ul>\n<li> IN if the resource location in inside one or more of the provided list of geofences. </li>\n<li> OUT if the resource location not inside any of the provided geofences. </li>\n</ul>\n\nRequired properties: \n\n<ul>\n<li> list of geofences:e.g.\n[\n    { \"id\":\"Antwerp\", \"type\": \"circle\", \"coordinates\": [51.2194, 4.4025], \"radius\": 10000 },\n    { \"id\":\"Ghent\", \"type\": \"polygon\", \"coordinates\": [ [51.089091, 3.606198], [51.110157, 3.869108], [50.995344, 3.878717], [50.995685, 3.628888] ] }\n]\n</li>\n<li> resource: the id of a resource with a location object </li>\n<li> latMetricName: name of the resource metric that stores the latitude coordinate </li>\n<li> longMetricName: name of the resource metric that stores the longitude coordinate </li>",
+    "iconURL": "https://static.waylay.io/icons/geoFence.png",
+    "supportedStates": [
+      "IN",
+      "OUT"
+    ],
+    "requiredProperties": [
+      "geofences",
+      "resource",
+      "latMetricName",
+      "longMetricName"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
