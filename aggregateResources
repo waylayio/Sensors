@@ -1,13 +1,13 @@
 {
   "name": "aggregateResources",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "type": "sensor",
   "script": "const username =  options.globalSettings.API_KEY\nconst password = options.globalSettings.API_PASS\n\nconst resources = waylayUtil.getProperty(options, \"resources\") || waylayUtil.getResource(options)\nconst metric = waylayUtil.getProperty(options, \"metric\")\nconst operator = waylayUtil.getProperty(options, \"operator\") || \"sum\"\n\nif(resources && username && password && metric) {\n    const options = {\n        method: 'GET',\n        auth: {\n            user: username,\n            password: password\n        }\n    }\n    \n    const msgFetching = resources.map(({ id }) => {\n        console.log('resource', id)\n        const url = `https://data.waylay.io/resources/${id}/current`\n        return requestP({ ...options, url })\n            .then(JSON.parse)\n    }) \n    \n    Promise.all(msgFetching)\n        .then(results => {\n            console.log(results)\n            var fname = \"_.\" + operator + 'By'\n            const result = eval(fname)(results, metric)\n            const value = {\n                observedState: 'Collected',\n                rawData: {\n                    result: {result, operator}\n                }\n            };\n            console.log('response:', value)\n            send(null, value)\n        }).catch(err=>{\n            send(new Error(err))\n        })\n} else {\n  send(new Error(\"Missing properties\"))\n}\n",
   "metadata": {
-    "author": "Veselin",
+    "author": "Waylay",
     "category": "Waylay",
     "description": "Calculates latest aggregate values (based on the operator sum is default) \nfrom the list of resources. Resources must be in this format\n<pre>\n[{\"id\": \"testresource\"},{\"id\": \"testresource1\"}]\n</pre>\n\nOperator can be </pre>\n<ul>\n<li>min</li>\n<li>max</li>\n<li>sum</li>\n<li>mean</li>\n</ul>\n</pre>",
-    "iconURL": "https://static.waylay.io/plugs/icons/dbGetItem.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/aggregate-resources.png",
     "supportedStates": [
       "Collected",
       "Error"
