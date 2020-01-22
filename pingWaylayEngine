@@ -1,13 +1,13 @@
 {
   "name": "pingWaylayEngine",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "type": "sensor",
   "script": "var username =  options.globalSettings.API_KEY;\nvar password = options.globalSettings.API_PASS;\nvar domain = options.requiredProperties.domain || waylayUtil.getResource(options);\n\nvar start = new Date().getTime();\n\nvar url =\"https://\"+ domain + \"/api/ping\";\n\nvar options = {\n                url: url,\n                method: 'GET',\n                auth: {\n                user: username,\n                password: password\n              }\n};\n\nrequest(options, function(err, resp, body){\n        console.log(resp);\n        var end = new Date().getTime();\n        var time = end - start;\n        value ={\n               observedState: resp.statusCode == 200 ? \"Alive\" : \"Not Alive\",\n               rawData: {\n                   time: time,\n               }\n        }\n        send(null, value);\n});\n\n",
   "metadata": {
-    "author": "",
+    "author": "Waylay",
     "category": "Waylay",
     "description": "Pings the engine endpoint.\nThe input argument is either domain or if not defiend a resource. Raw data \nis time to response.",
-    "iconURL": "https://static.waylay.io/plugs/icons/ping.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/pingWaylayEngine.png",
     "supportedStates": [
       "Alive",
       "Not Alive"
