@@ -1,10 +1,10 @@
 {
   "name": "getConnitDeviceData",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "sensor",
   "script": "var device  = options.requiredProperties.resource || waylayUtil.getResource(options);\nvar username =  options.globalSettings.CONNIT_KEY;\nvar password = options.globalSettings.CONNIT_PASS;\n\nif(device && username && password) {\n    var url = \"https://api.live-m2m.com/v1.0/Device/\"+device;\n     var options = {\n                    url: url,\n                    method: 'GET',\n                    strictSSL: false, // allow us to use our self-signed cert for testing\n                    rejectUnauthorized: false,\n                    auth: {\n                    user: username,\n                    password: password\n                  }\n    };\n    request(options, function (error, response, body) {\n      if (!error && response.statusCode == 200) {\n        var rawData = JSON.parse(body);\n        var value = {\n            observedState: \"Collected\",\n            rawData: rawData\n        };\n        console.log(\"value \" + value);\n        send(null, value);\n        }\n    else {\n        console.log(error);\n        send(null, {observedState : \"Not Collected\"});\n    }\n    }); \n   \n}else{\n  send(new Error(\"Missing properties\"));\n}\n",
   "metadata": {
-    "author": "",
+    "author": "Waylay",
     "category": "IOT Platforms",
     "description": "Connit sensor, that retrieves data for a particular resource.",
     "documentationURL": "http://live-m2m.com/ApiRest/Documentation",
