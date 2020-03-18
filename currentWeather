@@ -1,10 +1,10 @@
 {
   "name": "currentWeather",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "sensor",
-  "script": "var API_KEY = options.globalSettings.OPENWEATHER_KEY;\nvar city = waylayUtil.getProperty(options, \"city\")\nvar url =\"http://api.openweathermap.org/data/2.5/weather?q=\" + city + \"&units=metric\";\n\nif(API_KEY)\n  url = url + '&APPID='+API_KEY;\n\nrequestP({\"uri\": url})\n    .then(response=>{\n        var data = JSON.parse(response);\n        console.log(data);\n        if(data.cod && data.cod != \"200\" && data.message)\n           throw new Error(data.message);\n        var state = data.weather[0].main;\n        var icon = data.weather[0].icon;\n        var value = {\n        observedState: state,\n        rawData :{\n          temperature: data.main.temp,\n          pressure: data.main.pressure,\n          humidity: data.main.humidity,\n          temp_min: data.main.temp_min,\n          temp_max: data.main.temp_max,\n          wind_speed: data.wind.speed,\n          clouds_coverage: data.clouds.all,\n          sunrise: data.sys.sunrise,\n          sunset: data.sys.sunset,\n          longitude: data.coord.lon,\n          latitude:data.coord.lat,\n          name: data.name,\n          condition: state,\n          icon: \"http://openweathermap.org/img/w/\"+icon +\".png\"\n        }\n       }\n       send(null, value)\n    })\n    .catch(err=>{\n        send(new Error(err))\n    })\n",
+  "script": "const axios = require('axios')\nvar API_KEY = options.globalSettings.OPENWEATHER_KEY;\nvar city = waylayUtil.getProperty(options, \"city\")\nvar url =\"http://api.openweathermap.org/data/2.5/weather?q=\" + city + \"&units=metric\";\n\nif(API_KEY)\n  url = url + '&APPID='+API_KEY;\n\naxios.get(url)\n    .then(response=>{\n        var data = response.data\n        console.log(data);\n        if(data.cod && data.cod != \"200\" && data.message)\n           throw new Error(data.message);\n        var state = data.weather[0].main;\n        var icon = data.weather[0].icon;\n        var value = {\n        observedState: state,\n        rawData :{\n          temperature: data.main.temp,\n          pressure: data.main.pressure,\n          humidity: data.main.humidity,\n          temp_min: data.main.temp_min,\n          temp_max: data.main.temp_max,\n          wind_speed: data.wind.speed,\n          clouds_coverage: data.clouds.all,\n          sunrise: data.sys.sunrise,\n          sunset: data.sys.sunset,\n          longitude: data.coord.lon,\n          latitude:data.coord.lat,\n          name: data.name,\n          condition: state,\n          icon: \"http://openweathermap.org/img/w/\"+icon +\".png\"\n        }\n       }\n       send(null, value)\n    })\n    .catch(err=>{\n        send(new Error(err))\n    })\n",
   "metadata": {
-    "author": "Waylay",
+    "author": "",
     "category": "Weather",
     "description": "Weather sensor based on the API provided by <a target=\"_blank\" href=\"http://openweathermap.org/\">Open weather</a><br>\nPlease be aware that there are many cities in US that have the same name as the \none in Europe, so it is always better to specify the country, example: Paris, France\n\n<b>Properties</b>\n<ul>\n<li>city (format: city, country)</li>\n</ul><br>\n\nRaw Data example <pre>\n{\n  \"temperature\": 11.39,\n  \"pressure\": 1006,\n  \"humidity\": 87,\n  \"temp_min\": 11,\n  \"temp_max\": 12,\n  \"wind_speed\": 3.1,\n  \"clouds_coverage\": 90,\n  \"sunrise\": 1523595247,\n  \"sunset\": 1523644680,\n  \"longitude\": 3.73,\n  \"latitude\": 51.05,\n  \"name\": \"Ghent\",\n  \"condition\": \"Mist\",\n  \"icon\": \"http://openweathermap.org/img/w/50d.png\"\n}\n</pre>",
     "documentationURL": "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric",
@@ -82,5 +82,8 @@
         "dataType": "double"
       }
     ]
+  },
+  "dependencies": {
+    "axios": "0.19.2"
   }
 }
