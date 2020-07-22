@@ -1,13 +1,13 @@
 {
   "name": "isObjectMoving",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "sensor",
   "script": "var latitude, longitude;\n\ntry{\n    latitude = waylayUtil.getStreamData(options, \"latitude\")\n    longitude = waylayUtil.getStreamData(options, \"longitude\")  \n} catch(err){\n    send(new Error(err));\n}\nif(!latitude || !longitude){\n    send(new Error(\"runtime location not available\"))\n}\n\nvar previousLatitude = waylayUtil.getCacheData(options,\"latitude\");\nvar previousLongitude  = waylayUtil.getCacheData(options,\"longitude\");\nvar rawData = { latitude, longitude }\n\nif(latitude != previousLatitude || longitude != previousLongitude){\n    send(null, {observedState : \"Moving\", rawData});\n} else {\n    send(null, {observedState : \"Not Moving\", rawData}); \n}\n\n",
   "metadata": {
     "author": "Waylay",
     "category": "Location",
     "description": "isObjectMoving checks two consecutive locations to verify if the object is \nmoving or not.",
-    "iconURL": "http://static.waylay.io/plugs/icons/tracking.png",
+    "iconURL": "https://static.waylay.io/plugs/icons/tracking.png",
     "supportedStates": [
       "Moving",
       "Not Moving"
