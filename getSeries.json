@@ -1,0 +1,22 @@
+{
+  "name": "getSeries",
+  "version": "1.0.11",
+  "type": "sensor",
+  "script": "async function main () {\n    const resource = waylayUtil.getProperty(options, 'resource') || waylayUtil.getResource(options)\n    const from = waylayUtil.getProperty(options, 'from')\n\n    if (!resource) {\n        throw new Error('Resource required either from task or property')\n    }\n\n    const res = await  waylay.data.getSeries(resource, { metadata: true, _: Date.now() })\n        .catch(() => send(null, { observedState: \"Not Collected\" }))\n    \n    const data = _.reduce(res, (acc, metric) => {\n        if(!from || new Date(from) <= new Date(metric.latest.timestamp)) {\n            acc[metric.name] = metric.latest.value\n        }\n        \n        return acc\n    }, {})\n    \n    send(null, { observedState: \"Collected\", rawData: { data } })\n\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "Ward",
+    "category": "Waylay",
+    "description": "Returns a json object with all metrics that have been received on [resource].\n<br><br>\n<b>Params</b>\n<ul>\n    <li>Resource (Defaults to task resource)</li>\n    <li>From: Only show data that arrived since. (Optional)</li>\n</ul>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/graph-circle.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource",
+      "from"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}
