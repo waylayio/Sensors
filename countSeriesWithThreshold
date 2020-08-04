@@ -1,0 +1,29 @@
+{
+  "name": "countSeriesWithThreshold",
+  "version": "0.0.2",
+  "type": "sensor",
+  "script": "const count = waylayUtil.getProperty(options, \"count\") || 0\nconst threshold = waylayUtil.getProperty(options, \"threshold\") || 0\nvar series = waylayUtil.getProperty(options, \"series\") \n\nif(series === undefined || series === ''){\n    const attachNode =  waylayUtil.getAttachedSensorName(options)\n    series = waylayUtil.getRawData(options, attachNode).series\n}\n\n//console.log('data', series)\n\nvar state = \"Below\"\n\nconst resCount = series.reduce( (partial_sum, a) => {\n    if(a[1] > threshold)\n        return partial_sum + 1\n},0)\n\nif(resCount > count) {\n    state = \"Above\"\n} else if (resCount === count) {\n    state  = \"Equal\"\n}\n\nconst value = {\n  observedState: state,\n  rawData : { resCount}\n};\n\nsend(null, value);\n",
+  "metadata": {
+    "author": "",
+    "category": "General",
+    "description": "You can attach this node after \nthe times series node and check how \nmany datapoints in the array are \nabove the threshold\n",
+    "iconURL": "https://cdn.iconscout.com/icon/premium/png-512-thumb/electrical-threshold-557268.png",
+    "supportedStates": [
+      "Above",
+      "Equal",
+      "Below"
+    ],
+    "requiredProperties": [
+      "series",
+      "count",
+      "threshold"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "resCount",
+        "dataType": "int[]"
+      }
+    ]
+  }
+}
