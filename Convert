@@ -1,1 +1,19 @@
-{"name":"Convert","version":"0.0.3","type":"sensor","script":"const main = () => {\n    const converterScript = options.requiredProperties.converter\n    \n    let $input = null\n    \n    try {\n        const attachNode =  waylayUtil.getAttachedSensorName(options)\n        $input = waylayUtil.getRawData(options, attachNode)\n    } catch (_){ }\n\n    let $output = null\n    \n    try {\n        const returned = eval(`(function ($input) { ${converterScript} })($input)`)\n        const result = returned || $output\n        console.log(result)\n        \n        send(null, { rawData: { payload: result }, observedState: \"done\" })\n    } catch (error) {\n        console.log(error)\n        send(null, { observedState: \"error\" })\n    }\n}\n\nmain().catch(send)\n","metadata":{"author":"","iconURL":"https://static.waylay.io/plugs/icons/waylayGetLatestItem.png","description":"A variable $input is available, which contains the rawData of the connected node. \n\n<br/><br/>\n\nThis sensors rawData itself is whatever is returned from the converter or has been assigned to $output\n\n<br/><br/>\n\n<h2>An example script:</h2>\n<code>return $input.someProperty * 2</code>\n<br/><br/>\nor \n<br/><br/>\n<code>$output = $input.someProperty * 2</code>\n<br/><br/>\n\nThe convertscript is a JS sandbox. ","rawData":[],"requiredProperties":["converter"],"supportedStates":["done","error"]}}
+{
+  "name": "Convert",
+  "version": "0.0.6",
+  "type": "sensor",
+  "script": "const main = () => {\n    const converterScript = options.requiredProperties.converter\n    \n    let $input = null\n    let $attachNode = null\n    \n    try {\n        $attachNode =  waylayUtil.getAttachedSensorName(options)\n        $input = waylayUtil.getRawData(options, $attachNode)\n    } catch (_){ }\n\n    let $output = null\n    \n    try {\n        const returned = eval(`(function ($input, $attachNode) { ${converterScript} })($input, $attachNode)`)\n        const result = returned || $output\n        console.log(result)\n        \n        send(null, { rawData: result, observedState: \"done\" })\n    } catch (error) {\n        console.log(error)\n        send(null, { observedState: \"error\" })\n    }\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/waylayGetLatestItem.png",
+    "description": "A variable $input is available, which contains the rawData of the connected node. \n\n<br/><br/>\n\nThis sensors rawData itself is whatever is returned from the converter or has been assigned to $output\n\n<br/><br/>\n\n<h2>An example script:</h2>\n<code>return $input.someProperty * 2</code>\n<br/><br/>\nor \n<br/><br/>\n<code>$output = $input.someProperty * 2</code>\n<br/><br/>\n\nThe convertscript is a JS sandbox. ",
+    "rawData": [],
+    "requiredProperties": [
+      "converter"
+    ],
+    "supportedStates": [
+      "done",
+      "error"
+    ]
+  }
+}
