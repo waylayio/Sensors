@@ -1,0 +1,19 @@
+{
+  "name": "bitflip",
+  "version": "1.0.1",
+  "type": "sensor",
+  "script": "const previousState = options.internalState\nconst newState = previousState === '1' ? '0' : '1'\n\nsend(null, {\n  observedState: newState,\n  internalState: newState\n})",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>Bitflip Sensor</h4>\n<br>\nAt any tick it flips between zero and one.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        0\n    </li>\n    <li>\n        1\n    </li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/bitflip.png",
+    "supportedStates": [
+      "0",
+      "1"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}

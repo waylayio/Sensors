@@ -1,0 +1,28 @@
+{
+  "name": "getChildren",
+  "version": "1.0.7",
+  "type": "sensor",
+  "script": "const resource = options.node.RESOURCE\n\nif (resource === undefined || resource === '') {\n  send(new Error('resource not defined'))\n}\n\nwaylay.resources.children(resource)\n  .then(response => {\n    const rawData = Object.assign({}, response.values, { childIds: response.values.map(val => val.id) })\n    send(null, { observedState: 'Collected', rawData })\n  })\n  .catch((error) => {\n    send(null, { observedState: 'Not Collected', rawData : { error }})\n  })",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>getChildren Sensor</h4>\n<br>\nRetrieves the children of a resource.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        values: the array with the children objects\n    </li>\n    <li>\n        childIds: the array with the ids of the children\n    </li>\n</ul>\n<br>",
+    "iconURL": "https://static.waylay.io/plugs/icons/getChildren.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "values",
+        "dataType": "object[]"
+      },
+      {
+        "parameter": "childIds",
+        "dataType": "string[]"
+      }
+    ]
+  }
+}

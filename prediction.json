@@ -1,0 +1,35 @@
+{
+  "name": "prediction",
+  "version": "0.0.5",
+  "type": "sensor",
+  "script": "async function execute () {\n  const resource = options.node.RESOURCE\n  const tsaConfig = options.requiredProperties.tsaConfig\n  if (!resource || !tsaConfig) return send(new Error('Please provide resource and tsaConfig'))\n\n  let params = options.requiredProperties.params || {}\n  if (typeof params === 'string') {\n    try {\n      params = JSON.parse(params)\n    } catch (err) {\n      return send(new Error('Unable to parse params to JSON'))\n    }\n  }\n\n  const response = await waylay.analytics.predict(resource, tsaConfig, params)\n    .catch(error => sendError(error, send))\n\n  const result = {\n    observedState: response.predictions.length > 0 ? 'Computed' : 'Not Computed',\n    rawData: {\n      predictions: response.predictions,\n      first_prediction: response.first_prediction,\n      last_observation: response.last_observation\n    }\n  }\n\n  send(null, result)\n}\n\nfunction sendError (err, send) {\n  if (err.response) {\n    console.error(err.response.data)\n    send(new Error(JSON.stringify({\n      method: err.response.request.method,\n      path: err.response.request.path,\n      status: err.response.status,\n      message: err.response.data.error\n    })))\n  } else {\n    console.error(err)\n    send(err)\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>prediction Sensor</h4>\n<br>\nProvides forecasts for a time series.\n<strong>you must have TS Analytics package to run this sensor.</strong>\n<p>\nBefore using this sensor, configure the analytics options for \nthis metric using the  <a href=\"/#/analytics\" target=\"_blank\">analytics dashboard</a>.\nAlternatively you should give a complete option configuration in the\n<code>params</code> section. \nSee <a href='https://github.com/waylayio/TS_Analytics/blob/master/doc/apidoc.md' target=\"_blank\">apidoc</a>\non how to specify options.\n</p>\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Computed: if predictions are available\n    </li>\n    <li>\n        Not Computed: otherwise\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        <code>predictions</code>: list of prediction values. The size of the prediction window depends on the analytics option configuration, defaults to 10 predictions\n    </li>\n    <li>\n        <code>last_observation</code>: last observation before the predictions\n    </li>\n    <li>\n        <code>first_prediction</code>:  first prediction \n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        <code>tsaConfig</code>: name of the Time Series Analytics configuration\n    </li>\n    <li>\n        <code>params</code>: overrides for the analytics option configuration (see below)\n    </li>\n</ul>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/prediction.png",
+    "supportedStates": [
+      "Computed",
+      "Not Computed"
+    ],
+    "requiredProperties": [
+      "tsaConfig",
+      "params"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "prediction",
+        "dataType": "object"
+      },
+      {
+        "parameter": "firstPrediction",
+        "dataType": "object"
+      },
+      {
+        "parameter": "lastPrediction",
+        "dataType": "object"
+      }
+    ]
+  }
+}

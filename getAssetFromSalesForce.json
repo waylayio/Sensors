@@ -1,0 +1,76 @@
+{
+  "name": "getAssetFromSalesForce",
+  "version": "0.0.20",
+  "type": "sensor",
+  "script": "const jsforce = require('jsforce')\nconst pify = require('pify')\nconst Waylay = require('@waylay/client')\nconst _ = require('lodash')\n\nasync function main () {\n  const caseObject = cleanObject({\n    SerialNumber: String(options.requiredProperties.SerialNumber),\n    Name: options.requiredProperties.Name || options.node.RESOURCE,\n    Id: options.requiredProperties.Id\n  })\n\n  const conn = await getSalesforceConnection()\n\n  const SfAsset = pify(conn.sobject('Asset'))\n\n  const res = await SfAsset.find(caseObject)\n\n  if (res.length > 0) {\n    send(null, { observedState: 'Found', rawData: res[0] })\n  } else {\n    send(null, { observedState: 'Not Found' })\n  }\n}\n\nasync function getSalesforceConnection () {\n  try {\n    const waylayClient = new Waylay({\n      token: options.globalSettings.waylayToken\n    })\n\n    const { access_token: accessToken } = await waylayClient.hoard.getTokens('salesforce', { scope: 'organisation' })\n\n    if (!accessToken) {\n      throw new Error('No user or token provided via Hoard service')\n    }\n\n    const jsclient = new jsforce.Connection({\n      instanceUrl: 'https://eu26.salesforce.com',\n      accessToken\n    })\n\n    return jsclient\n  } catch (error) {\n    throw new Error(`error: ${error} \\n possible solution: Connect Salesforce through the connections`)\n  }\n}\n\n/**\n * remove empty values in object before sending to salesforce\n */\nfunction cleanObject (object) {\n  return _.reduce(object, (acc, v, k) => {\n    if (v) acc[k] = v\n    return acc\n  }, {})\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/get-asset-from-salesforce.png",
+    "description": "Example of asset sensor for SalesForce, raw Data example:\n\n<pre>\n \"Id\": \"02i1i000000h1OnAAI\",\n  \"ContactId\": null,\n  \"AccountId\": \"0011i00000A2MktAAF\",\n  \"Product2Id\": \"01t1i000000eMAjAAM\",\n  \"IsCompetitorProduct\": false,\n  \"CreatedDate\": \"2019-04-17T14:23:53.000+0000\",\n  \"CreatedById\": \"0051i000000fYz5AAE\",\n  \"LastModifiedDate\": \"2019-04-17T14:23:53.000+0000\",\n  \"LastModifiedById\": \"0051i000000fYz5AAE\",\n  \"SystemModstamp\": \"2019-04-17T14:23:53.000+0000\",\n  \"IsDeleted\": false,\n  \"Name\": \"EngineX\",\n  \"SerialNumber\": \"12345\",\n  \"InstallDate\": \"2019-04-16\",\n  \"PurchaseDate\": \"2019-04-04\",\n  \"UsageEndDate\": null,\n  \"Status\": \"Installed\",\n  \"Price\": 10000,\n  \"Quantity\": 1,\n  \"Description\": null,\n  \"OwnerId\": \"0051i000000fYz5AAE\",\n  \"LastViewedDate\": \"2019-04-18T16:09:03.000+0000\",\n  \"LastReferencedDate\": \"2019-04-18T16:09:03.000+0000\"\n  </pre>\n",
+    "rawData": [
+      {
+        "dataType": "string",
+        "parameter": "ContactId"
+      },
+      {
+        "dataType": "string",
+        "parameter": "AccountId"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Product2Id"
+      },
+      {
+        "dataType": "integer",
+        "parameter": "SerialNumber"
+      },
+      {
+        "dataType": "string",
+        "parameter": "InstallDate"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Status"
+      },
+      {
+        "dataType": "double",
+        "parameter": "Price"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Description"
+      },
+      {
+        "dataType": "string",
+        "parameter": "OwnerId"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Name"
+      },
+      {
+        "dataType": "double",
+        "parameter": "Quantity"
+      },
+      {
+        "dataType": "string",
+        "parameter": "OwnerId"
+      }
+    ],
+    "requiredProperties": [
+      "SerialNumber",
+      "Id",
+      "Name"
+    ],
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ]
+  },
+  "dependencies": {
+    "jsforce": "1.10.0",
+    "pify": "5.0.0",
+    "@waylay/client": "2.20.0",
+    "lodash": "4.17.15"
+  }
+}

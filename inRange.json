@@ -1,0 +1,24 @@
+{
+  "name": "inRange",
+  "version": "0.0.6",
+  "type": "sensor",
+  "script": "const value = parseFloat(options.requiredProperties.value)\nconst lowerLimit = parseFloat(options.requiredProperties.lowerLimit)\nconst upperLimit = parseFloat(options.requiredProperties.upperLimit)\n\nif ([value, lowerLimit, upperLimit].some(x => x == null)) {\n  send(new Error('All properties should be defined'))\n}\nif (upperLimit <= lowerLimit) {\n  send(new Error('Property \"upperLimit\" should be higher than \"lowerLimit\"'))\n}\n\nlet state = 'In Range'\nif (value < lowerLimit) {\n  state = 'Below'\n}\nif (value > upperLimit) {\n  state = 'Above'\n}\n\nsend(null, { observedState: state })",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>inRange Sensor</h4>\n<br>\nChecks if the given value is in range of the given bounds, where the bound are inclusive.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        In Range:\n    </li>\n    <li>\n        Above:\n    </li>\n    <li>\n        Below:\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        value\n    </li>\n    <li>\n        lowerLimit\n    </li>\n    <li>\n        upperLimit\n    </li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/in-range.png",
+    "supportedStates": [
+      "In Range",
+      "Below",
+      "Above"
+    ],
+    "requiredProperties": [
+      "value",
+      "lowerLimit",
+      "upperLimit"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}

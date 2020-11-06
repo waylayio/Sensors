@@ -1,0 +1,32 @@
+{
+  "name": "getUsageStats",
+  "version": "0.0.8",
+  "type": "sensor",
+  "script": "const { DateTime } = require('luxon')\nconst { get } = require('lodash')\n\nconst timeZone = options.requiredProperties.timeZone || 'UTC'\nconst service = options.requiredProperties.service\nconst metricName = options.requiredProperties.metricName\n\nconst until = DateTime.fromObject({ zone: timeZone })\nconst from = until.startOf('month')\n\nasync function fetchResourceCount () {\n  if (metricName !== 'count') {\n    return send(new Error(`Metric ${metricName} not found for resources`))\n  }\n\n  const resources = await waylay.resources.search({ limit: 0 })\n  send(null, { observedState: 'done', rawData: { consumption: resources.total } })\n}\n\nfunction getMetricPath (service, metricName) {\n  if (service === 'analytics') {\n    return `results.analytics.billing.${metricName}`\n  }\n  return `results.${metricName}.perMonth.aggregated`\n}\n\nasync function execute () {\n  if (!until.zone) {\n    return send(new Error('Unknown timezone: ' + timeZone))\n  }\n  console.log('Getting metrics for ' + service + ' from ' + from.toString() + ' until ' + until.toString())\n\n  if (service === 'resources') {\n    return await fetchResourceCount()\n  }\n\n  const stats = await waylay.stats.getMetric(service, { from: from.toMillis(), until: until.toMillis() })\n  const metricPath = getMetricPath(service, metricName)\n\n  if (!metricPath) {\n    return send(new Error(`Metric ${metricName} not found for ${service}`))\n  }\n\n  const consumption = get(stats, metricPath)\n\n  send(null, { observedState: 'done', rawData: { consumption } })\n}\n\nexecute().catch(send)",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>getUsageStats Sensor</h4>\n<br>\nSensor to check Waylay usage metrics.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        done\n    </li>\n    <li>\n        error\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<p>\nIf the specified metric could be successfully retrieved,\nthe value is added as consumption in the rawData\n</p>\n<ul>\n    <li>\n        consumption: object with result of sensor\n    </li>\n</ul>\nThe consumption object will contain the following data:\n<ul>\n    <li>sandbox: executions</li>\n    <li>nativePlug: executions</li>\n    <li>broker: messages</li>\n    <li>broker: datapoints</li>\n    <li>webscripts: executions</li>\n    <li>resources: count</li>\n    <li>analytics: totalMs</li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        threshold\n    </li>\n    <li>\n        service: one of <code>sandbox</code>, <code>nativePlug</code>, <code>broker</code>, <code>webscripts</code>, <code>resources</code>, <code>analytics</code>\n    </li>\n    <li>\n        metric: <code>executions</code>, <code>messages</code>, <code>datapoints</code>, <code>count</code> or <code>totalMs</code>(see above)\n    </li>\n    <li>\n        timeZone: timezone to use to determine begin of month (default: UTC)\n    </li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/getUsageStats.png",
+    "supportedStates": [
+      "done",
+      "error"
+    ],
+    "requiredProperties": [
+      "timeZone",
+      "service",
+      "metricName"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "consumption",
+        "dataType": "double"
+      }
+    ]
+  },
+  "dependencies": {
+    "luxon": "1.25.0",
+    "lodash": "4.17.15"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "getForecastWeather",
+  "version": "1.0.6",
+  "type": "sensor",
+  "script": "const axios = require('axios')\n\nconst API_KEY = options.requiredProperties.OPENWEATHER_KEY\nconst city = options.requiredProperties.city\n\nif (!API_KEY || !city) {\n  send(new Error('Required properties missing', {\n    observedState: 'Not Collected'\n  }))\n}\n\nconst url = `https://pro.openweathermap.org/data/2.5/forecast/hourly?q=${city}&appid=${API_KEY}&units=metric`\n\naxios.get(url)\n  .then(response => {\n    const { data } = response\n    if (data.cod && data.cod !== '200' && data.message) {\n      throw new Error(data.message)\n    }\n    const forecastArray = data.list.map((forecast) => {\n      return {\n        temperature: forecast.main.temp,\n        temp_feel: forecast.main.feels_like,\n        pressure: forecast.main.pressure,\n        humidity: forecast.main.humidity,\n        temp_min: forecast.main.temp_min,\n        temp_max: forecast.main.temp_max,\n        wind_speed: forecast.wind.speed,\n        wind_direction: forecast.wind.deg,\n        wind_gust_speed: forecast.wind.gust,\n        clouds_coverage: forecast.clouds.all,\n        sunrise: forecast.sys.sunrise,\n        sunset: forecast.sys.sunset,\n        rain_last_hour: forecast.rain ? forecast.rain['1h'] : undefined,\n        snow_last_hour: forecast.snow ? forecast.snow['1h'] : undefined,\n        longitude: forecast.coord.lon,\n        latitude: forecast.coord.lat,\n        name: forecast.name,\n        condition: forecast.weather[0].main,\n        icon: 'http://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png'\n      }\n    })\n\n    const value = {\n      observedState: 'Collected',\n      rawData: forecastArray\n    }\n    send(null, value)\n  })\n  .catch(err => {\n    send(new Error(err.response.data.message), {\n      observedState: 'Not Collected'\n    })\n  })\n",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>getForecastWeather Sensor</h4>\n<br>\nWeather forecast sensor based on the API provided by <a target=\"_blank\" href=\"http://openweathermap.org/\">Open weather</a><br>\nReturns an array of the weather forecast for the comming 96 hours\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\nThe forecastArray conatins an array of objects with these values: \n<ul>\n    <li>\n        temperature\n    </li>\n    <li>\n        temp_feel: This temperature parameter accounts for the human perception of weather.\n    </li>\n    <li>\n        pressure: Atmospheric pressure in hPa\n    </li>\n    <li>\n        humidity: Humidity in %\n    </li>\n    <li>\n        temp_min: Minimum temperature at the moment. This is minimal currently observed temperature \n    </li>\n    <li>\n        temp_max: Maximum temperature at the moment. This is maximal currently observed temperature.\n    </li>\n    <li>\n        wind_speed: Wind speed in meter/sec\n    </li>\n    <li>\n        wind_direction: Wind direction in degrees \n    </li>\n    <li>\n        wind_gust_speed: Wind gust speed in meter/sec\n    </li>\n    <li>\n        clouds_coverage: Cloudiness, %\n    </li>\n    <li>\n        sunrise: Sunrise time, unix, UTC\n    </li>\n    <li>\n        sunset: Sunset time, unix, UTC\n    </li>\n    <li>\n        rain_last_hour: Rain volume for the last hour in mm\n    </li>\n    <li>\n        snow_last_hour: Snow volume for the last hour in mm\n    </li>\n    <li>\n        longitude: City geo location, longitude\n    </li>\n    <li>\n        latitude: City geo location, latitude\n    </li>\n    <li>\n        name: City name\n    </li>\n    <li>\n        condition: Group of weather parameters (Rain, Snow, Extreme etc.)\n    </li>\n    <li>\n        icon: Weather icon url\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        city: Name of the city (be aware that there are many cities in US that have the same name as the one in Europe, so it is always better to also specify the country, example: Paris, France)\n    </li>\n    <li>\n        OPENWEATHER_KEY: OpenWeather api key (we do not recommend to fill in the api key as plaintext use, <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n</ul>",
+    "documentationURL": "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric",
+    "iconURL": "https://static.waylay.io/plugs/icons/weather.png",
+    "supportedStates": [
+      "Clouds",
+      "Clear",
+      "Storm",
+      "Rain",
+      "Mist",
+      "Fog",
+      "Haze",
+      "Snow",
+      "Drizzle"
+    ],
+    "requiredProperties": [
+      "city",
+      "OPENWEATHER_KEY"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "forecastArray",
+        "dataType": "object[]"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}

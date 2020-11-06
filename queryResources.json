@@ -1,0 +1,25 @@
+{
+  "name": "queryResources",
+  "version": "1.0.7",
+  "type": "sensor",
+  "script": "const query = options.requiredProperties.query\n\nif (!query) {\n  send(new Error('Missing property: query'))\n}\nlet parsedQuery\ntry {\n  parsedQuery = JSON.parse(query)\n} catch (err) {\n  send(new Error('Failed to parse query: ' + err))\n}\n\nwaylay.resources.search(parsedQuery).then((response) => {\n  send(null, {\n    observedState: 'Done',\n    rawData: { resources: response.values }\n  })\n}).catch((err) => {\n  send(new Error(err), {\n    observedState: 'Error'\n  })\n})\n",
+  "metadata": {
+    "author": "",
+    "description": "<h4>Sensor/Actuator Name</h4>\n<br>\nA sensor that queries all resources\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Done\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        resources: List of resources as objects containing all metadata\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        query: a json object to query specific resources <a href=\"https://docs.waylay.io/api/rest/#query-resources\" target=\"_blank\">see docs</a> for all possible options\n    </li>\n</ul>",
+    "iconURL": "https://static.waylay.io/plugs/icons/meta.png",
+    "supportedStates": [
+      "Done",
+      "Error"
+    ],
+    "requiredProperties": [
+      "query"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "resources",
+        "dataType": "object[]"
+      }
+    ]
+  }
+}
