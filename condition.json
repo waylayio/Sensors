@@ -1,0 +1,20 @@
+{
+  "name": "condition",
+  "version": "1.0.7",
+  "type": "sensor",
+  "script": "const conditionScript = options.requiredProperties.condition\n\ntry {\n  const observedState = eval(conditionScript) ? 'True' : 'False'\n  send(null, { observedState })\n} catch (error) {\n  console.log(error)\n  send(new Error(error))\n}\n",
+  "metadata": {
+    "author": "",
+    "description": "<h4>Condition</h4>\n<br>\n    sets state to True/False depending on the result of the condition expression \n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>True</li>\n    <li>False</li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        condition: condition script.\n    </li>\n</ul>\n\n<b>Example</b>\n<code>\n    $streamdata.temperature > 20\n</code>",
+    "iconURL": "https://static.waylay.io/icons/condition.png",
+    "supportedStates": [
+      "True",
+      "False"
+    ],
+    "requiredProperties": [
+      "condition"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  }
+}

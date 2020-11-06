@@ -1,0 +1,23 @@
+{
+  "name": "throttle",
+  "version": "1.1.2",
+  "type": "sensor",
+  "script": "/*\n * invocationPolicy as a sensor, effectively throttling the next nodes\n */\nconst parse = require('parse-duration')\n\nconst requiredProperties = options.requiredProperties || {}\nconst internalState = options.internalState || {}\n\nconst { lastInvocation = Date.now() } = internalState\nconst { duration = '1s' } = requiredProperties\n\nasync function main () {\n  // parse the human duration to milliseconds\n  const durationMs = parse(duration)\n  // we should trigger if the lastInvocation was older than the duration\n  const diff = Date.now() - lastInvocation\n  const shouldTrigger = diff > durationMs\n\n  // make sure we update the lastInvocation time\n  if (shouldTrigger) {\n    const lastInvocation = Date.now()\n\n    return send(null, {\n      internalState: { lastInvocation },\n      rawData: { lastInvocation },\n      observedState: 'trigger'\n    })\n  }\n\n  return send(null, {\n    internalState: { lastInvocation },\n    rawData: { lastInvocation },\n    observedState: 'no trigger'\n  })\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "Gilles De Mey",
+    "description": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/throttle.png",
+    "supportedStates": [
+      "trigger",
+      "no trigger"
+    ],
+    "requiredProperties": [
+      "duration"
+    ],
+    "requiredRawData": [],
+    "rawData": []
+  },
+  "dependencies": {
+    "parse-duration": "^0.4.0"
+  }
+}

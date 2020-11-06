@@ -1,0 +1,28 @@
+{
+  "name": "byomlPredict",
+  "version": "0.0.8",
+  "type": "sensor",
+  "script": "function execute () {\n  const modelName = options.requiredProperties.modelName\n  const instances = options.requiredProperties.instances\n  const useProbabilities = ['true', true].includes(options.requiredProperties.useProbabilities)\n\n  if (!modelName) { return send(new Error('Missing property: modelName'), { observedState: 'Not predicted' }) }\n  if (!instances) { return send(new Error('Missing property: instances'), { observedState: 'Not predicted' }) }\n\n  const payload = typeof instances === 'string' ? JSON.parse(instances) : instances\n\n  const data = { instances: payload, probability: useProbabilities }\n\n  waylay.byoml.predict(modelName, data)\n    .then(body => send(null, { observedState: 'predicted', rawData: body }))\n    .catch(err => {\n      console.error(err.response ? err.response.data : err)\n      send(new Error('Failed to predict, check if model exists and if instances are in correct format.'), { observedState: 'Not predicted' })\n    })\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>byomlPredict Sensor</h4>\nBYOML endpoint invoker.\n<br>\nUsed to invoke an uploaded ML model.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Not predicted: Indicates that something went wrong.\n    </li>\n    <li>\n        predicted: Indicates that the predictions are succesfully retrieved and the results are ready to use.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        prediction: This will contain the result returned by the specified model.\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        instances: The model inputs.\n    </li>\n    <li>\n        modelName: The model that should be used.\n    </li>\n    <li>\n        useProbabilities: Wether probabilities should be returned, this will only work for a subset of scikit-learn models.\n    </li>\n</ul>\n",
+    "iconURL": "https://static.waylay.io/plugs/icons/ML-prediction.png",
+    "supportedStates": [
+      "predicted",
+      "not predicted"
+    ],
+    "requiredProperties": [
+      "modelName",
+      "instances",
+      "useProbabilities"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "predictions",
+        "dataType": "object"
+      }
+    ]
+  }
+}

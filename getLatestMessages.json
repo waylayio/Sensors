@@ -1,0 +1,34 @@
+{
+  "name": "getLatestMessages",
+  "version": "2.0.6",
+  "type": "sensor",
+  "script": "const moment = require('moment')\nlet lastExecution\ntry {\n  lastExecution = options.rawData[options.task.NODE_NAME].lastExecution\n} catch (err) {\n  lastExecution = 0\n}\n\nconst resource = options.node.RESOURCE\nconst now = moment().unix() * 1000\n\nwaylay.data.getSeries(resource)\n  .then(data => {\n    data = data.filter((o) => { return o.timestamp > lastExecution })\n    const count = data.length\n    if (count === 0) {\n      send(null, { observedState: 'Empty', rawData: { lastExecution: now, count } })\n    } else {\n      send(null, { observedState: 'Done', rawData: { data, lastExecution: now, count } })\n    }\n  })\n  .catch(err => {\n    send(new Error(err))\n  })\n",
+  "metadata": {
+    "author": "",
+    "description": "<h4>getLatestMessages Sensor</h4>\n<br>\nGet latest message between two consecutive collections. \nFirst time gives all messages stored in the cloud cache\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Done\n    </li>\n     <li>\n        Empty\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: The array of found messages\n    </li>\n    <li>\n        lastExecution: The last time the sensor was triggerd\n    </li>\n    <li>\n        count: Amount of found messages between now and last execution\n    </li>\n</ul>\n<br>",
+    "iconURL": "https://static.waylay.io/plugs/icons/inventory.png",
+    "supportedStates": [
+      "Done",
+      "Empty"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "data",
+        "dataType": "object"
+      },
+      {
+        "parameter": "lastExecution",
+        "dataType": "double"
+      },
+      {
+        "parameter": "count",
+        "dataType": "double"
+      }
+    ]
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
+  }
+}

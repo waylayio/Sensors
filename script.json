@@ -1,0 +1,19 @@
+{
+  "name": "script",
+  "version": "1.0.6",
+  "type": "sensor",
+  "script": "const script = options.requiredProperties.script\n\nasync function main () {\n  let result\n\n  try {\n    result = await eval(`(${script})()`)\n  } catch (error) {\n    console.error(error.message)\n    send(null, { observedState: 'error' })\n  }\n\n  if (typeof result !== 'object' || result === null) {\n    throw new Error('Result is not an object')\n  }\n\n  send(null, { observedState: 'done', rawData: result })\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "Ward Van Durme",
+    "iconURL": "https://static.waylay.io/plugs/icons/code.png",
+    "description": "<h4>Script</h4>\n<br>\nThe script sensor allows you to prototype a small piece of code that doesn't belong in a dedicated plug.\n<br><br>\n<b>Example: </b><br>\n<code>\nfunction example () {\n    return { foo: 'bar' }\n}\n</code>\n<br><br>\nThe return value of this function has to be an object and will be used as rawData.",
+    "rawData": [],
+    "requiredProperties": [
+      "script"
+    ],
+    "supportedStates": [
+      "done",
+      "error"
+    ]
+  }
+}
