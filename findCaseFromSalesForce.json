@@ -1,0 +1,118 @@
+{
+  "name": "findCaseFromSalesForce",
+  "version": "0.0.15",
+  "type": "sensor",
+  "script": "const jsforce = require('jsforce')\nconst pify = require('pify')\nconst Waylay = require('@waylay/client')\nconst _ = require('lodash')\n\nasync function main () {\n  const caseObject = cleanObject({\n    AssetId: options.requiredProperties.AssetId || options.node.RESOURCE,\n    CaseNumber: options.requiredProperties.CaseNumber,\n    Subject: options.requiredProperties.Subject,\n    Status: options.requiredProperties.Status,\n    Priority: options.requiredProperties.Priority,\n    AccountId: options.requiredProperties.AccountId,\n    Reason: options.requiredProperties.Reason,\n    OwnerId: options.requiredProperties.OwnerId,\n    Product__c: options.requiredProperties.Product__c\n  })\n\n  const conn = await getSalesforceConnection()\n\n  const SfCase = pify(conn.sobject('Case'))\n\n  try {\n    const res = await SfCase.find(caseObject)\n    send(null, { observedState: 'Found', rawData: res[0] })\n  } catch (error) {\n    send(null, { observedState: 'Not Found' })\n  }\n}\n\nasync function getSalesforceConnection () {\n  try {\n    const waylayClient = new Waylay({\n      token: options.globalSettings.waylayToken\n    })\n\n    const { access_token: accessToken } = await waylayClient.hoard.getTokens('salesforce', { scope: 'organisation' })\n\n    if (!accessToken) {\n      throw new Error('No user or token provided via Hoard service')\n    }\n\n    const jsclient = new jsforce.Connection({\n      instanceUrl: 'https://eu26.salesforce.com',\n      accessToken\n    })\n\n    return jsclient\n  } catch (error) {\n    throw new Error(`error: ${error} \\n possible solution: Connect Salesforce through the connections`)\n  }\n}\n\n/**\n * remove empty values in object before sending to salesforce\n */\nfunction cleanObject (object) {\n  return _.reduce(object, (acc, v, k) => {\n    if (v) acc[k] = v\n    return acc\n  }, {})\n}\n\nmain().catch(send)\n",
+  "metadata": {
+    "author": "",
+    "iconURL": "https://static.waylay.io/plugs/icons/salesforce-find-case.png",
+    "description": "Case sensor for SalesForce, AssetId can be waylay resource as well\n\nraw Data example:\n\n<pre>\n {\n  \"attributes\": {\n    \"type\": \"Case\",\n    \"url\": \"/services/data/v34.0/sobjects/Case/5001i0000066cOoAAI\"\n  },\n  \"Id\": \"5001i0000066cOoAAI\",\n  \"IsDeleted\": false,\n  \"CaseNumber\": \"00027027\",\n  \"ContactId\": \"0031i000006vlJOAAY\",\n  \"AccountId\": \"0011i00000A2MktAAF\",\n  \"AssetId\": null,\n  \"ParentId\": null,\n  \"SuppliedName\": null,\n  \"SuppliedEmail\": null,\n  \"SuppliedPhone\": null,\n  \"SuppliedCompany\": null,\n  \"Type\": \"Mechanical\",\n  \"Status\": \"New\",\n  \"Reason\": \"Performance\",\n  \"Origin\": \"Web\",\n  \"Subject\": \"another issue\",\n  \"Priority\": \"Medium\",\n  \"Description\": null,\n  \"IsClosed\": false,\n  \"ClosedDate\": null,\n  \"IsEscalated\": false,\n  \"OwnerId\": \"0051i000000fYz5AAE\",\n  \"CreatedDate\": \"2019-04-17T14:30:32.000+0000\",\n  \"CreatedById\": \"0051i000000fYz5AAE\",\n  \"LastModifiedDate\": \"2019-04-17T14:40:38.000+0000\",\n  \"LastModifiedById\": \"0051i000000fYz5AAE\",\n  \"SystemModstamp\": \"2019-04-17T14:40:38.000+0000\",\n  \"LastViewedDate\": \"2019-04-19T09:05:31.000+0000\",\n  \"LastReferencedDate\": \"2019-04-19T09:05:31.000+0000\",\n  \"EngineeringReqNumber__c\": null,\n  \"Product__c\": \"GC1040\",\n  \"PotentialLiability__c\": null,\n  \"CSAT__c\": null,\n  \"Case_ExternalId__c\": null,\n  \"FCR__c\": false,\n  \"Product_Family_KB__c\": null,\n  \"SLAViolation__c\": null,\n  \"SLA_Type__c\": null\n}\n</pre>\n",
+    "rawData": [
+      {
+        "dataType": "string",
+        "parameter": "Id"
+      },
+      {
+        "dataType": "string",
+        "parameter": "CaseNumber"
+      },
+      {
+        "dataType": "string",
+        "parameter": "ContactId"
+      },
+      {
+        "dataType": "integer",
+        "parameter": "AccountId"
+      },
+      {
+        "dataType": "string",
+        "parameter": "InstallDate"
+      },
+      {
+        "dataType": "string",
+        "parameter": "AssetId"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SuppliedName"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SuppliedEmail"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SuppliedPhone"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SuppliedCompany"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Status"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Subject"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Priority"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Description"
+      },
+      {
+        "dataType": "boolean",
+        "parameter": "IsClosed"
+      },
+      {
+        "dataType": "boolean",
+        "parameter": "IsEscalated"
+      },
+      {
+        "dataType": "string",
+        "parameter": "CreatedDate"
+      },
+      {
+        "dataType": "string",
+        "parameter": "CreatedById"
+      },
+      {
+        "dataType": "string",
+        "parameter": "Product__c"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SLAViolation__c"
+      },
+      {
+        "dataType": "string",
+        "parameter": "SLA_Type__c"
+      }
+    ],
+    "requiredProperties": [
+      "AssetId",
+      "Subject",
+      "Status",
+      "Priority",
+      "AccountId",
+      "Reason",
+      "OwnerId",
+      "Product__c",
+      "CaseNumber"
+    ],
+    "supportedStates": [
+      "Found",
+      "Not Found"
+    ]
+  },
+  "dependencies": {
+    "jsforce": "1.10.0",
+    "pify": "5.0.0",
+    "@waylay/client": "2.20.0",
+    "lodash": "4.17.15"
+  }
+}
