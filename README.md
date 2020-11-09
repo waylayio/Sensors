@@ -17,6 +17,10 @@ Please note we have some guidelines, please follow these when editing or creatin
 
 ### Code guidelines
 
+#### Fetching API Keys
+Do not hardcode references to API keys in `globalSettings`. 
+The preferred way to fetch API keys is to have them as a property, so the user can fill them in using declarative bindings.
+
 #### Do not use injected waylayUtil functions
 These functions will soon be deprecated, so we can't use them in the Sensor code anymore. 
 All functionality that these functions provide should be directly available in the injected `options` object.
