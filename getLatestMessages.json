@@ -1,6 +1,6 @@
 {
   "name": "getLatestMessages",
-  "version": "5.1.6",
+  "version": "5.1.7",
   "type": "sensor",
   "script": "const { resource } = options.requiredProperties\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('No resource provided'))\n  }\n  try {\n    const data = await waylay.data.getSeries(resource)\n    const count = data.length\n    return send(null, { observedState: 'Collected', rawData: { data, count } })\n  } catch (error) {\n    return send(null, { observedState: 'Not Collected', rawData: { errorMessage: 'Failed to get latest messages: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {
@@ -20,10 +20,6 @@
       {
         "parameter": "data",
         "dataType": "object"
-      },
-      {
-        "parameter": "lastExecution",
-        "dataType": "double"
       },
       {
         "parameter": "count",
