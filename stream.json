@@ -1,6 +1,6 @@
 {
   "name": "stream",
-  "version": "0.0.8",
+  "version": "0.0.7",
   "type": "sensor",
   "script": "const stream = options.rawData.GLOBAL || {}\nconst id = options.node.RESOURCE\n\nif (Object.entries(stream).length === 0) {\n  send(new Error('No Streamdata'))\n} else {\n  send(null, { observedState: 'Data', rawData: { stream, id } })\n}",
   "metadata": {

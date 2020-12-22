@@ -1,6 +1,6 @@
 {
   "name": "transformer",
-  "version": "1.0.15",
+  "version": "2.0.0",
   "type": "sensor",
   "script": "const transformer = options.requiredProperties.transformer\n\ntry {\n  if (!transformer) {\n    throw new Error('Provide a valid transformer')\n  }\n\n  const result = eval(`(${transformer})`)\n\n  if (typeof result !== 'object' || result === null) {\n    throw new Error('Expected result to be an object')\n  }\n\n  send(null, { rawData: result, observedState: 'Success' })\n} catch (error) {\n  console.log(error)\n  send(null, { observedState: 'Error' })\n}\n",
   "metadata": {

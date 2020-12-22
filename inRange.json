@@ -1,6 +1,6 @@
 {
   "name": "inRange",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "type": "sensor",
   "script": "function execute () {\n  const value = parseFloat(options.requiredProperties.value)\n  const lowerLimit = parseFloat(options.requiredProperties.lowerLimit)\n  const upperLimit = parseFloat(options.requiredProperties.upperLimit)\n\n  if ([value, lowerLimit, upperLimit].some(x => x == null)) {\n    return send(new Error('All properties should be defined'))\n  }\n  if (upperLimit <= lowerLimit) {\n    return send(new Error('Property \"upperLimit\" should be higher than \"lowerLimit\"'))\n  }\n\n  let state = 'In Range'\n  if (value < lowerLimit) {\n    state = 'Below'\n  }\n  if (value > upperLimit) {\n    state = 'Above'\n  }\n\n  send(null, { observedState: state })\n}\n\nexecute()",
   "metadata": {

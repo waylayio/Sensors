@@ -1,6 +1,6 @@
 {
   "name": "getLatestAlarm",
-  "version": "1.0.16",
+  "version": "2.0.0",
   "type": "sensor",
   "script": "const moment = require('moment')\nconst _ = require('lodash')\n\nconst { resource } = options.requiredProperties\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('No resource defined'))\n  }\n\n  const response = await waylay.alarms.search({ source: resource })\n  if (response.total < 1) {\n    return send(null, { observedState: 'Not Found' })\n  }\n\n  const alarm = _.maxBy(response.alarms, alarm => {\n    return moment(alarm.creationTime).unix()\n  })\n\n  send(null, {\n    observedState: alarm.status,\n    rawData: {\n      id: alarm.id,\n      severity: alarm.severity,\n      count: alarm.count,\n      creationTime: alarm.creationTime,\n      timestamp: moment(alarm.creationTime).unix(),\n      type: alarm.type,\n      text: alarm.text,\n      status: alarm.status,\n      resource: resource\n    }\n  })\n}\n\nexecute().catch(send)",
   "metadata": {

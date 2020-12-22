@@ -1,6 +1,6 @@
 {
   "name": "throttle",
-  "version": "2.0.3",
+  "version": "2.0.0",
   "type": "sensor",
   "script": "/*\n * invocationPolicy as a sensor, effectively throttling the next nodes\n */\nconst parse = require('parse-duration')\n\nconst internalState = options.internalState || {}\n\nconst { lastInvocation = Date.now() } = internalState\nconst { duration } = options.requiredProperties\n\nasync function execute () {\n  if (!duration) {\n    throw new Error('Missing property')\n  }\n  // parse the human duration to milliseconds\n  const durationMs = parse(duration)\n  // we should trigger if the lastInvocation was older than the duration\n  const diff = Date.now() - lastInvocation\n  const shouldTrigger = diff > durationMs\n\n  // make sure we update the lastInvocation time\n  if (shouldTrigger) {\n    const lastInvocation = Date.now()\n\n    return send(null, {\n      internalState: { lastInvocation },\n      rawData: { lastInvocation },\n      observedState: 'Trigger'\n    })\n  }\n\n  return send(null, {\n    internalState: { lastInvocation },\n    rawData: { lastInvocation },\n    observedState: 'No Trigger'\n  })\n}\n\nexecute().catch(send)\n",
   "metadata": {

@@ -1,6 +1,6 @@
 {
   "name": "getAlarmsByFilter",
-  "version": "2.0.4",
+  "version": "2.0.0",
   "type": "sensor",
   "script": "const { resource, statusFilter, history, typeFilter } = options.requiredProperties\n\nconst alarmFilter = {\n  source: resource,\n  ...(history && { history: history }),\n  ...(typeFilter && { type: typeFilter }),\n  ...(statusFilter && { status: statusFilter }),\n  all: true\n}\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n  try {\n    const response = await waylay.alarms.search(alarmFilter)\n    if (response.total > 0) {\n      return send(null, { observedState: 'Found', rawData: { total: response.total, alarms: response.alarms } })\n    }\n    return send(null, { observedState: 'Not Found', rawData: { total: response.total } })\n  } catch (error) {\n    return send(new Error('Querying alarms failed: ' + error))\n  }\n}\n\nexecute()\n",
   "metadata": {

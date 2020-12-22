@@ -1,6 +1,6 @@
 {
   "name": "byomlPredict",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "type": "sensor",
   "script": "const { modelName, instances, useProbabilities } = options.requiredProperties\n\nconst probability = ['true', true].includes(useProbabilities)\n\nasync function execute () {\n  if (!modelName) { return send(new Error('Missing property: modelName')) }\n  if (!instances) { return send(new Error('Missing property: instances')) }\n\n  let payload\n  try {\n    payload = typeof instances === 'string' ? JSON.parse(instances) : instances\n  } catch (error) {\n    return send(error)\n  }\n\n  const data = { instances: payload, probability }\n  try {\n    const body = await waylay.byoml.predict(modelName, data)\n    send(null, { observedState: 'Predicted', rawData: body })\n  } catch (error) {\n    console.error(error.response ? error.response.data : error)\n    send(new Error('Failed to predict, check if model exists and if instances are in correct format.'))\n  }\n}\n\nexecute()",
   "metadata": {
