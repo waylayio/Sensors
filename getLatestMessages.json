@@ -1,8 +1,8 @@
 {
   "name": "getLatestMessages",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "type": "sensor",
-  "script": "async function execute () {\n  if (!resource) {\n    return send(new Error('No resource provided'))\n  }\n  try {\n    const data = await waylay.data.getSeries(resource)\n    const count = data.length\n    return send(null, { observedState: 'Collected', rawData: { data, count } })\n  } catch (error) {\n    return send(null, { observedState: 'Not Collected', rawData: { errorMessage: 'Failed to get latest messages: ' + error } })\n  }\n}\n\nexecute()\n",
+  "script": "const { resource } = options.requiredProperties\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('No resource provided'))\n  }\n  try {\n    const data = await waylay.data.getSeries(resource)\n    const count = data.length\n    return send(null, { observedState: 'Collected', rawData: { data, count } })\n  } catch (error) {\n    return send(null, { observedState: 'Not Collected', rawData: { errorMessage: 'Failed to get latest messages: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {
     "author": "",
     "description": "<h4>getLatestMessages Sensor</h4>\n<br>\nGives 100 latest messages stored in the cloud cache\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n     <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: The array of found messages\n    </li>\n    <li>\n        count: Amount of found messages between now and last execution\n    </li>\n</ul>\n<br>",
