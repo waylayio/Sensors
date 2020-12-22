@@ -1,0 +1,36 @@
+{
+  "name": "jira",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const axios = require('axios')\n\nconst { JIRA_USER: user, JIRA_PASSWORD: password, JIRA_URL: url, subject, message, project, type = 'Bug' } = options.requiredProperties\n\nasync function execute () {\n  try {\n    const data = {\n      fields: {\n        project: {\n          key: project\n        },\n        summary: subject,\n        description: message,\n        issuetype: {\n          name: type\n        }\n      }\n    }\n    const response = await axios.post(url, data, {\n      auth: {\n        user: user,\n        password: password\n      }\n    })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to create jira ticket: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>Jira Sensor</h4>\n<br>\nCreates an issue on jira.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        project\n    </li>\n    <li>\n        message\n    </li>\n    <li>\n        subject\n    </li>\n    <li>\n        type (Task, Bug ...) (optional)\n    </li>\n    <li>\n        JIRA_USER\n    </li>\n    <li>\n        JIRA_PASSWORD\n    </li>\n    <li>\n        JIRA_URL\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/jira/",
+    "iconURL": "https://static.waylay.io/plugs/icons/jira_icon.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "subject",
+      "message",
+      "type",
+      "project",
+      "JIRA_USER",
+      "JIRA_PASSWORD"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "object"
+      }
+    ]
+  }
+}

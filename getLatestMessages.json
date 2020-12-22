@@ -1,17 +1,20 @@
 {
   "name": "getLatestMessages",
-  "version": "2.0.6",
+  "version": "5.1.5",
   "type": "sensor",
-  "script": "const moment = require('moment')\nlet lastExecution\ntry {\n  lastExecution = options.rawData[options.task.NODE_NAME].lastExecution\n} catch (err) {\n  lastExecution = 0\n}\n\nconst resource = options.node.RESOURCE\nconst now = moment().unix() * 1000\n\nwaylay.data.getSeries(resource)\n  .then(data => {\n    data = data.filter((o) => { return o.timestamp > lastExecution })\n    const count = data.length\n    if (count === 0) {\n      send(null, { observedState: 'Empty', rawData: { lastExecution: now, count } })\n    } else {\n      send(null, { observedState: 'Done', rawData: { data, lastExecution: now, count } })\n    }\n  })\n  .catch(err => {\n    send(new Error(err))\n  })\n",
+  "script": "async function execute () {\n  if (!resource) {\n    return send(new Error('No resource provided'))\n  }\n  try {\n    const data = await waylay.data.getSeries(resource)\n    const count = data.length\n    return send(null, { observedState: 'Collected', rawData: { data, count } })\n  } catch (error) {\n    return send(null, { observedState: 'Not Collected', rawData: { errorMessage: 'Failed to get latest messages: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {
     "author": "",
-    "description": "<h4>getLatestMessages Sensor</h4>\n<br>\nGet latest message between two consecutive collections. \nFirst time gives all messages stored in the cloud cache\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Done\n    </li>\n     <li>\n        Empty\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: The array of found messages\n    </li>\n    <li>\n        lastExecution: The last time the sensor was triggerd\n    </li>\n    <li>\n        count: Amount of found messages between now and last execution\n    </li>\n</ul>\n<br>",
+    "description": "<h4>getLatestMessages Sensor</h4>\n<br>\nGives 100 latest messages stored in the cloud cache\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n     <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: The array of found messages\n    </li>\n    <li>\n        count: Amount of found messages between now and last execution\n    </li>\n</ul>\n<br>",
+    "documentationURL": "https://docs.waylay.io/plugins/getlatestmessages/",
     "iconURL": "https://static.waylay.io/plugs/icons/inventory.png",
     "supportedStates": [
-      "Done",
-      "Empty"
+      "Collected",
+      "Not Collected"
     ],
-    "requiredProperties": [],
+    "requiredProperties": [
+      "resource"
+    ],
     "requiredRawData": [],
     "rawData": [
       {
@@ -27,8 +30,5 @@
         "dataType": "double"
       }
     ]
-  },
-  "dependencies": {
-    "moment": "^2.29.1"
   }
 }

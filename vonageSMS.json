@@ -1,0 +1,39 @@
+{
+  "name": "vonageSMS",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const Vonage = require('@vonage/server-sdk')\nconst pify = require('pify')\n\nconst { VONAGE_KEY, VONAGE_SECRET, message, to, from = 'Waylay' } = options.requiredProperties\n\nasync function execute () {\n  if (!VONAGE_SECRET || !message || !VONAGE_KEY || !to) {\n    return send(new Error('Missing property'))\n  }\n\n  const vonage = new Vonage({\n    apiKey: VONAGE_KEY,\n    apiSecret: VONAGE_SECRET\n  })\n  const sendSms = pify(\n    vonage.message.sendSms.bind(vonage.message)\n  )\n\n  try {\n    const responseData = await sendSms(from, to, message)\n    if (responseData.messages[0].status === '0') {\n      console.log('Message sent successfully.')\n      send(null, { observedState: 'Success', rawData: { response: responseData } })\n    } else {\n      console.error(`Message failed with error: ${responseData.messages[0]['error-text']}`)\n      send(null, {\n        observedState: 'Error',\n        rawData: { errorMessage: `Message failed with error: ${responseData.messages[0]['error-text']}` }\n      })\n    }\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Sending message failed: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>vonageSMS Sensor</h4>\n<br>\nActuator to send SMS messages using the Vonage sdk (formerly known as Nexmo).\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        VONAGE_KEY: Vonage api key\n    </li>\n     <li>\n        VONAGE_SECRET: Vonage api secret (we do not recommend to fill in the secret as plaintext, use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n     <li>\n        message: The message that will be sent\n    </li>\n     <li>\n        to: Phone number of the recipiant\n    </li>\n     <li>\n        from (optional): Phone number of the sender\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/vonagesms/",
+    "iconURL": "https://static.waylay.io/plugs/icons/nexmo.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "from",
+      "to",
+      "message",
+      "VONAGE_KEY",
+      "VONAGE_SECRET"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "object"
+      }
+    ]
+  },
+  "dependencies": {
+    "@vonage/server-sdk": "^2.10.4",
+    "util": "^0.12.3"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "clearAlarm",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const { type, resource } = options.requiredProperties\n\nasync function execute () {\n  if (!type) {\n    return send(new Error('Missing property type'))\n  }\n\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n\n  const alarmFilter = {\n    source: resource,\n    status: ['ACTIVE', 'ACKNOWLEDGED'],\n    all: true,\n    type\n  }\n\n  try {\n    const searchResult = await waylay.alarms.search(alarmFilter)\n    console.log(`Found ${searchResult.alarms.length} alarms to clear`)\n\n    const response = await Promise.all(searchResult.alarms.map((alarm) => {\n      return waylay.alarms.update(alarm.id, { status: 'CLEARED' })\n    }))\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to clear alarms: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>clearAlarm Sensor</h4>\n<br>\nClear all the active alarms of a given type for the configured resource.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returned on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        type: The alarm type you want to clear\n    </li>\n</ul>\n\n",
+    "documentationURL": "https://docs.waylay.io/plugins/clearalarm/",
+    "iconURL": "https://static.waylay.io/icons/clear-alarm.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "type",
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "objects[]"
+      }
+    ]
+  }
+}

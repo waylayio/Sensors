@@ -1,15 +1,16 @@
 {
   "name": "queryResources",
-  "version": "1.0.7",
+  "version": "2.0.9",
   "type": "sensor",
-  "script": "const query = options.requiredProperties.query\n\nif (!query) {\n  send(new Error('Missing property: query'))\n}\nlet parsedQuery\ntry {\n  parsedQuery = JSON.parse(query)\n} catch (err) {\n  send(new Error('Failed to parse query: ' + err))\n}\n\nwaylay.resources.search(parsedQuery).then((response) => {\n  send(null, {\n    observedState: 'Done',\n    rawData: { resources: response.values }\n  })\n}).catch((err) => {\n  send(new Error(err), {\n    observedState: 'Error'\n  })\n})\n",
+  "script": "const { query } = options.requiredProperties\n\nasync function execute () {\n  if (!query) {\n    return send(new Error('Missing property: query'))\n  }\n  let parsedQuery\n  try {\n    parsedQuery = typeof query === 'string' ? JSON.parse(query) : query\n  } catch (error) {\n    return send(new Error('Failed to parse query: ' + error))\n  }\n\n  try {\n    const response = await waylay.resources.search(parsedQuery)\n    send(null, {\n      observedState: 'Collected',\n      rawData: { resources: response.values }\n    })\n  } catch (error) {\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {
     "author": "",
-    "description": "<h4>Sensor/Actuator Name</h4>\n<br>\nA sensor that queries all resources\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Done\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        resources: List of resources as objects containing all metadata\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        query: a json object to query specific resources <a href=\"https://docs.waylay.io/api/rest/#query-resources\" target=\"_blank\">see docs</a> for all possible options\n    </li>\n</ul>",
-    "iconURL": "https://static.waylay.io/plugs/icons/meta.png",
+    "description": "<h4>queryResource</h4>\n<br>\nA sensor that queries all resources\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Collected: resource data available\n    </li>\n    <li>\n       Not collected: The execution failed\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        resources: List of resources as objects containing all metadata\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        query: a json object to query specific resources <a href=\"https://docs.waylay.io/api/rest/#query-resources\" target=\"_blank\">see docs</a> for all possible options\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/queryresources/",
+    "iconURL": "https://static.waylay.io/plugs/icons/query_resource.png",
     "supportedStates": [
-      "Done",
-      "Error"
+      "Collected",
+      "Not Collected"
     ],
     "requiredProperties": [
       "query"
@@ -19,6 +20,10 @@
       {
         "parameter": "resources",
         "dataType": "object[]"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
       }
     ]
   }

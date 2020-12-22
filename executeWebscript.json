@@ -1,0 +1,36 @@
+{
+  "name": "executeWebscript",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const jwtDecode = require('jwt-decode')\nconst { tenant: tenantId } = jwtDecode(options.globalSettings.waylayToken)\nconst { name, json, version = 'latest' } = options.requiredProperties\n\nasync function execute () {\n  let parsedJSON\n  if (!name) {\n    return send(new Error('Missing property'))\n  }\n  if (json && typeof json === 'string') {\n    try {\n      parsedJSON = JSON.parse(json)\n    } catch (err) {\n      return send(new Error('Error parsing JSON: ' + err))\n    }\n  }\n  try {\n    const response = await waylay.webscripts.call(tenantId, name, version, parsedJSON)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to execute webscript: ' + error } })\n  }\n}\n\nexecute()\n",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>executeWebscript Sensor</h4>\n<br>\nThis sensor allows you to trigger a waylay webscript execution (<a href=\"https://webscripts.waylay.io/webscripts\" target=\"_blank\">https://webscripts.waylay.io/webscripts</a>).\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        name: The name of the webscript you wish to trigger\n    </li>\n    <li>\n        version (optional): The version of the webscript you want to trigger\n    </li>\n    <li>\n        body: Body passed directly to the webscript as a JSON\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/executewebscript/",
+    "iconURL": "https://static.waylay.io/plugs/icons/Cloud-Functions.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "name",
+      "version",
+      "body"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "double"
+      }
+    ]
+  },
+  "dependencies": {
+    "jwt-decode": "^3.1.2"
+  }
+}

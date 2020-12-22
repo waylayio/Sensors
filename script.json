@@ -1,19 +1,21 @@
 {
   "name": "script",
-  "version": "1.0.6",
+  "version": "1.0.10",
   "type": "sensor",
-  "script": "const script = options.requiredProperties.script\n\nasync function main () {\n  let result\n\n  try {\n    result = await eval(`(${script})()`)\n  } catch (error) {\n    console.error(error.message)\n    send(null, { observedState: 'error' })\n  }\n\n  if (typeof result !== 'object' || result === null) {\n    throw new Error('Result is not an object')\n  }\n\n  send(null, { observedState: 'done', rawData: result })\n}\n\nmain().catch(send)\n",
+  "script": "const { script } = options.requiredProperties\n\nasync function execute () {\n  try {\n    const result = await eval(`(${script})()`)\n    if (typeof result !== 'object' || result === null) {\n      return send(new Error('return type of script is not an object'))\n    }\n\n    send(null, { observedState: 'Success', rawData: result })\n  } catch (error) {\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {
-    "author": "Ward Van Durme",
-    "iconURL": "https://static.waylay.io/plugs/icons/code.png",
+    "author": "",
     "description": "<h4>Script</h4>\n<br>\nThe script sensor allows you to prototype a small piece of code that doesn't belong in a dedicated plug.\n<br><br>\n<b>Example: </b><br>\n<code>\nfunction example () {\n    return { foo: 'bar' }\n}\n</code>\n<br><br>\nThe return value of this function has to be an object and will be used as rawData.",
-    "rawData": [],
+    "documentationURL": "https://docs.waylay.io/plugins/script/",
+    "iconURL": "https://static.waylay.io/plugs/icons/code.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
     "requiredProperties": [
       "script"
     ],
-    "supportedStates": [
-      "done",
-      "error"
-    ]
+    "requiredRawData": [],
+    "rawData": []
   }
 }

@@ -1,0 +1,33 @@
+{
+  "name": "updateAlarm",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const { alarmId, severity, status } = options.requiredProperties\n\nasync function execute () {\n  if (!alarmId) {\n    return send(new Error('Missing property'))\n  }\n  try {\n    const response = await waylay.alarms.update(alarmId, { severity, status })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Updating alarm failed: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>updateAlarm</h4>\n<br>\nUpdate status and/or severity of an alarm.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        alarmId: id of the alarm to update (UUID)\n    </li>\n    <li>\n        status (optional): ACTIVE or ACKNOWLEDGED\n    </li>\n    <li>\n        severity (optional): WARNING, MINOR, MAJOR or CRITICAL\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/updatealarm/",
+    "iconURL": "https://static.waylay.io/icons/update%20alarm.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "alarmId",
+      "status",
+      "severity"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "response",
+        "dataType": "object"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
+    ]
+  }
+}

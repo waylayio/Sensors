@@ -1,0 +1,37 @@
+{
+  "name": "createAlarm",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const moment = require('moment')\n\nconst { severity, type, resource, text = '' } = options.requiredProperties\nconst taskId = options.task.TASK_ID\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n\n  if (!type || !severity) {\n    return send(new Error('Missing properties'))\n  }\n  try {\n    const alarm = {\n      severity: severity,\n      type: type,\n      task: taskId,\n      text: text,\n      source: { id: resource },\n      timestamp: moment().unix() * 1000\n    }\n\n    console.log('alarm', alarm)\n\n    const response = await waylay.alarms.create(alarm)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Storing alarm failed: ' + error.response.data.error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>createAlarm Sensor</h4>\n<br>\nCreates a new alarms of a chosen type and severity for a configured resource\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        text (optional): Description of the alarm \n    </li>\n    <li>\n        severity:  WARNING, MINOR, MAJOR or CRITICAL\n    </li>\n    <li>\n        type: Type of the alarm (can be string of choice)\n    </li>\n    <li>\n        resource: Waylay resource\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/createalarm/",
+    "iconURL": "https://static.waylay.io/icons/alarm.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "text",
+      "severity",
+      "type",
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "object"
+      }
+    ]
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
+  }
+}

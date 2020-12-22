@@ -1,0 +1,38 @@
+{
+  "name": "sendGridMail",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const axios = require('axios')\nconst validator = require('email-validator')\n\nconst { to, from, SENDGRID_KEY, subject, message } = options.requiredProperties\n\nasync function execute () {\n  if (!SENDGRID_KEY || !message || !subject || !from || !to) {\n    return send(new Error('Missing property'))\n  }\n  if (!validator.validate(to) || !validator.validate(from)) {\n    return send(null, {\n      observedState: 'Error',\n      rawData: { error: 'One or both emails are not valid: to=' + to + ', from=' + from }\n    })\n  }\n  try {\n    const payload = {\n      html: message,\n      subject: subject,\n      from: options.requiredProperties.from,\n      to: to\n    }\n\n    const resp = await axios.post('https://api.sendgrid.com/api/mail.send.json', { payload }, { headers: { Authorization: `Bearer ${SENDGRID_KEY}` } })\n    send(null, { observedState: 'Success', rawData: { response: resp } })\n  } catch (error) {\n    console.error(error)\n    send(null, {\n      observedState: 'Error',\n      rawData: { errorMessage: 'Failed to send mail using sendgrid API: ' + error }\n    })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "description": "<h4>sendGridMail Sensor</h4>\n<br>\nSends email to recipient using SendGrid.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        from: The email adrress the mail is sent from\n    </li>\n    <li>\n        to: The email adrress the mail is sent to\n    </li>\n    <li>\n        message: The contents of the mail\n    </li>\n    <li>\n        subject: The subject of the mail\n    </li>\n    <li>\n        SENDGRID_KEY: The SendGrid key (we do not recommend to fill in the key as plaintext use, <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/sendgridmail/",
+    "iconURL": "https://static.waylay.io/plugs/icons/sendgrid-128.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "from",
+      "to",
+      "message",
+      "subject",
+      "SENDGRID_KEY"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "response",
+        "dataType": "object"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "email-validator": "^2.0.4"
+  }
+}

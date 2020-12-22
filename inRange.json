@@ -1,12 +1,13 @@
 {
   "name": "inRange",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "type": "sensor",
-  "script": "const value = parseFloat(options.requiredProperties.value)\nconst lowerLimit = parseFloat(options.requiredProperties.lowerLimit)\nconst upperLimit = parseFloat(options.requiredProperties.upperLimit)\n\nif ([value, lowerLimit, upperLimit].some(x => x == null)) {\n  send(new Error('All properties should be defined'))\n}\nif (upperLimit <= lowerLimit) {\n  send(new Error('Property \"upperLimit\" should be higher than \"lowerLimit\"'))\n}\n\nlet state = 'In Range'\nif (value < lowerLimit) {\n  state = 'Below'\n}\nif (value > upperLimit) {\n  state = 'Above'\n}\n\nsend(null, { observedState: state })",
+  "script": "function execute () {\n  const value = parseFloat(options.requiredProperties.value)\n  const lowerLimit = parseFloat(options.requiredProperties.lowerLimit)\n  const upperLimit = parseFloat(options.requiredProperties.upperLimit)\n\n  if ([value, lowerLimit, upperLimit].some(x => x == null)) {\n    return send(new Error('All properties should be defined'))\n  }\n  if (upperLimit <= lowerLimit) {\n    return send(new Error('Property \"upperLimit\" should be higher than \"lowerLimit\"'))\n  }\n\n  let state = 'In Range'\n  if (value < lowerLimit) {\n    state = 'Below'\n  }\n  if (value > upperLimit) {\n    state = 'Above'\n  }\n\n  send(null, { observedState: state })\n}\n\nexecute()",
   "metadata": {
     "author": "",
     "category": "",
     "description": "<h4>inRange Sensor</h4>\n<br>\nChecks if the given value is in range of the given bounds, where the bound are inclusive.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        In Range:\n    </li>\n    <li>\n        Above:\n    </li>\n    <li>\n        Below:\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        value\n    </li>\n    <li>\n        lowerLimit\n    </li>\n    <li>\n        upperLimit\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/inrange/",
     "iconURL": "https://static.waylay.io/plugs/icons/in-range.png",
     "supportedStates": [
       "In Range",

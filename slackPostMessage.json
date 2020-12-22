@@ -1,0 +1,35 @@
+{
+  "name": "slackPostMessage",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const axios = require('axios')\nconst { channel, text } = options.requiredProperties\n\nasync function execute () {\n  let accessToken\n  try {\n    const hoardResp = await waylay.hoard.getTokens('slack', { scope: 'organisation' })\n    accessToken = hoardResp.bot.bot_access_token\n  } catch (error) {\n    console.error(error)\n    return send(null, {\n      observedState: 'Error',\n      rawData: { errorMessage: 'Error fetching token from hoard: ' + error.response.data.message }\n    })\n  }\n\n  if (!accessToken || !channel || !text) {\n    return send(new Error('Missing property'))\n  }\n  try {\n    const response = await axios.post('https://slack.com/api/chat.postMessage',\n      { text, channel },\n      { headers: { Authorization: `Bearer ${accessToken}` } })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Error posting to slack api: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>slackPostMessage Sensor</h4>\n<br>\nSends a message to a Slack channel or user.\nTo use this actuator, the connection with slack should be configured in your settings under connections.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        channel: Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name\n    </li>\n    <li>\n        text: The message that will be sent\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/slackpostmessage/",
+    "iconURL": "https://static.waylay.io/plugs/icons/slack.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "channel",
+      "text"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "response",
+        "dataType": "object"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}

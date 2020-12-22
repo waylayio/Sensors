@@ -1,26 +1,32 @@
 {
   "name": "callURL",
-  "version": "1.0.9",
+  "version": "2.0.4",
   "type": "sensor",
-  "script": "const axios = require('axios')\n\nconst url = options.requiredProperties.url\nconst method = options.requiredProperties.method\nlet body\nif (options.requiredProperties.body) {\n  try {\n    body = JSON.parse(options.requiredProperties.body)\n  } catch (error) {\n    send(new Error('Body property could not be parsed as JSON'))\n  }\n}\nif (!url || !method) {\n  send(new Error('Missing properties'))\n}\n\naxios({ url, data: body, method, timeout: 10000 }).then((response) => {\n  console.log()\n  send(null, { observedState: 'Success', rawData: response })\n}\n).catch((error) => {\n  send(null, { observedState: 'Failure', rawData: error })\n})\n",
+  "script": "const axios = require('axios')\n\nconst { url, method } = options.requiredProperties\n\nasync function execute () {\n  let body\n  if (options.requiredProperties.body) {\n    try {\n      body = JSON.parse(options.requiredProperties.body)\n    } catch (error) {\n      return send(new Error('Body property could not be parsed as JSON'))\n    }\n  }\n  if (!url || !method) {\n    return send(new Error('Missing properties'))\n  }\n  try {\n    const response = await axios({ url, data: body, method, timeout: 10000 })\n    send(null, { observedState: 'Success', rawData: response })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to call url: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {
     "author": "",
+    "description": "<h4>callURL Sensor</h4>\n<br>\nThis sensor calls an URL using the axios library.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Success: Successfuly called url\n    </li>\n    <li>\n        Error: Failure in sensor\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        response: axios response object (only returned on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        url\n    </li>\n    <li>\n        method: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD\n    </li>\n    <li>\n        body (optional): body of request in JSON format\n    </li>\n\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/callurl/",
     "iconURL": "https://static.waylay.io/plugs/icons/ping.png",
-    "description": "<h4>callURL Sensor</h4>\n<br>\nThis sensor calls an URL using the axios library.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Success: Successfuly called url\n    </li>\n    <li>\n        Failure: Failure when calling url\n    </li>\n    <li>\n        Error: Failure in sensor\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        response: axios response object\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        url\n    </li>\n    <li>\n        method: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD\n    </li>\n    <li>\n        body (optional): body of request in JSON format\n    </li>\n\n</ul>",
-    "rawData": [
-      {
-        "dataType": "object",
-        "parameter": "response"
-      }
+    "supportedStates": [
+      "Success",
+      "Error"
     ],
     "requiredProperties": [
       "url",
       "method",
       "body"
     ],
-    "supportedStates": [
-      "Success",
-      "Failure"
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "response",
+        "dataType": "object"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
     ]
   },
   "dependencies": {
