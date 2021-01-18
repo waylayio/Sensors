@@ -1,19 +1,22 @@
 {
   "name": "getLatestAlarm",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "type": "sensor",
-  "script": "const moment = require('moment')\nconst _ = require('lodash')\n\nconst resource = options.node.RESOURCE\n\nif (!resource) {\n  send(new Error('No resource defined'))\n}\n\nwaylay.alarms.search({ source: resource })\n  .then(response => {\n    if (response.total < 1) {\n      send(null, { observedState: 'Not Found' })\n    }\n    const alarm = _.maxBy(response.alarms, alarm => {\n      return moment(alarm.creationTime).unix()\n    })\n    send(null, {\n      observedState: alarm.status,\n      rawData: {\n        id: alarm.id,\n        severity: alarm.severity,\n        count: alarm.count,\n        creationTime: alarm.creationTime,\n        timestamp: moment(alarm.creationTime).unix(),\n        type: alarm.type,\n        text: alarm.text,\n        status: alarm.status,\n        resource: resource\n      }\n    })\n  })\n  .catch((err) => {\n    send(new Error(err))\n  })\n",
+  "script": "const moment = require('moment')\nconst _ = require('lodash')\n\nconst { resource } = options.requiredProperties\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('No resource defined'))\n  }\n\n  const response = await waylay.alarms.search({ source: resource })\n  if (response.total < 1) {\n    return send(null, { observedState: 'Not Found' })\n  }\n\n  const alarm = _.maxBy(response.alarms, alarm => {\n    return moment(alarm.creationTime).unix()\n  })\n\n  send(null, {\n    observedState: alarm.status,\n    rawData: {\n      id: alarm.id,\n      severity: alarm.severity,\n      count: alarm.count,\n      creationTime: alarm.creationTime,\n      timestamp: moment(alarm.creationTime).unix(),\n      type: alarm.type,\n      text: alarm.text,\n      status: alarm.status,\n      resource: resource\n    }\n  })\n}\n\nexecute().catch(send)",
   "metadata": {
     "author": "",
     "description": "<h4>getLatestAlarm Sensor</h4>\n<br>\nSensor gives back alarms for a given resource.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        ACTIVE\n    </li>\n    <li>\n        ACKNOWLEDGED\n    </li>\n    <li>\n        CLEARED\n    </li>\n    <li>\n        Not Found\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        id: The generated UUID of the alarm\n    </li>\n    <li>\n        severity: The severity that was given to the alarm\n    </li>\n    <li>\n        count: The amount of times the alarm was triggered\n    </li>\n    <li>\n        creationTime: e.g.: \"2018-08-09T12:49:47.040Z\"\n    </li>\n    <li>\n        timestamp: e.g.: 1533818987\n    </li>\n    <li>\n        type: The type of the alarm,\n    </li>\n    <li>\n        text: The description of the alarm,\n    </li>\n    <li>\n        status: The status of the alarm (ACTIVE, CLEARED or ACKNOWEDGED),\n    </li>\n    <li>\n        resource: The resource where the alarm was triggerd on\n    </li>\n</ul>\n<br>",
-    "iconURL": "https://static.waylay.io/plugs/icons/alarm.png",
+    "documentationURL": "https://docs.waylay.io/plugins/getlatestalarm/",
+    "iconURL": "http://static.waylay.io/icons/getLatestAlarm.png",
     "supportedStates": [
       "ACTIVE",
       "ACKNOWLEDGED",
       "CLEARED",
       "Not Found"
     ],
-    "requiredProperties": [],
+    "requiredProperties": [
+      "resource"
+    ],
     "requiredRawData": [],
     "rawData": [
       {

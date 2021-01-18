@@ -1,0 +1,35 @@
+{
+  "name": "AzureInvokeMethodOnDevice",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const Client = require('azure-iothub').Client\n/**\n * More documentation on sending data to an Azure connected device can be found here:\n * https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-control-device-node\n */\nconst { deviceId, methodName, payload, responseTimeoutInSeconds = 10, CONNECTION_STRING } = options.requiredProperties\n\nasync function main () {\n  if (!deviceId || !methodName || !CONNECTION_STRING) {\n    return send(new Error('REQUIRED: deviceId, methodName'))\n  }\n\n  const client = Client.fromConnectionString(CONNECTION_STRING)\n\n  const result = await client.invokeDeviceMethod(deviceId, { methodName, payload, responseTimeoutInSeconds })\n  send(null, { observedState: 'Success', rawData: { response: result } })\n}\n\nmain().catch(error => {\n  console.error(error)\n  send(null, {\n    observedState: 'Error',\n    rawData: { errorMessage: 'Failed to invoke method \\'' + methodName + '\\': ' + error.message }\n  })\n})",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>AzureInvokeMethodOnDevice Sensor</h4>\n<br>\nInvoke a function on an Azure connected device.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        methodName: The name of the function on the device which you would like to invoke\n    </li>\n    <li>\n        responseTimeoutInSeconds (optional): Max time to wait for a response. (in seconds) (default: 10)\n    </li>\n    <li>\n        deviceId: the device name registered on Azure\n    </li>\n    <li>\n        payload: The value to provide to the invoked function\n    </li>\n    <li>\n        CONNECTION_STRING: A valid Azure connection string\n    </li>\n</ul>\n<br>\nNOTE: Azure has three kinds of connection strings. You can read about the 'IoT Hub Connection String' property: use <a href=\"https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/\" target=\"_blank\">here</a>",
+    "documentationURL": "https://docs.waylay.io/plugins/azureinvokemethodondevice/",
+    "iconURL": "https://static.waylay.io/icons/azure.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "methodName",
+      "responseTimeoutInSeconds",
+      "deviceId",
+      "payload",
+      "CONNECTION_STRING"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "response",
+        "dataType": "object"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      }
+    ]
+  }
+}

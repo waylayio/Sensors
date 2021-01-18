@@ -1,12 +1,13 @@
 {
   "name": "stream",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "type": "sensor",
   "script": "const stream = options.rawData.GLOBAL || {}\nconst id = options.node.RESOURCE\n\nif (Object.entries(stream).length === 0) {\n  send(new Error('No Streamdata'))\n} else {\n  send(null, { observedState: 'Data', rawData: { stream, id } })\n}",
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>stream Sensor</h4>\n<br>\n\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Data\n    </li>\n    <li>\n        Idle\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        stream: data received on resource\n    </li>\n    <li>\n        id: id of the resource\n    </li>\n</ul>\n",
+    "description": "<h4>stream Sensor</h4>\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Data\n    </li>\n    <li>\n        Idle\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        stream: data received on resource\n    </li>\n    <li>\n        id: id of the resource\n    </li>\n</ul>\n",
+    "documentationURL": "https://docs.waylay.io/plugins/stream/",
     "iconURL": "https://static.waylay.io/plugs/icons/streaming-data-sensor.png",
     "supportedStates": [
       "Data",

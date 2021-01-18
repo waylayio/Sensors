@@ -1,11 +1,12 @@
 {
   "name": "dice",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "type": "sensor",
   "script": "const randomValue = Math.random()\nlet state\nif (randomValue > 0.85) state = 'ONE'\nelse if (randomValue > 0.7) state = 'TWO'\nelse if (randomValue > 0.55) state = 'THREE'\nelse if (randomValue > 0.4) state = 'FOUR'\nelse if (randomValue > 0.25) state = 'FIVE'\nelse state = 'SIX'\nconst value = {\n  observedState: state,\n  rawData: { randomValue: randomValue }\n}\nsend(null, value)",
   "metadata": {
     "author": "",
     "description": "<h4>Dice Sensor</h4>\n<br>\nDice generates states bewteen ONE and SIX based on a random value.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        ONE\n    </li>\n    <li>\n        TWO\n    </li>\n    <li>\n        THREE\n    </li>\n    <li>\n        FOUR\n    </li>\n    <li>\n        FIVE\n    </li>\n    <li>\n        SIX\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        randomValue: Value used to compute the output state\n    </li>\n</ul>\n<br>",
+    "documentationURL": "https://docs.waylay.io/plugins/dice/",
     "iconURL": "https://static.waylay.io/plugs/icons/dice.png",
     "supportedStates": [
       "ONE",

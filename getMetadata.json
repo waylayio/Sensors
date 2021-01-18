@@ -1,17 +1,20 @@
 {
   "name": "getMetadata",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "type": "sensor",
-  "script": "const resource = options.node.RESOURCE\n\nif(!resource){\n    send(new Error('Resource not defined'))\n}\n\nwaylay.resources.get(resource)\n  .then(response => {\n    send(null, { observedState: 'Collected', rawData: { metadata: response } })\n  })\n  .catch(() => {\n    send(null, { observedState: 'Not Collected' })\n  })\n",
+  "script": "const { resource } = options.requiredProperties\n\nif (!resource) {\n  send(new Error('Resource not defined'))\n}\n\nasync function execute () {\n  try {\n    const response = await waylay.resources.get(resource)\n    send(null, { observedState: 'Found', rawData: { metadata: response } })\n  } catch (error) {\n    if (error.response && error.response.status === 404) {\n      return send(null, {\n        observedState: 'Not Found'\n      })\n    }\n    console.error(error)\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {
     "author": "",
-    "description": "<h4>getMetadata Sensor</h4>\n<br>\nGets metadata for a configured resource\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        metadata: object containing metadata of resource\n    </li>\n</ul>\n\n",
+    "description": "<h4>getMetadata Sensor</h4>\n<br>\nGets metadata for a configured resource\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        metadata: object containing metadata of resource\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        resource: resource you want to fetch metadata from\n    </li>\n</ul>\n\n",
+    "documentationURL": "https://docs.waylay.io/plugins/getmetadata/",
     "iconURL": "https://static.waylay.io/plugs/icons/meta.png",
     "supportedStates": [
-      "Collected",
-      "Not Collected"
+      "Found",
+      "Not Found"
     ],
-    "requiredProperties": [],
+    "requiredProperties": [
+      "resource"
+    ],
     "requiredRawData": [],
     "rawData": [
       {

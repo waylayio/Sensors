@@ -1,0 +1,39 @@
+{
+  "name": "zendesk",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const axios = require('axios')\n\nconst { ZENDESK_USER: username, ZENDESK_KEY: token, ZENDESK_DOMAIN: domain, subject, message, requester } = options.requiredProperties\n\nasync function execute () {\n  if (!username || !token || !subject || !message || !domain || !requester) {\n    return send(new Error('Missing Property'))\n  }\n  const url = 'https://' + domain + '.zendesk.com/api/v2/tickets.json'\n  const data = {\n    ticket: {\n      requester: {\n        name: requester\n      },\n      subject: subject,\n      comment: message\n    }\n  }\n  const auth = {\n    username: username + '/token',\n    password: token\n  }\n  try {\n    const response = await axios.post(url, data, { auth })\n    send(null, { observedState: 'Success', rawData: { response: response.data } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to create ticket: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>zendesk</h4>\n<br>\nCreates zendesk tickets.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        message: Message provided with the ticket\n    </li>\n    <li>\n        subject: Subject of the ticket\n    </li>\n    <li>\n        ZENDESK_USER: Zendesk user (email)\n    </li>\n    <li>\n        ZENDESK_KEY: Zendesk API token (<a href=\"https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-\" target=”_blank”>more info</a>)\n    </li>\n    <li>\n        ZENDESK_DOMAIN: E.g.: 'waylayhelp' is the domain for waylay support\n    </li>\n    <li>\n        requester: Requester of the ticket\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/zendesk/",
+    "iconURL": "https://static.waylay.io/plugs/icons/zendesk.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "subject",
+      "message",
+      "ZENDESK_USER",
+      "ZENDESK_KEY",
+      "ZENDESK_DOMAIN",
+      "requester"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "double"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}

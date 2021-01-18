@@ -1,0 +1,37 @@
+{
+  "name": "pushoverNotification",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const axios = require('axios')\n\nconst { token, user, message, title } = options.requiredProperties\n\nasync function execute () {\n  if (!token || !user || !message || !title) {\n    return send(new Error('Missing Property'))\n  }\n  try {\n    const response = await axios.post(\n      'https://api.pushover.net/1/messages.json',\n      { token, user, message: options.requiredProperties.message, title }\n    )\n    send(null, {\n      observedState: 'Success', rawData: { response }\n    })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Calling pushover failed: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>pushoverNotification Sensor</h4>\n<br>\nSends a ntification using the pushover service\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        token: Pushover api token (we do not recommend to fill in the token as plaintext, use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n    <li>\n        user: The usergroup that will receive the notification\n    </li>\n    <li>\n        message: Message that will be added to the notification\n    </li>\n    <li>\n        title: Title of the notification\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/pushovernotification/",
+    "iconURL": "https://static.waylay.io/plugs/icons/pushover.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "token",
+      "user",
+      "message",
+      "title"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "object"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.20.0"
+  }
+}

@@ -1,16 +1,17 @@
 {
   "name": "template",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "type": "sensor",
-  "script": "const handlebars = require('handlebars')\nconst { DateTime } = require('luxon')\n\nhandlebars.registerHelper('time', (optionsOrTimeZone, options) => {\n  // if no argument given, the passed arguments will only be options, otherwise both timeZone and options will be set\n  const timeZone = options ? optionsOrTimeZone : 'UTC'\n  return DateTime.local().setZone(timeZone).toLocaleString(DateTime.TIME_24_WITH_SECONDS)\n})\n\nhandlebars.registerHelper('date', (optionsOrTimeZone, options) => {\n  // if no argument given, the passed arguments will only be options, otherwise both timeZone and options will be set\n  const timeZone = options ? optionsOrTimeZone : 'UTC'\n  return DateTime.local().setZone(timeZone).toLocaleString(DateTime.TIME_24_WITH_SECONDS)\n})\n\nasync function execute () {\n  handlebars.registerHelper('TASK_ID', () => {\n    return options.task.TASK_ID\n  })\n\n  const template = options.requiredProperties.template\n  const context = options.rawData\n\n  const compiledTemplate = handlebars.compile(template)\n\n  send(null, {\n    observedState: 'done',\n    rawData: { result: compiledTemplate(context) }\n  })\n}\n\nexecute().catch(send)",
+  "script": "const handlebars = require('handlebars')\n\nasync function execute () {\n  handlebars.registerHelper('TASK_ID', () => {\n    return options.task.TASK_ID\n  })\n\n  const template = options.requiredProperties.template\n  const context = options.rawData\n\n  const compiledTemplate = handlebars.compile(template)\n\n  send(null, {\n    observedState: 'Success',\n    rawData: { result: compiledTemplate(context) }\n  })\n}\n\nexecute().catch(send)",
   "metadata": {
     "author": "",
     "category": "",
-    "description": "In case you want to use actuators such as e-mail, you might wish to create an HTML based content. \nThis sensor can used to create such a template, where we use {{ }} notation.\n\nFor example if you want to specify the resource name in the template and the resource is set at node level, use {{META.$.name}}.\nIf you want to access other resource metadata property in template, use {{ META.$.<metadata property> }}\nThe task id can be accessed using {{TASK_ID}}",
+    "description": "<h4>template Sensor</h4>\n<br>\nIn case you want to use actuators such as e-mail, you might wish to create an HTML based content. \nThis sensor can used to create such a template, where we use {{ }} notation.\n\nFor example if you want to specify the resource name in the template and the resource is set at node level, use {{META.$.name}}.\nIf you want to access other resource metadata property in template, use {{ META.$.<metadata property> }}\nThe task id can be accessed using {{TASK_ID}}\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        result (only returned on Success state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        template: Text to template\n    </li>\n</ul>\n\n",
+    "documentationURL": "https://docs.waylay.io/plugins/template/",
     "iconURL": "https://static.waylay.io/plugs/icons/template.png",
     "supportedStates": [
-      "done",
-      "error"
+      "Success",
+      "Error"
     ],
     "requiredProperties": [
       "template"

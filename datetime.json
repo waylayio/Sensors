@@ -1,0 +1,68 @@
+{
+  "name": "datetime",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const moment = require('moment')\n\nasync function execute () {\n  const now = moment()\n  return send(null, {\n    observedState: 'Data',\n    rawData: {\n      timestamp: now.valueOf(),\n      year: now.year(),\n      month: now.month() + 1,\n      day: now.date(),\n      hours: now.hour(),\n      minutes: now.minute(),\n      seconds: now.second(),\n      dateString: now.toString(),\n      dayString: now.format('dddd'),\n      ISOstring: now.toISOString()\n    }\n  })\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "category": "",
+    "description": "<h4>Datetime sensor</h4>\n<br>\nGives you the current time info\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Data: Time data is found and ready to use\n    </li>\n    <li>\n        Idle: The sensor is idle\n    </li>\n</ul>\n<br><br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        timestamp: Epoch millis\n    </li>\n    <li>\n        year\n    </li>\n    <li>\n        month\n    </li>\n    <li>\n        day\n    </li>\n    <li>\n        hours\n    </li>\n    <li>\n        minutes\n    </li>\n    <li>\n        seconds\n    </li>\n    <li>\n        dateString\n    </li>\n    <li>\n        dayString\n    </li>\n    <li>\n        ISOString\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/timefilter/",
+    "iconURL": "https://static.waylay.io/plugs/icons/hour.png",
+    "supportedStates": [
+      "Data",
+      "Idle"
+    ],
+    "requiredProperties": [],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "timestamp",
+        "dataType": "number"
+      },
+      {
+        "parameter": "year",
+        "dataType": "number"
+      },
+      {
+        "parameter": "month",
+        "dataType": "number"
+      },
+      {
+        "parameter": "day",
+        "dataType": "number"
+      },
+      {
+        "parameter": "hours",
+        "dataType": "number"
+      },
+      {
+        "parameter": "minutes",
+        "dataType": "number"
+      },
+      {
+        "parameter": "seconds",
+        "dataType": "number"
+      },
+      {
+        "parameter": "dateString",
+        "dataType": "string"
+      },
+      {
+        "parameter": "dayString",
+        "dataType": "string"
+      },
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "ISOstring",
+        "dataType": "string"
+      }
+    ]
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
+  }
+}

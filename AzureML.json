@@ -1,22 +1,23 @@
 {
   "name": "AzureML",
-  "version": "0.2.16",
+  "version": "1.0.0",
   "type": "sensor",
-  "script": "const axios = require('axios')\n\nfunction execute () {\n  let {\n    observations,\n    endpointUrl,\n    contentType,\n    key\n  } = options.requiredProperties\n\n  if (typeof observations === 'string') {\n    observations = JSON.parse(observations)\n  }\n\n  if (!observations || !endpointUrl || !contentType) { return send(new Error('Please provide endpointUrl, observations and contentType')) }\n\n  const headers = { 'Content-Type': contentType }\n  if (key) headers.Authorization = `Bearer ${key}`\n\n  axios.post(endpointUrl, JSON.stringify(observations), { headers })\n    .then(response => {\n      console.log('Returned predictions: ', response.data)\n\n      send(null, {\n        observedState: 'Collected',\n        rawData: {\n          data: response.data\n        }\n      })\n    })\n    .catch(error => send(error, { observedState: 'Not Collected' }))\n}\n\nexecute()",
+  "script": "const axios = require('axios')\n\nfunction execute () {\n  let {\n    observations,\n    AZURE_ML_ENDPOINT,\n    contentType,\n    AZURE_ML_TOKEN\n  } = options.requiredProperties\n\n  if (typeof observations === 'string') {\n    observations = JSON.parse(observations)\n  }\n\n  if (!observations || !AZURE_ML_ENDPOINT || !contentType) { return send(new Error('Please provide AZURE_ML_ENDPOINT, observations and contentType')) }\n\n  const headers = { 'Content-Type': contentType }\n  if (AZURE_ML_TOKEN) headers.Authorization = `Bearer ${AZURE_ML_TOKEN}`\n\n  axios.post(AZURE_ML_ENDPOINT, JSON.stringify(observations), { headers })\n    .then(response => {\n      console.log('Returned predictions: ', response.data)\n\n      send(null, {\n        observedState: 'Predicted',\n        rawData: {\n          data: response.data\n        }\n      })\n    })\n    .catch(error => send(error))\n}\n\nexecute()",
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>AzureML Sensor</h4>\nAzure ML endpoint invoker.\n<br>\nUsed to invoke a Azure ML endpoint run on the Azure platform.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Not Collected: Indicates that no results are ready be due to an error.\n    </li>\n    <li>\n        Collected: Indicates that a request was made and the results are ready to use.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: This will contain the result returned by the Azure ML endpoint.\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        endpoint: The url to the Azure ML endpoint.\n    </li>\n    <li>\n        observations: The object with observations formated in the way that Azure ML endpoint expects.\n    </li>\n    <li>\n        contentType: The MIME type of the observations.\n    </li>\n    <li>\n        key: If the endpoint has authorisation this should be the key or token to gain access to it. To generate a key for your service please refere to the <a href=\"https://docs.microsoft.com/en-us/azure/machine-learning/how-to-setup-authentication#web-service-authentication\">official documentation</a>.\n    </li>\n</ul>",
+    "description": "<h4>AzureML Sensor</h4>\nAzure ML endpoint invoker.\n<br>\nUsed to invoke a Azure ML endpoint run on the Azure platform.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Not Predicted: Indicates that no results are ready be due to an error.\n    </li>\n    <li>\n        Predicted: Indicates that a request was made and the results are ready to use.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: This will contain the result returned by the Azure ML endpoint.\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        AZURE_ML_ENDPOINT: The url to the Azure ML endpoint.\n    </li>\n    <li>\n        observations: The object with observations formated in the way that Azure ML endpoint expects.\n    </li>\n    <li>\n        contentType: The MIME type of the observations.\n    </li>\n    <li>\n        AZURE_ML_TOKEN: If the endpoint has authorisation this should be the key or token to gain access to it. To generate a key for your service please refere to the <a href=\"https://docs.microsoft.com/en-us/azure/machine-learning/how-to-setup-authentication#web-service-authentication\">official documentation</a>.\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/azureml/",
     "iconURL": "https://static.waylay.io/icons/azureml.png",
     "supportedStates": [
-      "Uncollected",
-      "Collected"
+      "Not Predicted",
+      "Predicted"
     ],
     "requiredProperties": [
-      "endpointUrl",
+      "AZURE_ML_ENDPOINT",
       "observations",
       "contentType",
-      "key"
+      "AZURE_ML_TOKEN"
     ],
     "requiredRawData": [],
     "rawData": [
@@ -27,6 +28,6 @@
     ]
   },
   "dependencies": {
-    "axios": "0.19.2"
+    "axios": "^0.19.2"
   }
 }

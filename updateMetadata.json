@@ -1,0 +1,31 @@
+{
+  "name": "updateMetadata",
+  "version": "1.0.0",
+  "type": "sensor",
+  "script": "const { metadata } = options.requiredProperties\n\nasync function execute () {\n  let parsedMetadata\n\n  if (!metadata) {\n    return send(new Error('Missing property'))\n  }\n\n  try {\n    parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata\n  } catch (err) {\n    return send(new Error('Failed to parse to object: ' + err))\n  }\n\n  const resource = options.requiredProperties.resource\n\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n  try {\n    const response = await waylay.resources.update(resource, parsedMetadata)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to update resource: ' + error } })\n  }\n}\n\nexecute()",
+  "metadata": {
+    "author": "",
+    "description": "<h4>updateMetadata</h4>\n<br>\nAllows you to add the metadata to a resource, If the resource you try to append metadata to does not exist, the resource will be created.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        resource: Resource you wish to update\n    </li>\n    <li>\n        metadata: a json object with the keys and values you want to add to the resource metadata\n    </li>\n</ul>",
+    "documentationURL": "https://docs.waylay.io/plugins/updatemetadata/",
+    "iconURL": "https://static.waylay.io/plugs/icons/waylay-update-meta-data.png",
+    "supportedStates": [
+      "Success",
+      "Error"
+    ],
+    "requiredProperties": [
+      "metadata",
+      "resource"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "errorMessage",
+        "dataType": "string"
+      },
+      {
+        "parameter": "response",
+        "dataType": "object"
+      }
+    ]
+  }
+}

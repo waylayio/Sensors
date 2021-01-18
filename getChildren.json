@@ -1,18 +1,21 @@
 {
   "name": "getChildren",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "type": "sensor",
-  "script": "const resource = options.node.RESOURCE\n\nif (resource === undefined || resource === '') {\n  send(new Error('resource not defined'))\n}\n\nwaylay.resources.children(resource)\n  .then(response => {\n    const rawData = Object.assign({}, response.values, { childIds: response.values.map(val => val.id) })\n    send(null, { observedState: 'Collected', rawData })\n  })\n  .catch((error) => {\n    send(null, { observedState: 'Not Collected', rawData : { error }})\n  })",
+  "script": "const { resource } = options.requiredProperties\n\nif (!resource) {\n  send(new Error('resource not defined'))\n}\n\nasync function execute () {\n  try {\n    const response = await waylay.resources.children(resource)\n    const rawData = Object.assign({}, response.values, { childIds: response.values.map(val => val.id) })\n    send(null, { observedState: 'Found', rawData })\n  } catch (error) {\n    if (error.response && error.response.status === 404) {\n      return send(null, {\n        observedState: 'Not Found'\n      })\n    }\n\n    return send(error)\n  }\n}\n\nexecute()",
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>getChildren Sensor</h4>\n<br>\nRetrieves the children of a resource.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        values: the array with the children objects\n    </li>\n    <li>\n        childIds: the array with the ids of the children\n    </li>\n</ul>\n<br>",
+    "description": "<h4>getChildren Sensor</h4>\n<br>\nRetrieves the children of a resource.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Found\n    </li>\n    <li>\n        Not Found\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        values: the array with the children objects\n    </li>\n    <li>\n        childIds: the array with the ids of the children\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        resource: The resource you want the children from\n    </li>\n</ul>\n<br>",
+    "documentationURL": "https://docs.waylay.io/plugins/getchildren/",
     "iconURL": "https://static.waylay.io/plugs/icons/getChildren.png",
     "supportedStates": [
-      "Collected",
-      "Not Collected"
+      "Found",
+      "Not Found"
     ],
-    "requiredProperties": [],
+    "requiredProperties": [
+      "resource"
+    ],
     "requiredRawData": [],
     "rawData": [
       {
