@@ -16,6 +16,15 @@
       "transformer"
     ],
     "requiredRawData": [],
-    "rawData": []
+    "rawData": [],
+    "configuration": [
+      {
+        "name": "transformer",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
+    ]
   }
 }

@@ -65,6 +65,15 @@
         "parameter": "ShippingAddress",
         "dataType": "string"
       }
+    ],
+    "configuration": [
+      {
+        "name": "name",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

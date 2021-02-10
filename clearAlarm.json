@@ -27,6 +27,22 @@
         "parameter": "response",
         "dataType": "objects[]"
       }
+    ],
+    "configuration": [
+      {
+        "name": "type",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

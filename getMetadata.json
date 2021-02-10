@@ -21,6 +21,15 @@
         "parameter": "metadata",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

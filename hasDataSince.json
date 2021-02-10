@@ -23,6 +23,29 @@
         "parameter": "lastTimestamp",
         "dataType": "number"
       }
+    ],
+    "configuration": [
+      {
+        "name": "metric",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "since",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

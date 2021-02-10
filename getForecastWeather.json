@@ -24,6 +24,29 @@
         "parameter": "forecastArray",
         "dataType": "object[]"
       }
+    ],
+    "configuration": [
+      {
+        "name": "OPENWEATHER_KEY",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "latitude",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "longitude",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

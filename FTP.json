@@ -32,6 +32,57 @@
         "parameter": "response",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "FTP_USR",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "FTP_PWD",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "FTP_HOST",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "FTP_PORT",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "FTP_FILEPATH",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "filename",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "data",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

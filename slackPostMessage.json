@@ -27,6 +27,22 @@
         "parameter": "errorMessage",
         "dataType": "string"
       }
+    ],
+    "configuration": [
+      {
+        "name": "channel",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

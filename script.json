@@ -16,6 +16,15 @@
       "script"
     ],
     "requiredRawData": [],
-    "rawData": []
+    "rawData": [],
+    "configuration": [
+      {
+        "name": "script",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
+    ]
   }
 }

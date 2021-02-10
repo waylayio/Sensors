@@ -23,6 +23,7 @@
         "parameter": "randomValue",
         "dataType": "double"
       }
-    ]
+    ],
+    "configuration": []
   }
 }

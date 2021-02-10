@@ -27,6 +27,22 @@
         "parameter": "response",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "sensor",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "propertyList",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

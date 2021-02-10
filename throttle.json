@@ -20,6 +20,15 @@
         "parameter": "lastInvocation",
         "dataType": "number"
       }
+    ],
+    "configuration": [
+      {
+        "name": "duration",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

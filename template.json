@@ -22,6 +22,15 @@
         "parameter": "result",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "template",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

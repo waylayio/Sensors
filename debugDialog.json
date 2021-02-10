@@ -16,7 +16,16 @@
       "message"
     ],
     "requiredRawData": [],
-    "rawData": []
+    "rawData": [],
+    "configuration": [
+      {
+        "name": "message",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
+    ]
   },
   "dependencies": {
     "handlebars": "^4.7.6"

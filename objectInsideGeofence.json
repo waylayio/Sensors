@@ -26,6 +26,22 @@
         "parameter": "results",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "geofences",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "coordinates",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

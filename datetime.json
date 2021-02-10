@@ -60,7 +60,8 @@
         "parameter": "ISOstring",
         "dataType": "string"
       }
-    ]
+    ],
+    "configuration": []
   },
   "dependencies": {
     "moment": "^2.29.1"

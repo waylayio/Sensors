@@ -25,6 +25,15 @@
         "parameter": "errorMessage",
         "dataType": "string"
       }
+    ],
+    "configuration": [
+      {
+        "name": "query",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

@@ -26,6 +26,15 @@
         "parameter": "childIds",
         "dataType": "string[]"
       }
+    ],
+    "configuration": [
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

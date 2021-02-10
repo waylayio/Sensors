@@ -22,6 +22,22 @@
         "parameter": "errorMessage",
         "dataType": "double"
       }
+    ],
+    "configuration": [
+      {
+        "name": "payload",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

@@ -102,6 +102,22 @@
         "parameter": "SLA_Type__c",
         "dataType": "string"
       }
+    ],
+    "configuration": [
+      {
+        "name": "caseNumber",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   },
   "dependencies": {

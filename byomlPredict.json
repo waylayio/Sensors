@@ -24,6 +24,29 @@
         "parameter": "predictions",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "modelName",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "instances",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "useProbabilities",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }

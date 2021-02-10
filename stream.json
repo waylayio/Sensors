@@ -24,6 +24,7 @@
         "parameter": "id",
         "dataType": "string"
       }
-    ]
+    ],
+    "configuration": []
   }
 }

@@ -26,6 +26,22 @@
         "parameter": "response",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "metadata",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {},
+        "defaultValue": ""
+      }
     ]
   }
 }
