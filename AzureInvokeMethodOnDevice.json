@@ -42,9 +42,9 @@
       {
         "name": "responseTimeoutInSeconds",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": 10
       },
       {
         "name": "deviceId",
@@ -55,10 +55,10 @@
       },
       {
         "name": "payload",
-        "type": "string",
-        "mandatory": true,
+        "type": "object",
+        "mandatory": false,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": {}
       },
       {
         "name": "CONNECTION_STRING",

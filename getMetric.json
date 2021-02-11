@@ -36,7 +36,9 @@
         "name": "resource",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "resource"
+        },
         "defaultValue": ""
       },
       {
@@ -49,14 +51,25 @@
       {
         "name": "from",
         "type": "string",
-        "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "mandatory": false,
+        "format": {
+          "type": "enum",
+          "values": [
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT3H",
+            "PT12H",
+            "PT24H"
+          ]
+        },
+        "defaultValue": "PT30M"
       },
       {
         "name": "to",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
@@ -64,15 +77,35 @@
         "name": "aggregate",
         "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "format": {
+          "type": "enum",
+          "values": [
+            "mean",
+            "medium",
+            "min",
+            "max",
+            "sum"
+          ]
+        },
+        "defaultValue": "mean"
       },
       {
         "name": "grouping",
         "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "format": {
+          "type": "enum",
+          "values": [
+            "none",
+            "auto",
+            "second",
+            "minute",
+            "hour",
+            "day",
+            "week"
+          ]
+        },
+        "defaultValue": "auto"
       }
     ]
   },

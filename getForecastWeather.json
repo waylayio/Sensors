@@ -31,7 +31,7 @@
         "type": "string",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": "${vault.OPENWEATHER_KEY}"
       },
       {
         "name": "latitude",

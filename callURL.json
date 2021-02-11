@@ -45,10 +45,10 @@
       },
       {
         "name": "body",
-        "type": "string",
+        "type": "object",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": {}
       }
     ]
   },

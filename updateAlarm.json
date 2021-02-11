@@ -41,14 +41,29 @@
         "name": "status",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "enum",
+          "values": [
+            "ACTIVE",
+            "CLEARED",
+            "ACKNOWLEDGED"
+          ]
+        },
         "defaultValue": ""
       },
       {
         "name": "severity",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "enum",
+          "values": [
+            "MAJOR",
+            "MINOR",
+            "WARNING",
+            "CRITICAL"
+          ]
+        },
         "defaultValue": ""
       }
     ]

@@ -24,24 +24,24 @@
     "configuration": [
       {
         "name": "value",
-        "type": "string",
+        "type": "double",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": 0.0
       },
       {
         "name": "lowerLimit",
-        "type": "string",
+        "type": "double",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": 0.0
       },
       {
         "name": "upperLimit",
-        "type": "string",
+        "type": "double",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": 0.0
       }
     ]
   }

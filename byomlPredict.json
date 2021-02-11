@@ -35,17 +35,17 @@
       },
       {
         "name": "instances",
-        "type": "string",
+        "type": "number",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": 1
       },
       {
         "name": "useProbabilities",
-        "type": "string",
+        "type": "boolean",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": false
       }
     ]
   }

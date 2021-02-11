@@ -40,16 +40,16 @@
       {
         "name": "version",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "body",
-        "type": "string",
-        "mandatory": true,
+        "type": "object",
+        "mandatory": false,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": {}
       }
     ]
   },

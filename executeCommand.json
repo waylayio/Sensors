@@ -47,7 +47,9 @@
         "name": "resource",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "resource"
+        },
         "defaultValue": ""
       }
     ]

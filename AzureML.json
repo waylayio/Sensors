@@ -32,11 +32,11 @@
         "type": "string",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": "${vault.AZURE_ML_ENDPOINT}"
       },
       {
         "name": "observations",
-        "type": "string",
+        "type": "array",
         "mandatory": true,
         "format": {},
         "defaultValue": ""
@@ -53,7 +53,7 @@
         "type": "string",
         "mandatory": true,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": "${vault.AZURE_ML_TOKEN}"
       }
     ]
   },

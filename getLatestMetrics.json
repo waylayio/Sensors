@@ -21,15 +21,28 @@
       {
         "name": "from",
         "type": "string",
-        "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "mandatory": false,
+        "format": {
+          "type": "enum",
+          "values": [
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT3H",
+            "PT12H",
+            "PT24H"
+          ]
+        },
+        "defaultValue": "PT30M"
       },
       {
         "name": "resource",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "resource"
+        },
         "defaultValue": ""
       }
     ]

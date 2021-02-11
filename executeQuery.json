@@ -43,37 +43,37 @@
       {
         "name": "window",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "from",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "until",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "removeTimestamp",
-        "type": "string",
-        "mandatory": true,
+        "type": "boolean",
+        "mandatory": false,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": false
       },
       {
         "name": "columnwise",
-        "type": "string",
-        "mandatory": true,
+        "type": "boolean",
+        "mandatory": false,
         "format": {},
-        "defaultValue": ""
+        "defaultValue": false
       }
     ]
   },

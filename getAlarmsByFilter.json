@@ -34,20 +34,25 @@
         "name": "status",
         "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "format": {
+          "type": "enum",
+          "values": [
+            "ACTIVE",
+            "CLEARED",
+            "ACKNOWLEDGED"]
+        },
+        "defaultValue": "ACTIVE"
       },
       {
         "name": "history",
-        "type": "string",
+        "type": "boolean",
         "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "defaultValue": false
       },
       {
         "name": "type",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
@@ -55,7 +60,9 @@
         "name": "resource",
         "type": "string",
         "mandatory": true,
-        "format": {},
+        "format": {
+          "type": "resource"
+        },
         "defaultValue": ""
       }
     ]
