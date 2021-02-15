@@ -1,6 +1,6 @@
 {
   "name": "createEventForSalesForce",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const jsforce = require('jsforce')\nconst pify = require('pify')\nconst _ = require('lodash')\nconst moment = require('moment')\n\nasync function main () {\n  const caseObject = cleanObject({\n    Subject: options.requiredProperties.subject,\n    Location: options.requiredProperties.location,\n    ActivityDateTime: moment().toISOString(),\n    DurationInMinutes: options.requiredProperties.duration || 1\n  })\n\n  if (!caseObject.Subject) {\n    send(null, { observedState: 'Error', rawData: { error: 'No subject provided' } })\n  }\n\n  const conn = await getSalesforceConnection()\n  const SfEvent = pify(conn.sobject('Event'))\n\n  const res = await SfEvent.create(caseObject)\n  send(null, { observedState: 'Success', rawData: { message: res } })\n}\n\nasync function getSalesforceConnection () {\n  try {\n    const { access_token: accessToken } = await waylay.hoard.getTokens('salesforce', { scope: 'organisation' })\n\n    if (!accessToken) {\n      throw new Error('No user or token provided via Hoard service')\n    }\n\n    const jsclient = new jsforce.Connection({\n      instanceUrl: 'https://eu26.salesforce.com',\n      accessToken\n    })\n\n    return jsclient\n  } catch (error) {\n    throw new Error(`error: ${error} \\n possible solution: Connect Salesforce through the connections`)\n  }\n}\n\n/**\n * remove empty values in object before sending to salesforce\n */\nfunction cleanObject (object) {\n  return _.reduce(object, (acc, v, k) => {\n    if (v) acc[k] = v\n    return acc\n  }, {})\n}\n\nmain().catch(send)\n",
   "metadata": {
@@ -23,21 +23,21 @@
       {
         "name": "subject",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "location",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "duration",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       }

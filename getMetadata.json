@@ -1,6 +1,6 @@
 {
   "name": "getMetadata",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "sensor",
   "script": "const { resource } = options.requiredProperties\n\nif (!resource) {\n  send(new Error('Resource not defined'))\n}\n\nasync function execute () {\n  try {\n    const response = await waylay.resources.get(resource)\n    send(null, { observedState: 'Found', rawData: { metadata: response } })\n  } catch (error) {\n    if (error.response && error.response.status === 404) {\n      return send(null, {\n        observedState: 'Not Found'\n      })\n    }\n    console.error(error)\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {

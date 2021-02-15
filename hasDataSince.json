@@ -1,6 +1,6 @@
 {
   "name": "hasDataSince",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "sensor",
   "script": "const moment = require('moment')\n\nasync function execute () {\n  const { resource, metric, since } = options.requiredProperties\n\n  if (!resource) {\n    throw new Error('No resource provided.')\n  }\n  const sinceString = String(since)\n  let duration = sinceString.indexOf('P') > -1\n    ? Date.now() - moment.duration(sinceString)\n    : Number(moment(Number(sinceString)))\n\n  duration = moment(duration)\n\n  if (!moment(duration).isValid() || duration < 1000) {\n    throw new Error(`Invalid property 'since' provided. (${sinceString})`)\n  }\n\n  const res = metric\n    ? await waylay.data.getLastMetric(resource, metric)\n    : await waylay.data.getLatestDocument(resource)\n  const lastTimestamp = res.timestamp\n  const hasDataSince = lastTimestamp > Number(duration)\n\n  const observedState = hasDataSince ? 'True' : 'False'\n\n  console.log(res)\n  send(null, { observedState, rawData: { lastTimestamp } })\n}\n\nexecute().catch(send)\n",
   "metadata": {

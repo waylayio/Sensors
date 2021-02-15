@@ -1,6 +1,6 @@
 {
   "name": "getContactFromSalesForce",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const jsforce = require('jsforce')\nconst pify = require('pify')\nconst _ = require('lodash')\n\nasync function main () {\n  const caseObject = cleanObject({\n    Id: options.requiredProperties.id,\n    Name: options.requiredProperties.name,\n    Email: options.requiredProperties.email\n  })\n\n  const conn = await getSalesforceConnection()\n\n  const SfContact = pify(conn.sobject('Contact'))\n\n  const res = await SfContact.find(caseObject)\n\n  if (res.length > 0) {\n    send(null, { observedState: 'Found', rawData: res[0] })\n  } else {\n    send(null, { observedState: 'Not Found' })\n  }\n}\n\nasync function getSalesforceConnection () {\n  try {\n    const { access_token: accessToken } = await waylay.hoard.getTokens('salesforce', { scope: 'organisation' })\n\n    if (!accessToken) {\n      throw new Error('No user or token provided via Hoard service')\n    }\n\n    const jsclient = new jsforce.Connection({\n      instanceUrl: 'https://eu26.salesforce.com',\n      accessToken\n    })\n\n    return jsclient\n  } catch (error) {\n    throw new Error(`error: ${error} \\n possible solution: Connect Salesforce through the connections`)\n  }\n}\n\n/**\n * remove empty values in object before sending to salesforce\n */\nfunction cleanObject (object) {\n  return _.reduce(object, (acc, v, k) => {\n    if (v) acc[k] = v\n    return acc\n  }, {})\n}\n\nmain().catch(send)\n",
   "metadata": {
@@ -96,21 +96,21 @@
       {
         "name": "id",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "name",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "email",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       }

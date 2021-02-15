@@ -1,6 +1,6 @@
 {
   "name": "TwilioCall",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const Twilio = require('twilio')\n\nconst { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, message, to, from } = options.requiredProperties\n\nasync function execute () {\n  if (!message || !TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !to || !from) {\n    return send(new Error('Missing property'))\n  }\n\n  try {\n    const client = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)\n    const call = await client.calls.create({\n      to: to,\n      from: from,\n      twiml: '<Response><Say voice=\"woman\" loop=\"2\">' + message + '</Say></Response>'\n    })\n\n    console.info('Success! Call is being made:')\n    console.info(call.sid)\n\n    send(null, { observedState: 'Success', rawData: { response: call } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Call failed: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {

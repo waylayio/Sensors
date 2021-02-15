@@ -1,6 +1,6 @@
 {
   "name": "storeMessage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "async function execute () {\n  const { payload } = options.requiredProperties\n\n  const body = parsePayload(payload)\n\n  const resource = options.requiredProperties.resource\n\n  if (!resource) {\n    return send(new Error('No resource provided'))\n  }\n\n  await waylay.data.postSeries(resource, body, { forward: false, store: true })\n\n  send(null, { observedState: 'Success' })\n}\n\nfunction parsePayload (payload) {\n  if (!payload) {\n    return send(new Error('No payload provided'))\n  }\n\n  try {\n    payload = typeof payload === 'string' ? JSON.parse(payload) : payload\n  } catch (_) {\n    console.log(payload)\n    return send(new Error('payload has to be a valid JSON object'))\n  }\n\n  return payload\n}\n\nexecute().catch((error) => {\n  send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to store message: ' + error.message } })\n})\n",
   "metadata": {

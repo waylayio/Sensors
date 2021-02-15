@@ -1,6 +1,6 @@
 {
   "name": "template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const handlebars = require('handlebars')\n\nasync function execute () {\n  handlebars.registerHelper('TASK_ID', () => {\n    return options.task.TASK_ID\n  })\n\n  const template = options.requiredProperties.template\n  const context = options.rawData\n\n  const compiledTemplate = handlebars.compile(template)\n\n  send(null, {\n    observedState: 'Success',\n    rawData: { result: compiledTemplate(context) }\n  })\n}\n\nexecute().catch(send)",
   "metadata": {

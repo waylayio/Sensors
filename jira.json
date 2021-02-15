@@ -1,6 +1,6 @@
 {
   "name": "jira",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const axios = require('axios')\n\nconst { JIRA_USER: user, JIRA_PASSWORD: password, JIRA_URL: url, subject, message, project, type = 'Bug' } = options.requiredProperties\n\nasync function execute () {\n  try {\n    const data = {\n      fields: {\n        project: {\n          key: project\n        },\n        summary: subject,\n        description: message,\n        issuetype: {\n          name: type\n        }\n      }\n    }\n    const response = await axios.post(url, data, {\n      auth: {\n        user: user,\n        password: password\n      }\n    })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to create jira ticket: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -36,42 +36,42 @@
       {
         "name": "subject",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "message",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "type",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "project",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "JIRA_USER",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },
       {
         "name": "JIRA_PASSWORD",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       }

@@ -1,6 +1,6 @@
 {
   "name": "script",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "sensor",
   "script": "const { script } = options.requiredProperties\n\nasync function execute () {\n  try {\n    const result = await eval(`(${script})()`)\n    if (typeof result !== 'object' || result === null) {\n      return send(new Error('return type of script is not an object'))\n    }\n\n    send(null, { observedState: 'Success', rawData: result })\n  } catch (error) {\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {

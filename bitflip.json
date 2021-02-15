@@ -1,6 +1,6 @@
 {
   "name": "bitflip",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "sensor",
   "script": "const previousState = options.internalState\nconst newState = previousState === '1' ? '0' : '1'\n\nsend(null, {\n  observedState: newState,\n  internalState: newState\n})",
   "metadata": {

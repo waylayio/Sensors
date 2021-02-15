@@ -1,6 +1,6 @@
 {
   "name": "createAlarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const moment = require('moment')\n\nconst { severity, type, resource, text = '' } = options.requiredProperties\nconst taskId = options.task.TASK_ID\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n\n  if (!type || !severity) {\n    return send(new Error('Missing properties'))\n  }\n  try {\n    const alarm = {\n      severity: severity,\n      type: type,\n      task: taskId,\n      text: text,\n      source: { id: resource },\n      timestamp: moment().unix() * 1000\n    }\n\n    console.log('alarm', alarm)\n\n    const response = await waylay.alarms.create(alarm)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Storing alarm failed: ' + error.response.data.error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -34,7 +34,7 @@
       {
         "name": "text",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },

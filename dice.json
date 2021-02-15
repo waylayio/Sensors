@@ -1,6 +1,6 @@
 {
   "name": "dice",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "type": "sensor",
   "script": "const randomValue = Math.random()\nlet state\nif (randomValue > 0.85) state = 'ONE'\nelse if (randomValue > 0.7) state = 'TWO'\nelse if (randomValue > 0.55) state = 'THREE'\nelse if (randomValue > 0.4) state = 'FOUR'\nelse if (randomValue > 0.25) state = 'FIVE'\nelse state = 'SIX'\nconst value = {\n  observedState: state,\n  rawData: { randomValue: randomValue }\n}\nsend(null, value)",
   "metadata": {

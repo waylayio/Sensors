@@ -1,6 +1,6 @@
 {
   "name": "Sagemaker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const AWS = require('aws-sdk')\n\nfunction reportResults (error, data, send) {\n  if (error) {\n    console.log('Cannot invoke endpoint')\n    console.log(error, error.stack)\n    return send(new Error(error))\n  }\n\n  // Parse the returned data\n  const responseData = Buffer.from(data.Body).toString('utf8')\n\n  const result = {\n    observedState: 'Predicted',\n    rawData: {\n      data: responseData\n    }\n  }\n\n  return send(null, result)\n}\n\nfunction invokeSageMaker (error, options, send) {\n  if (error) {\n    console.log('Cannot assume role')\n    console.log(error, error.stack)\n    return send(new Error(error))\n  }\n\n  const {\n    endpoint,\n    contentType,\n    observations\n  } = options.requiredProperties\n\n  const sageMakerRuntime = new AWS.SageMakerRuntime({})\n\n  sageMakerRuntime.invokeEndpoint({\n    Body: JSON.stringify(observations),\n    EndpointName: endpoint,\n    ContentType: contentType\n  },\n  (error, data) => reportResults(error, data, send)\n  )\n}\n\nfunction updateAwsConfig (awsConfig) {\n  AWS.config.update({\n    credentials: {\n      accessKeyId: awsConfig.key,\n      secretAccessKey: awsConfig.secret\n    },\n    region: awsConfig.region\n  })\n}\n\nfunction checkSensorPrerequisites (options, send) {\n  // Check if everything is provided, else fail early\n  if (!options.requiredProperties.endpoint) { return send(new Error('Missing property: endpoint')) }\n  if (!options.requiredProperties.observations) { return send(new Error('Missing property: observations')) }\n  if (!options.requiredProperties.contentType) { return send(new Error('Missing property: contentType')) }\n  if (!options.requiredProperties.SAGEMAKER_CONFIG) { return send(new Error('Missing SageMaker config.')) }\n\n  return true\n}\n\nfunction execute () {\n  if (!checkSensorPrerequisites(options, send)) return\n\n  const awsConfig = JSON.parse(options.requiredProperties.SAGEMAKER_CONFIG)\n  updateAwsConfig(awsConfig)\n\n  // Switch to the role that is allowed to invoke sagemaker endpoint.\n  const sts = new AWS.STS()\n  sts.assumeRole({\n    RoleArn: awsConfig.role,\n    RoleSessionName: 'sagemaker-session'\n  },\n  error => invokeSageMaker(error, options, send)\n  )\n}\n\nexecute()",
   "metadata": {
@@ -44,7 +44,7 @@
       {
         "name": "contentType",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },

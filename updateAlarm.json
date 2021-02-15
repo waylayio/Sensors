@@ -1,6 +1,6 @@
 {
   "name": "updateAlarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { alarmId, severity, status } = options.requiredProperties\n\nasync function execute () {\n  if (!alarmId) {\n    return send(new Error('Missing property'))\n  }\n  try {\n    const response = await waylay.alarms.update(alarmId, { severity, status })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Updating alarm failed: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -40,7 +40,7 @@
       {
         "name": "status",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {
           "type": "enum",
           "values": [
@@ -54,7 +54,7 @@
       {
         "name": "severity",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {
           "type": "enum",
           "values": [

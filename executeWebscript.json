@@ -1,6 +1,6 @@
 {
   "name": "executeWebscript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const jwtDecode = require('jwt-decode')\nconst { tenant: tenantId } = jwtDecode(options.globalSettings.waylayToken)\nconst { name, json, version = 'latest' } = options.requiredProperties\n\nasync function execute () {\n  let parsedJSON\n  if (!name) {\n    return send(new Error('Missing property'))\n  }\n  if (json && typeof json === 'string') {\n    try {\n      parsedJSON = JSON.parse(json)\n    } catch (err) {\n      return send(new Error('Error parsing JSON: ' + err))\n    }\n  }\n  try {\n    const response = await waylay.webscripts.call(tenantId, name, version, parsedJSON)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to execute webscript: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {

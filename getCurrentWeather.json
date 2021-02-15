@@ -1,6 +1,6 @@
 {
   "name": "getCurrentWeather",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "sensor",
   "script": "const axios = require('axios')\n\nconst { OPENWEATHER_KEY: API_KEY, city } = options.requiredProperties\n\nasync function execute () {\n  if (!API_KEY || !city) {\n    return send(new Error('Required properties missing'))\n  }\n\n  try {\n    const url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=metric' + '&appid=' + API_KEY\n    const response = await axios.get(url)\n    const { data } = response\n    if (data.cod && data.cod !== '200' && data.message) {\n      throw new Error(data.message)\n    }\n    const state = data.weather[0].main\n    const value = {\n      observedState: 'Collected',\n      rawData: {\n        temperature: data.main.temp,\n        temp_feel: data.main.feels_like,\n        pressure: data.main.pressure,\n        humidity: data.main.humidity,\n        temp_min: data.main.temp_min,\n        temp_max: data.main.temp_max,\n        wind_speed: data.wind.speed,\n        wind_direction: data.wind.deg,\n        clouds_coverage: data.clouds.all,\n        sunrise: data.sys.sunrise,\n        sunset: data.sys.sunset,\n        longitude: data.coord.lon,\n        latitude: data.coord.lat,\n        name: data.name,\n        condition: state,\n        icon: 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png'\n      }\n    }\n\n    send(null, value)\n  } catch (error) {\n    send(new Error('Failed to fetch current weather' + error))\n  }\n}\n\nexecute()\n",
   "metadata": {

@@ -1,6 +1,6 @@
 {
   "name": "slackPostMessage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const axios = require('axios')\nconst { channel, text } = options.requiredProperties\n\nasync function execute () {\n  let accessToken\n  try {\n    const hoardResp = await waylay.hoard.getTokens('slack', { scope: 'organisation' })\n    accessToken = hoardResp.bot.bot_access_token\n  } catch (error) {\n    console.error(error)\n    return send(null, {\n      observedState: 'Error',\n      rawData: { errorMessage: 'Error fetching token from hoard: ' + error.response.data.message }\n    })\n  }\n\n  if (!accessToken || !channel || !text) {\n    return send(new Error('Missing property'))\n  }\n  try {\n    const response = await axios.post('https://slack.com/api/chat.postMessage',\n      { text, channel },\n      { headers: { Authorization: `Bearer ${accessToken}` } })\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Error posting to slack api: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {

@@ -1,6 +1,6 @@
 {
   "name": "getUsageStats",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { DateTime } = require('luxon')\nconst { get } = require('lodash')\n\nconst { timeZone = 'UTC', service, metricName } = options.requiredProperties\n\nconst until = DateTime.fromObject({ zone: timeZone })\nconst from = until.startOf('month')\n\nasync function fetchResourceCount () {\n  if (metricName !== 'count') {\n    return send(new Error(`Metric ${metricName} not found for resources`))\n  }\n\n  const resources = await waylay.resources.search({ limit: 0 })\n  send(null, { observedState: 'Collected', rawData: { consumption: resources.total } })\n}\n\nasync function execute () {\n  if (!until.zone) {\n    return send(new Error('Unknown timezone: ' + timeZone))\n  }\n  console.log('Getting metrics for ' + service + ' from ' + from.toString() + ' until ' + until.toString())\n\n  if (service === 'resources') {\n    return await fetchResourceCount()\n  }\n\n  const stats = await waylay.stats.getMetric(service, { from: from.toMillis(), until: until.toMillis() })\n  const metricPath = `results.${metricName}.perMonth.aggregated`\n\n  if (!metricPath) {\n    return send(new Error(`Metric ${metricName} not found for ${service}`))\n  }\n\n  const consumption = get(stats, metricPath)\n\n  send(null, { observedState: 'Collected', rawData: { consumption } })\n}\n\nexecute().catch(send)",
   "metadata": {
@@ -29,7 +29,7 @@
       {
         "name": "timeZone",
         "type": "string",
-        "mandatory": true,
+        "mandatory": false,
         "format": {},
         "defaultValue": ""
       },

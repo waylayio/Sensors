@@ -1,6 +1,6 @@
 {
   "name": "composite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { propertyList, sensor } = options.requiredProperties\n\nasync function execute () {\n  if (!propertyList || !sensor) {\n    return send(new Error('Missing property'))\n  }\n\n  let parsedProperties\n  try {\n    parsedProperties = typeof propertyList === 'string' ? JSON.parse(propertyList) : propertyList\n  } catch (error) {\n    return send(error)\n  }\n  try {\n    const results = parsedProperties.map((properties) => {\n      return waylay.sensors.execute(sensor, 'latest', { properties })\n    })\n    const response = await Promise.all(results)\n\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, {\n      observedState: 'Error',\n      rawData: { errorMessage: 'An error occured while executing sensor: ' + error }\n    })\n  }\n}\n\nexecute()",
   "metadata": {

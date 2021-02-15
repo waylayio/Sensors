@@ -1,6 +1,6 @@
 {
   "name": "callURL",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "sensor",
   "script": "const axios = require('axios')\n\nconst { url, method } = options.requiredProperties\n\nasync function execute () {\n  let body\n  if (options.requiredProperties.body) {\n    try {\n      body = JSON.parse(options.requiredProperties.body)\n    } catch (error) {\n      return send(new Error('Body property could not be parsed as JSON'))\n    }\n  }\n  if (!url || !method) {\n    return send(new Error('Missing properties'))\n  }\n  try {\n    const response = await axios({ url, data: body, method, timeout: 10000 })\n    send(null, { observedState: 'Success', rawData: response })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to call url: ' + error } })\n  }\n}\n\nexecute()\n",
   "metadata": {

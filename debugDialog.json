@@ -1,6 +1,6 @@
 {
   "name": "debugDialog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const handlebars = require('handlebars')\n\nconst message = options.requiredProperties.message\n\nconst context = options.rawData\n\nconst compiledTemplate = handlebars.compile(message)\nconst result = compiledTemplate(context)\n\nsend(null, { observedState: 'Success', message: result })\n",
   "metadata": {
