@@ -18,7 +18,7 @@
     "rawData": [
       {
         "parameter": "lastInvocation",
-        "dataType": "number"
+        "dataType": "numeric"
       }
     ],
     "configuration": [

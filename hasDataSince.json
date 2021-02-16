@@ -21,7 +21,7 @@
     "rawData": [
       {
         "parameter": "lastTimestamp",
-        "dataType": "number"
+        "dataType": "numeric"
       }
     ],
     "configuration": [

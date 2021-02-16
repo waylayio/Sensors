@@ -35,7 +35,7 @@
       },
       {
         "name": "instances",
-        "type": "number",
+        "type": "numeric",
         "mandatory": true,
         "format": {},
         "defaultValue": 1
