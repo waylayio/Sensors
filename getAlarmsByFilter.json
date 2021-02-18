@@ -39,7 +39,8 @@
           "values": [
             "ACTIVE",
             "CLEARED",
-            "ACKNOWLEDGED"]
+            "ACKNOWLEDGED"
+          ]
         },
         "defaultValue": "ACTIVE"
       },
@@ -53,7 +54,6 @@
         "name": "type",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {

@@ -35,7 +35,6 @@
         "name": "text",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
@@ -45,7 +44,10 @@
         "format": {
           "type": "enum",
           "values": [
-            "MAJOR","MINOR","WARNING","CRITICAL"
+            "MAJOR",
+            "MINOR",
+            "WARNING",
+            "CRITICAL"
           ]
         },
         "defaultValue": "MINOR"
@@ -54,7 +56,6 @@
         "name": "type",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {

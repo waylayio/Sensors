@@ -69,21 +69,18 @@
         "name": "serialNumber",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "id",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "name",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       }
     ]

@@ -71,7 +71,6 @@
         "name": "name",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       }
     ]

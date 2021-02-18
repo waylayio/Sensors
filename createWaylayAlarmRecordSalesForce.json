@@ -25,28 +25,24 @@
         "name": "assetID",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "description",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "name",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "accountID",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       }
     ]

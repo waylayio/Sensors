@@ -27,9 +27,7 @@
       {
         "name": "payload",
         "type": "object",
-        "mandatory": true,
-        "format": {},
-        "defaultValue": {}
+        "mandatory": true
       },
       {
         "name": "resource",

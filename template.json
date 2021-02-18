@@ -28,7 +28,6 @@
         "name": "template",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

@@ -30,21 +30,18 @@
         "name": "modelName",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "instances",
-        "type": "numeric",
+        "type": "long",
         "mandatory": true,
-        "format": {},
         "defaultValue": 1
       },
       {
         "name": "useProbabilities",
         "type": "boolean",
         "mandatory": true,
-        "format": {},
         "defaultValue": false
       }
     ]

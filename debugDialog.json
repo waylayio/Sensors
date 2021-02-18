@@ -22,7 +22,6 @@
         "name": "message",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

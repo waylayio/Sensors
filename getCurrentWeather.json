@@ -92,14 +92,12 @@
         "name": "city",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "OPENWEATHER_KEY",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": "${vault.OPENWEATHER_KEY}"
       }
     ]

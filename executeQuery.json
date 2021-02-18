@@ -37,42 +37,36 @@
         "name": "queryName",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "window",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "from",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "until",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "removeTimestamp",
         "type": "boolean",
         "mandatory": false,
-        "format": {},
         "defaultValue": false
       },
       {
         "name": "columnwise",
         "type": "boolean",
         "mandatory": false,
-        "format": {},
         "defaultValue": false
       }
     ]

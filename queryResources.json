@@ -31,7 +31,6 @@
         "name": "query",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

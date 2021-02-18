@@ -33,15 +33,12 @@
         "name": "command",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "properties",
         "type": "object",
-        "mandatory": false,
-        "format": {},
-        "defaultValue": {}
+        "mandatory": false
       },
       {
         "name": "resource",

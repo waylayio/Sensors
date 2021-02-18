@@ -34,22 +34,18 @@
         "name": "name",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "version",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "body",
         "type": "object",
-        "mandatory": false,
-        "format": {},
-        "defaultValue": {}
+        "mandatory": false
       }
     ]
   },

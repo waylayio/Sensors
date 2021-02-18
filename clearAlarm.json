@@ -33,7 +33,6 @@
         "name": "type",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {

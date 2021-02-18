@@ -30,17 +30,15 @@
     "configuration": [
       {
         "name": "geofences",
-        "type": "array",
+        "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": []
+        "defaultValue": "[]"
       },
       {
         "name": "coordinates",
-        "type": "array",
+        "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": []
+        "defaultValue": "[]"
       }
     ]
   },

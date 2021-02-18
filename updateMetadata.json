@@ -32,7 +32,6 @@
         "name": "metadata",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {

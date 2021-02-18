@@ -33,22 +33,18 @@
         "name": "url",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "method",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "body",
         "type": "object",
-        "mandatory": true,
-        "format": {},
-        "defaultValue": {}
+        "mandatory": true
       }
     ]
   },

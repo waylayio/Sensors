@@ -21,7 +21,7 @@
     "rawData": [
       {
         "parameter": "lastTimestamp",
-        "dataType": "numeric"
+        "dataType": "long"
       }
     ],
     "configuration": [
@@ -29,7 +29,6 @@
         "name": "metric",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {

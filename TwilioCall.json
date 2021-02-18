@@ -36,35 +36,30 @@
         "name": "to",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "message",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "TWILIO_ACCOUNT_SID",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "TWILIO_AUTH_TOKEN",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "from",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

@@ -31,28 +31,24 @@
         "name": "AZURE_ML_ENDPOINT",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": "${vault.AZURE_ML_ENDPOINT}"
       },
       {
         "name": "observations",
-        "type": "array",
+        "type": "string",
         "mandatory": true,
-        "format": {},
-        "defaultValue": ""
+        "defaultValue": "[]"
       },
       {
         "name": "contentType",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "AZURE_ML_TOKEN",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": "${vault.AZURE_ML_TOKEN}"
       }
     ]

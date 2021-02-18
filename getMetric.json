@@ -45,7 +45,6 @@
         "name": "metric",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
@@ -70,7 +69,6 @@
         "name": "to",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {

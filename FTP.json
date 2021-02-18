@@ -38,49 +38,42 @@
         "name": "FTP_USR",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": "${vault.FTP_USR}"
       },
       {
         "name": "FTP_PWD",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": "${vault.FTP_PWD}"
       },
       {
         "name": "FTP_HOST",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "FTP_PORT",
-        "type": "numeric",
+        "type": "long",
         "mandatory": true,
-        "format": {},
         "defaultValue": 22
       },
       {
         "name": "FTP_FILEPATH",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "filename",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "data",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

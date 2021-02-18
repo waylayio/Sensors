@@ -22,7 +22,6 @@
         "name": "script",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

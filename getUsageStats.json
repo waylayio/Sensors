@@ -30,7 +30,6 @@
         "name": "timeZone",
         "type": "string",
         "mandatory": false,
-        "format": {},
         "defaultValue": ""
       },
       {
@@ -40,7 +39,12 @@
         "format": {
           "type": "enum",
           "values": [
-            "sandbox", "nativePlug", "broker", "webscripts", "resources", "analytics"
+            "sandbox",
+            "nativePlug",
+            "broker",
+            "webscripts",
+            "resources",
+            "analytics"
           ]
         },
         "defaultValue": ""
@@ -51,7 +55,13 @@
         "mandatory": true,
         "format": {
           "type": "enum",
-          "values": ["executions", "messages", "datapoints", "count", "totalMs"]
+          "values": [
+            "executions",
+            "messages",
+            "datapoints",
+            "count",
+            "totalMs"
+          ]
         },
         "defaultValue": "executions"
       }

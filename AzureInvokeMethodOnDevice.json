@@ -36,35 +36,29 @@
         "name": "methodName",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "responseTimeoutInSeconds",
-        "type": "string",
+        "type": "long",
         "mandatory": false,
-        "format": {},
         "defaultValue": 10
       },
       {
         "name": "deviceId",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
         "name": "payload",
         "type": "object",
-        "mandatory": false,
-        "format": {},
-        "defaultValue": {}
+        "mandatory": false
       },
       {
         "name": "CONNECTION_STRING",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

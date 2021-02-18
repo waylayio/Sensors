@@ -22,7 +22,6 @@
         "name": "condition",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       }
     ]

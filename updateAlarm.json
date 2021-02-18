@@ -34,7 +34,6 @@
         "name": "alarmId",
         "type": "string",
         "mandatory": true,
-        "format": {},
         "defaultValue": ""
       },
       {
