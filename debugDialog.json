@@ -1,11 +1,11 @@
 {
   "name": "debugDialog",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "sensor",
   "script": "const handlebars = require('handlebars')\n\nconst message = options.requiredProperties.message\n\nconst context = options.rawData\n\nconst compiledTemplate = handlebars.compile(message)\nconst result = compiledTemplate(context)\n\nsend(null, { observedState: 'Success', message: result })\n",
   "metadata": {
     "author": "",
-    "description": "<h4>Debug Sensor</h4>\n<br>\nDebug dialog actuator, can be used while debugging new templates.\nThe provided message will pop up as a toast in the designer window.\n<br><br>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        message: The message to be shown in the debug dialog\n    </li>\n</ul>",
+    "description": "<h4>Debug Sensor</h4>\n<br>\nDebug dialog actuator, can be used while debugging new templates.\nThe provided message will be shown in the debugger tab.\n<br><br>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        message: The message to be shown in the debug dialog\n    </li>\n</ul>",
     "documentationURL": "https://docs.waylay.io/plugins/debugdialog/",
     "iconURL": "https://static.waylay.io/plugs/icons/bubble.png",
     "supportedStates": [
