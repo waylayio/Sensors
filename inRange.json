@@ -25,20 +25,17 @@
       {
         "name": "value",
         "type": "double",
-        "mandatory": true,
-        "defaultValue": 0.0
+        "mandatory": true
       },
       {
         "name": "lowerLimit",
         "type": "double",
-        "mandatory": true,
-        "defaultValue": 0.0
+        "mandatory": true
       },
       {
         "name": "upperLimit",
         "type": "double",
-        "mandatory": true,
-        "defaultValue": 0.0
+        "mandatory": true
       }
     ]
   }
