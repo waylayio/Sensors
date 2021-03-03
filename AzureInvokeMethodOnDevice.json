@@ -40,7 +40,7 @@
       },
       {
         "name": "responseTimeoutInSeconds",
-        "type": "integer",
+        "type": "long",
         "mandatory": false,
         "defaultValue": 10
       },
