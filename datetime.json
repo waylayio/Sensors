@@ -18,31 +18,31 @@
     "rawData": [
       {
         "parameter": "timestamp",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "year",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "month",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "day",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "hours",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "minutes",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "seconds",
-        "dataType": "long"
+        "dataType": "integer"
       },
       {
         "parameter": "dateString",

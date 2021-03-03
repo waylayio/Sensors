@@ -54,7 +54,7 @@
       },
       {
         "name": "FTP_PORT",
-        "type": "long",
+        "type": "integer",
         "mandatory": true,
         "defaultValue": 22
       },
