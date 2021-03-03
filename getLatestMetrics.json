@@ -1,8 +1,8 @@
 {
   "name": "getLatestMetrics",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "type": "sensor",
-  "script": "const moment = require('moment')\nconst _ = require('lodash')\n\nconst resource = options.requiredProperties.resource\nconst boundResource = options.node.RESOURCE\nconst streamData = resource === boundResource ? options.rawData.GLOBAL : {}\nconst from = options.requiredProperties.from\n\nasync function main () {\n  if (!resource) {\n    return send(new Error('Resource required'))\n  }\n\n  const res = await waylay.data.getSeries(resource, { metadata: true })\n    .catch((error) => {\n      return send(null, {\n        observedState: 'Not Collected',\n        rawData: { errorMessage: 'Failed to ge tseries for resource: ' + error }\n      })\n    })\n\n  const fromMillis = from.toString().startsWith('P')\n    ? moment() - moment.duration(from)\n    : from\n\n  const timeseriesData = _.reduce(res, (acc, metric) => {\n    if (!fromMillis || new Date(fromMillis) <= new Date(metric.latest.timestamp)) {\n      acc[metric.name] = metric.latest.value\n    }\n\n    return acc\n  }, {})\n\n  const data = _.merge(timeseriesData, streamData)\n\n  send(null, {\n    observedState: 'Collected',\n    rawData: data\n  })\n}\n\nmain().catch(send)\n",
+  "script": "const moment = require('moment')\nconst _ = require('lodash')\n\nconst resource = options.requiredProperties.resource\nconst boundResource = options.node.RESOURCE\nconst streamData = resource === boundResource ? options.rawData.GLOBAL : {}\nconst from = options.requiredProperties.from || ''\n\nasync function main () {\n  if (!resource) {\n    return send(new Error('Resource required'))\n  }\n\n  const res = await waylay.data.getSeries(resource, { metadata: true })\n    .catch((error) => {\n      return send(null, {\n        observedState: 'Not Collected',\n        rawData: { errorMessage: 'Failed to ge tseries for resource: ' + error }\n      })\n    })\n\n  const fromMillis = from.toString().startsWith('P')\n    ? moment() - moment.duration(from)\n    : from\n\n  const timeseriesData = _.reduce(res, (acc, metric) => {\n    if (!fromMillis || new Date(fromMillis) <= new Date(metric.latest.timestamp)) {\n      acc[metric.name] = metric.latest.value\n    }\n\n    return acc\n  }, {})\n\n  const data = _.merge(timeseriesData, streamData)\n\n  send(null, {\n    observedState: 'Collected',\n    rawData: data\n  })\n}\n\nmain().catch(send)\n",
   "metadata": {
     "author": "",
     "description": "<h4>getLatestMetrics Sensor</h4>\n<br>\nGet the latest values of all metrics for a resource. \n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Collected: Data is collected\n    </li>\n     <li>\n        Not Collected: Indicates that something went wrong.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n    The properties that have been received on the specified resource\n<br>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        from (optional): epoch time in milliseconds or <a href=\"https://en.wikipedia.org/wiki/ISO_8601\" target=\"_blank\">ISO_8601 duration </a>\n    </li>\n</ul>",
@@ -16,7 +16,36 @@
       "resource"
     ],
     "requiredRawData": [],
-    "rawData": []
+    "rawData": [],
+    "configuration": [
+      {
+        "name": "from",
+        "type": "string",
+        "mandatory": false,
+        "format": {
+          "type": "enum",
+          "values": [
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT3H",
+            "PT12H",
+            "PT24H"
+          ]
+        },
+        "defaultValue": "PT30M"
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": ""
+      }
+    ]
   },
   "dependencies": {
     "moment": "^2.29.1",

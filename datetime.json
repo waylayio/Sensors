@@ -1,6 +1,6 @@
 {
   "name": "datetime",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const moment = require('moment')\n\nasync function execute () {\n  const now = moment()\n  return send(null, {\n    observedState: 'Data',\n    rawData: {\n      timestamp: now.valueOf(),\n      year: now.year(),\n      month: now.month() + 1,\n      day: now.date(),\n      hours: now.hour(),\n      minutes: now.minute(),\n      seconds: now.second(),\n      dateString: now.toString(),\n      dayString: now.format('dddd'),\n      ISOstring: now.toISOString()\n    }\n  })\n}\n\nexecute()",
   "metadata": {
@@ -18,31 +18,31 @@
     "rawData": [
       {
         "parameter": "timestamp",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "year",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "month",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "day",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "hours",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "minutes",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "seconds",
-        "dataType": "number"
+        "dataType": "long"
       },
       {
         "parameter": "dateString",
@@ -60,7 +60,8 @@
         "parameter": "ISOstring",
         "dataType": "string"
       }
-    ]
+    ],
+    "configuration": []
   },
   "dependencies": {
     "moment": "^2.29.1"

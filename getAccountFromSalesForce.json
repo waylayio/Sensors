@@ -1,6 +1,6 @@
 {
   "name": "getAccountFromSalesForce",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const jsforce = require('jsforce')\nconst pify = require('pify')\n\nasync function main () {\n  const Name = options.requiredProperties.name\n\n  const conn = await getSalesforceConnection()\n\n  const SfAccount = pify(conn.sobject('Account'))\n\n  const res = await SfAccount.find({ Name })\n\n  if (res.length > 0) {\n    send(null, { observedState: 'Found', rawData: res[0] })\n  } else {\n    send(null, { observedState: 'Not Found' })\n  }\n}\n\nasync function getSalesforceConnection () {\n  try {\n    const { access_token: accessToken } = await waylay.hoard.getTokens('salesforce', { scope: 'organisation' })\n\n    if (!accessToken) {\n      throw new Error('No user or token provided via Hoard service')\n    }\n\n    const jsclient = new jsforce.Connection({\n      instanceUrl: 'https://eu26.salesforce.com',\n      accessToken\n    })\n\n    return jsclient\n  } catch (error) {\n    throw new Error(`error: ${error} \\n possible solution: Connect Salesforce through the connections`)\n  }\n}\n\nmain().catch(send)",
   "metadata": {
@@ -64,6 +64,14 @@
       {
         "parameter": "ShippingAddress",
         "dataType": "string"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "name",
+        "type": "string",
+        "mandatory": false,
+        "defaultValue": ""
       }
     ]
   },

@@ -1,6 +1,6 @@
 {
   "name": "AzureML",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const axios = require('axios')\n\nfunction execute () {\n  let {\n    observations,\n    AZURE_ML_ENDPOINT,\n    contentType,\n    AZURE_ML_TOKEN\n  } = options.requiredProperties\n\n  if (typeof observations === 'string') {\n    observations = JSON.parse(observations)\n  }\n\n  if (!observations || !AZURE_ML_ENDPOINT || !contentType) { return send(new Error('Please provide AZURE_ML_ENDPOINT, observations and contentType')) }\n\n  const headers = { 'Content-Type': contentType }\n  if (AZURE_ML_TOKEN) headers.Authorization = `Bearer ${AZURE_ML_TOKEN}`\n\n  axios.post(AZURE_ML_ENDPOINT, JSON.stringify(observations), { headers })\n    .then(response => {\n      console.log('Returned predictions: ', response.data)\n\n      send(null, {\n        observedState: 'Predicted',\n        rawData: {\n          data: response.data\n        }\n      })\n    })\n    .catch(error => send(error))\n}\n\nexecute()",
   "metadata": {
@@ -24,6 +24,32 @@
       {
         "parameter": "data",
         "dataType": "object"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "AZURE_ML_ENDPOINT",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": "${vault.AZURE_ML_ENDPOINT}"
+      },
+      {
+        "name": "observations",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": "[]"
+      },
+      {
+        "name": "contentType",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "AZURE_ML_TOKEN",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": "${vault.AZURE_ML_TOKEN}"
       }
     ]
   },

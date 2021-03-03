@@ -1,6 +1,6 @@
 {
   "name": "getForecastWeather",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "sensor",
   "script": "const axios = require('axios')\n\nconst { OPENWEATHER_KEY: API_KEY, latitude: lat, longitude: lon } = options.requiredProperties\n\nasync function execute () {\n  if (!API_KEY || !lat || !lon) {\n    return send(new Error('Missing property'))\n  }\n\n  try {\n    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&exclude=current,minutely,daily,alerts`\n    const response = await axios.get(url)\n    const { data } = response\n    if (data.cod && data.cod !== '200' && data.message) {\n      throw new Error(data.message)\n    }\n    const forecastArray = data.hourly.map((forecast) => {\n      return {\n        time: forecast.dt,\n        temperature: forecast.temp,\n        temp_feel: forecast.feels_like,\n        pressure: forecast.pressure,\n        humidity: forecast.humidity,\n        wind_speed: forecast.wind_speed,\n        wind_direction: forecast.wind_deg,\n        clouds_coverage: forecast.clouds,\n        longitude: data.lon,\n        latitude: data.lat,\n        condition: forecast.weather[0].main,\n        icon: 'http://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png'\n      }\n    })\n\n    send(null, {\n      observedState: 'Collected',\n      rawData: { forecastArray }\n    })\n  } catch (error) {\n    send(new Error('Could not fetch forecast weather: ' + error))\n  }\n}\n\nexecute()",
   "metadata": {
@@ -23,6 +23,26 @@
       {
         "parameter": "forecastArray",
         "dataType": "object[]"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "OPENWEATHER_KEY",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": "${vault.OPENWEATHER_KEY}"
+      },
+      {
+        "name": "latitude",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "longitude",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   },

@@ -1,6 +1,6 @@
 {
   "name": "condition",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "sensor",
   "script": "const conditionScript = options.requiredProperties.condition\ntry {\n  const observedState = eval(conditionScript) ? 'True' : 'False'\n  send(null, { observedState })\n} catch (error) {\n  console.log(error)\n  send(new Error(error))\n}\n",
   "metadata": {
@@ -16,6 +16,14 @@
       "condition"
     ],
     "requiredRawData": [],
-    "rawData": []
+    "rawData": [],
+    "configuration": [
+      {
+        "name": "condition",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      }
+    ]
   }
 }

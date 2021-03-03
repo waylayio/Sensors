@@ -1,6 +1,6 @@
 {
   "name": "vonageSMS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const Vonage = require('@vonage/server-sdk')\nconst pify = require('pify')\n\nconst { VONAGE_KEY, VONAGE_SECRET, message, to, from = 'Waylay' } = options.requiredProperties\n\nasync function execute () {\n  if (!VONAGE_SECRET || !message || !VONAGE_KEY || !to) {\n    return send(new Error('Missing property'))\n  }\n\n  const vonage = new Vonage({\n    apiKey: VONAGE_KEY,\n    apiSecret: VONAGE_SECRET\n  })\n  const sendSms = pify(\n    vonage.message.sendSms.bind(vonage.message)\n  )\n\n  try {\n    const responseData = await sendSms(from, to, message)\n    if (responseData.messages[0].status === '0') {\n      console.log('Message sent successfully.')\n      send(null, { observedState: 'Success', rawData: { response: responseData } })\n    } else {\n      console.error(`Message failed with error: ${responseData.messages[0]['error-text']}`)\n      send(null, {\n        observedState: 'Error',\n        rawData: { errorMessage: `Message failed with error: ${responseData.messages[0]['error-text']}` }\n      })\n    }\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Sending message failed: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -29,6 +29,38 @@
       {
         "parameter": "response",
         "dataType": "object"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "from",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "to",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "VONAGE_KEY",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "VONAGE_SECRET",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   },

@@ -1,6 +1,6 @@
 {
   "name": "AzureInvokeMethodOnDevice",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const Client = require('azure-iothub').Client\n/**\n * More documentation on sending data to an Azure connected device can be found here:\n * https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-control-device-node\n */\nconst { deviceId, methodName, payload, responseTimeoutInSeconds = 10, CONNECTION_STRING } = options.requiredProperties\n\nasync function main () {\n  if (!deviceId || !methodName || !CONNECTION_STRING) {\n    return send(new Error('REQUIRED: deviceId, methodName'))\n  }\n\n  const client = Client.fromConnectionString(CONNECTION_STRING)\n\n  const result = await client.invokeDeviceMethod(deviceId, { methodName, payload, responseTimeoutInSeconds })\n  send(null, { observedState: 'Success', rawData: { response: result } })\n}\n\nmain().catch(error => {\n  console.error(error)\n  send(null, {\n    observedState: 'Error',\n    rawData: { errorMessage: 'Failed to invoke method \\'' + methodName + '\\': ' + error.message }\n  })\n})",
   "metadata": {
@@ -29,6 +29,37 @@
       {
         "parameter": "errorMessage",
         "dataType": "string"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "methodName",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "responseTimeoutInSeconds",
+        "type": "long",
+        "mandatory": false,
+        "defaultValue": 10
+      },
+      {
+        "name": "deviceId",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "payload",
+        "type": "object",
+        "mandatory": false
+      },
+      {
+        "name": "CONNECTION_STRING",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
   "name": "TwilioSMS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const Twilio = require('twilio')\n\nconst { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, message, to, from } = options.requiredProperties\n\nasync function execute () {\n  if (!TWILIO_ACCOUNT_SID || !message || !TWILIO_AUTH_TOKEN || !to || !from) {\n    send(new Error('Missing Property'))\n  }\n\n  const toList = to.trim().split(',')\n\n  try {\n    const client = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)\n    const promises = toList.map(to => {\n      return client.messages.create({\n        to: to,\n        from: from,\n        body: message\n      })\n    })\n    const messageResp = await Promise.all(promises)\n\n    send(null, { observedState: 'Success', rawData: { responses: messageResp } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'SMS failed: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -28,6 +28,38 @@
       {
         "parameter": "responses",
         "dataType": "object[]"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "message",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "to",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "from",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "TWILIO_ACCOUNT_SID",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "TWILIO_AUTH_TOKEN",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   },

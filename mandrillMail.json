@@ -1,6 +1,6 @@
 {
   "name": "mandrillMail",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const axios = require('axios')\nconst validator = require('email-validator')\n\nasync function sendMail (key, from, to, replyTo, message, subject, sendAt, data) {\n  try {\n    const body = {\n      key: key,\n      send_at: sendAt,\n      message: {\n        html: message,\n        subject: subject,\n        from_email: from,\n        from_name: from,\n        to: [\n          {\n            email: to,\n            name: to,\n            type: 'to'\n          }\n        ],\n        headers: {\n          'Reply-To': replyTo\n        }\n      }\n    }\n    if (data) {\n      body.message.attachments = [\n        {\n          name: 'Attachment.pdf',\n          type: 'application/pdf',\n          content: data.toString('base64')\n        }\n      ]\n    }\n    const resp = await axios.post('https://mandrillapp.com/api/1.0/messages/send.json', body)\n    const { data: respBody } = resp\n    if (respBody[0] && respBody[0].status && respBody[0].status === 'rejected') {\n      send(null, {\n        observedState: 'Error',\n        rawData: { errorMessage: 'Failed to send mail: ' + JSON.stringify(respBody) }\n      })\n    } else {\n      send(null, { observedState: 'Success', rawData: { response: resp } })\n    }\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to send mail: ' + error } })\n  }\n}\n\nasync function execute () {\n  const {\n    from,\n    to,\n    replyTo = from,\n    MANDRILL_KEY,\n    message,\n    subject,\n    sendAt,\n    pdfUrl\n  } = options.requiredProperties\n\n  if (!from || !to || !message || !subject) {\n    return send(new Error('Missing property'))\n  }\n\n  if (!MANDRILL_KEY) {\n    return send(new Error('Error missing MANDRILL_KEY, please provide it in the properties'))\n  }\n\n  if (!validator.validate(to) || !validator.validate(from)) {\n    const error = 'Emails are not valid: to=' + to + ', from=' + from\n    return send(new Error(error))\n  }\n\n  if (!pdfUrl) {\n    await sendMail(MANDRILL_KEY, from, to, replyTo, message, subject, sendAt)\n    return\n  }\n\n  try {\n    const pdfResp = await axios.get(pdfUrl, {\n      responseType: 'arraybuffer',\n      headers: {\n        Accept: 'application/pdf'\n      }\n    })\n    await sendMail(MANDRILL_KEY, from, to, replyTo, message, subject, sendAt, pdfResp.data)\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to fetch pdf from link: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -32,6 +32,56 @@
       {
         "parameter": "response",
         "dataType": "object"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "from",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "to",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "subject",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "reply",
+        "type": "string",
+        "mandatory": false,
+        "defaultValue": ""
+      },
+      {
+        "name": "send_at",
+        "type": "string",
+        "mandatory": false,
+        "defaultValue": ""
+      },
+      {
+        "name": "pdfURL",
+        "type": "string",
+        "mandatory": false,
+        "defaultValue": ""
+      },
+      {
+        "name": "MANDRILL_KEY",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   }

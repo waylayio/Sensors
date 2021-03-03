@@ -1,6 +1,6 @@
 {
   "name": "clearAlarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { type, resource } = options.requiredProperties\n\nasync function execute () {\n  if (!type) {\n    return send(new Error('Missing property type'))\n  }\n\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n\n  const alarmFilter = {\n    source: resource,\n    status: ['ACTIVE', 'ACKNOWLEDGED'],\n    all: true,\n    type\n  }\n\n  try {\n    const searchResult = await waylay.alarms.search(alarmFilter)\n    console.log(`Found ${searchResult.alarms.length} alarms to clear`)\n\n    const response = await Promise.all(searchResult.alarms.map((alarm) => {\n      return waylay.alarms.update(alarm.id, { status: 'CLEARED' })\n    }))\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to clear alarms: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -26,6 +26,23 @@
       {
         "parameter": "response",
         "dataType": "objects[]"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "type",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": "${task.RESOURCE}"
       }
     ]
   }

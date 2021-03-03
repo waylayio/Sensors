@@ -1,6 +1,6 @@
 {
   "name": "executeCommand",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { resource, command, properties } = options.requiredProperties\n\nasync function execute () {\n  if (!command) {\n    return send(new Error('Missing property'))\n  }\n\n  if (!resource) {\n    return send(new Error('Resource not configured'))\n  }\n  let parsedProperties\n  try {\n    parsedProperties = typeof properties === 'string' ? JSON.parse(properties) : properties\n  } catch (error) {\n    return send(error)\n  }\n  try {\n    const response = await waylay.resources.executeCommand(resource, command, parsedProperties)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to execute command: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -26,6 +26,28 @@
       {
         "parameter": "errorMessage",
         "dataType": "string"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "command",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "properties",
+        "type": "object",
+        "mandatory": false
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": ""
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
   "name": "updateMetadata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "sensor",
   "script": "const { metadata } = options.requiredProperties\n\nasync function execute () {\n  let parsedMetadata\n\n  if (!metadata) {\n    return send(new Error('Missing property'))\n  }\n\n  try {\n    parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata\n  } catch (err) {\n    return send(new Error('Failed to parse to object: ' + err))\n  }\n\n  const resource = options.requiredProperties.resource\n\n  if (!resource) {\n    return send(new Error('resource not defined'))\n  }\n  try {\n    const response = await waylay.resources.update(resource, parsedMetadata)\n    send(null, { observedState: 'Success', rawData: { response } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Failed to update resource: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
@@ -25,6 +25,23 @@
       {
         "parameter": "response",
         "dataType": "object"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "metadata",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": ""
       }
     ]
   }

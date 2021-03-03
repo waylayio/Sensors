@@ -1,6 +1,6 @@
 {
   "name": "queryResources",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "sensor",
   "script": "const { query } = options.requiredProperties\n\nasync function execute () {\n  if (!query) {\n    return send(new Error('Missing property: query'))\n  }\n  let parsedQuery\n  try {\n    parsedQuery = typeof query === 'string' ? JSON.parse(query) : query\n  } catch (error) {\n    return send(new Error('Failed to parse query: ' + error))\n  }\n\n  try {\n    const response = await waylay.resources.search(parsedQuery)\n    send(null, {\n      observedState: 'Collected',\n      rawData: { resources: response.values }\n    })\n  } catch (error) {\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {
@@ -24,6 +24,14 @@
       {
         "parameter": "errorMessage",
         "dataType": "string"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "query",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
       }
     ]
   }
