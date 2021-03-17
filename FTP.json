@@ -1,6 +1,6 @@
 {
   "name": "FTP",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "sensor",
   "script": "const SftpClient = require('ssh2-sftp-client')\n\nconst {\n  FTP_USER: username,\n  FTP_PASSWORD: password,\n  FTP_HOST: host,\n  FTP_PORT: port,\n  FTP_FILEPATH: path,\n  filename,\n  data\n} = options.requiredProperties\n\nasync function execute () {\n  if (!data || !username || !password || !host || !port || !path || !filename) {\n    return send(new Error('Missing required property'))\n  }\n\n  const buffer = Buffer.from(data)\n  const client = new SftpClient()\n\n  try {\n    await client.connect({\n      host,\n      port,\n      username,\n      password\n    })\n  } catch (error) {\n    console.error(error)\n    return send(null, { observedState: 'Error', rawData: { errorMessage: 'Connection error: ' + error } })\n  }\n\n  try {\n    const resp = await client.put(buffer, `${path}${filename}`)\n    send(null, { observedState: 'Success', rawData: { response: resp } })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'File upload error: ' + error } })\n  }\n}\n\nexecute().catch(send)",
   "metadata": {
