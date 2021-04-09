@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>inRange Sensor</h4>\n<br>\nChecks if the given value is in range of the given bounds, where the bound are inclusive.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        In Range:\n    </li>\n    <li>\n        Above:\n    </li>\n    <li>\n        Below:\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        value\n    </li>\n    <li>\n        lowerLimit\n    </li>\n    <li>\n        upperLimit\n    </li>\n</ul>",
+    "description": "Checks if the given value is in range of the given bounds, where the bound are inclusive.",
     "documentationURL": "https://docs.waylay.io/plugins/inrange/",
     "iconURL": "https://static.waylay.io/plugs/icons/in-range.png",
     "supportedStates": [

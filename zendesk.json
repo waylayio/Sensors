@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>zendesk</h4>\n<br>\nCreates zendesk tickets.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        message: Message provided with the ticket\n    </li>\n    <li>\n        subject: Subject of the ticket\n    </li>\n    <li>\n        ZENDESK_USER: Zendesk user (email)\n    </li>\n    <li>\n        ZENDESK_KEY: Zendesk API token (<a href=\"https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-\" target=”_blank”>more info</a>)\n    </li>\n    <li>\n        ZENDESK_DOMAIN: E.g.: 'waylayhelp' is the domain for waylay support\n    </li>\n    <li>\n        requester: Requester of the ticket\n    </li>\n</ul>",
+    "description": "Creates zendesk tickets.",
     "documentationURL": "https://docs.waylay.io/plugins/zendesk/",
     "iconURL": "https://static.waylay.io/plugs/icons/zendesk.png",
     "supportedStates": [

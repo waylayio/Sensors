@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>TwillioCall</h4>\n<br>\nThe provided message will be read to the recipient 2 times by a female voice.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returned on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        to: The recipiants phone number\n    </li>\n    <li>\n        from: The callers phone number\n    </li>\n    <li>\n        message: The message that will be read\n    </li>\n    <li>\n        TWILIO_ACCOUNT_SID: The account sid for your twillio account\n    </li>\n    <li>\n        TWILIO_AUTH_TOKEN:  The auth token for your twillio account (we do not recommend to fill in the auth token as plaintext, use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n</ul>",
+    "description": "The provided message will be read to the recipient 2 times by a female voice.",
     "documentationURL": "https://docs.waylay.io/plugins/twiliocall/",
     "iconURL": "https://static.waylay.io/plugs/icons/twilio_call.png",
     "supportedStates": [

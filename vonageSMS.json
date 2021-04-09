@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>vonageSMS Sensor</h4>\n<br>\nActuator to send SMS messages using the Vonage sdk (formerly known as Nexmo).\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        VONAGE_KEY: Vonage api key\n    </li>\n     <li>\n        VONAGE_SECRET: Vonage api secret (we do not recommend to fill in the secret as plaintext, use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n     <li>\n        message: The message that will be sent\n    </li>\n     <li>\n        to: Phone number of the recipiant\n    </li>\n     <li>\n        from (optional): Phone number of the sender\n    </li>\n</ul>",
+    "description": "Actuator to send SMS messages using the Vonage sdk (formerly known as Nexmo).",
     "documentationURL": "https://docs.waylay.io/plugins/vonagesms/",
     "iconURL": "https://static.waylay.io/plugs/icons/nexmo.png",
     "supportedStates": [

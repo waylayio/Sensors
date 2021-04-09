@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>mandrilMail Sensor</h4>\n<br>\nSends email using the mandril api.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        from: Email address the email is sent from (make sure you have registered the domain with mandril)\n    </li>\n     <li>\n        to: Email address the email is sent to\n    </li>\n     <li>\n        message: Contens of the email\n    </li>\n     <li>\n        subject: Subject of the email\n    </li>\n     <li>\n        reply (optional): Reply-to email address\n    </li>\n     <li>\n        send_at (optional): Specify a date and time when the email should be sent (as a UTC timestamp in YYYY-MM-DD HH:MM:SS format)\n    </li>\n     <li>\n        pdfURL (optional): Link to pdf that should be attached\n    </li>\n    <li>\n        MANDRILL_KEY: The mandril api key (we do not recommend to fill in the api key as plaintext use, <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n</ul>",
+    "description": "Sends email using the mandril api.",
     "documentationURL": "https://docs.waylay.io/plugins/mandrillmail/",
     "iconURL": "https://static.waylay.io/plugs/icons/mail.png",
     "supportedStates": [

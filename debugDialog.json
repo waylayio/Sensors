@@ -5,7 +5,7 @@
   "script": "const handlebars = require('handlebars')\n\nconst message = options.requiredProperties.message\n\nconst context = options.rawData\n\nconst compiledTemplate = handlebars.compile(message)\nconst result = compiledTemplate(context)\n\nsend(null, { observedState: 'Success', message: result })\n",
   "metadata": {
     "author": "",
-    "description": "<h4>Debug Sensor</h4>\n<br>\nDebug dialog actuator, can be used while debugging new templates.\nThe provided message will be shown in the debugger tab.\n<br><br>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        message: The message to be shown in the debug dialog\n    </li>\n</ul>",
+    "description": "Debug dialog actuator, can be used while debugging new templates. The provided message will be shown in the debugger tab.",
     "documentationURL": "https://docs.waylay.io/plugins/debugdialog/",
     "iconURL": "https://static.waylay.io/plugs/icons/bubble.png",
     "supportedStates": [

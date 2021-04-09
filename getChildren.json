@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>getChildren Sensor</h4>\n<br>\nRetrieves the children of a resource.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Found\n    </li>\n    <li>\n        Not Found\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        values: the array with the children objects\n    </li>\n    <li>\n        childIds: the array with the ids of the children\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        resource: The resource you want the children from\n    </li>\n</ul>\n<br>",
+    "description": "Retrieves the children of a resource.",
     "documentationURL": "https://docs.waylay.io/plugins/getchildren/",
     "iconURL": "https://static.waylay.io/plugs/icons/getChildren.png",
     "supportedStates": [

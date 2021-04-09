@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>slackPostMessage Sensor</h4>\n<br>\nSends a message to a Slack channel or user.\nTo use this actuator, the connection with slack should be configured in your settings under connections.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        channel: Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name\n    </li>\n    <li>\n        text: The message that will be sent\n    </li>\n</ul>",
+    "description": "Sends a message to a Slack channel or user. To use this actuator, the connection with slack should be configured in your settings under connections.",
     "documentationURL": "https://docs.waylay.io/plugins/slackpostmessage/",
     "iconURL": "https://static.waylay.io/plugs/icons/slack.png",
     "supportedStates": [

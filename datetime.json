@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>Datetime sensor</h4>\n<br>\nGives you the current time info\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Data: Time data is found and ready to use\n    </li>\n    <li>\n        Idle: The sensor is idle\n    </li>\n</ul>\n<br><br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        timestamp: Epoch millis\n    </li>\n    <li>\n        year\n    </li>\n    <li>\n        month\n    </li>\n    <li>\n        day\n    </li>\n    <li>\n        hours\n    </li>\n    <li>\n        minutes\n    </li>\n    <li>\n        seconds\n    </li>\n    <li>\n        dateString\n    </li>\n    <li>\n        dayString\n    </li>\n    <li>\n        ISOString\n    </li>\n</ul>",
+    "description": "Gives you the current time info.",
     "documentationURL": "https://docs.waylay.io/plugins/timefilter/",
     "iconURL": "https://static.waylay.io/plugs/icons/hour.png",
     "supportedStates": [

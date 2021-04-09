@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>AzureInvokeMethodOnDevice Sensor</h4>\n<br>\nInvoke a function on an Azure connected device.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        methodName: The name of the function on the device which you would like to invoke\n    </li>\n    <li>\n        responseTimeoutInSeconds (optional): Max time to wait for a response. (in seconds) (default: 10)\n    </li>\n    <li>\n        deviceId: the device name registered on Azure\n    </li>\n    <li>\n        payload: The value to provide to the invoked function\n    </li>\n    <li>\n        CONNECTION_STRING: A valid Azure connection string\n    </li>\n</ul>\n<br>\nNOTE: Azure has three kinds of connection strings. You can read about the 'IoT Hub Connection String' property: use <a href=\"https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/\" target=\"_blank\">here</a>",
+    "description": "Invoke a function on an Azure connected device.",
     "documentationURL": "https://docs.waylay.io/plugins/azureinvokemethodondevice/",
     "iconURL": "https://static.waylay.io/icons/azure.png",
     "supportedStates": [
