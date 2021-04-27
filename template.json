@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>template Sensor</h4>\n<br>\nIn case you want to use actuators such as e-mail, you might wish to create an HTML based content. \nThis sensor can used to create such a template, where we use {{ }} notation.\n\nFor example if you want to specify the resource name in the template and the resource is set at node level, use {{META.$.name}}.\nIf you want to access other resource metadata property in template, use {{ META.$.<metadata property> }}\nThe task id can be accessed using {{TASK_ID}}\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        result (only returned on Success state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        template: Text to template\n    </li>\n</ul>\n\n",
+    "description": "In case you want to use actuators such as e-mail, you might wish to create an HTML based content. \nThis sensor can used to create such a template, where we use {{ }} notation.\n\nFor example if you want to specify the resource name in the template and the resource is set at node level, use {{META.$.name}}.\nIf you want to access other resource metadata property in template, use {{ META.$.<metadata property> }}\nThe task id can be accessed using {{TASK_ID}}",
     "documentationURL": "https://docs.waylay.io/plugins/template/",
     "iconURL": "https://static.waylay.io/plugs/icons/template.png",
     "supportedStates": [

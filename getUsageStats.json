@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>getUsageStats Sensor</h4>\n<br>\nSensor to check Waylay usage metrics.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Collected\n    </li>\n    <li>\n        Not Collected\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<p>\nIf the specified metric could be successfully retrieved,\nthe value is added as consumption in the rawData\n</p>\n<ul>\n    <li>\n        consumption: object with result of sensor\n    </li>\n</ul>\nThe consumption object will contain the following data:\n<ul>\n    <li>sandbox: executions</li>\n    <li>nativePlug: executions</li>\n    <li>broker: messages</li>\n    <li>broker: datapoints</li>\n    <li>webscripts: executions</li>\n    <li>resources: count</li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        threshold\n    </li>\n    <li>\n        service: one of <code>sandbox</code>, <code>nativePlug</code>, <code>broker</code>, <code>webscripts</code>, <code>resources</code>, <code>analytics</code>\n    </li>\n    <li>\n        metric: <code>executions</code>, <code>messages</code>, <code>datapoints</code>, <code>count</code> or <code>totalMs</code>(see above)\n    </li>\n    <li>\n        timeZone: timezone to use to determine begin of month (default: UTC)\n    </li>\n</ul>",
+    "description": "Sensor to check Waylay usage metrics.",
     "documentationURL": "https://docs.waylay.io/plugins/getusagestats/",
     "iconURL": "https://static.waylay.io/plugs/icons/getUsageStats.png",
     "supportedStates": [

@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>pushoverNotification Sensor</h4>\n<br>\nSends a ntification using the pushover service\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        token: Pushover api token (we do not recommend to fill in the token as plaintext, use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n    <li>\n        user: The usergroup that will receive the notification\n    </li>\n    <li>\n        message: Message that will be added to the notification\n    </li>\n    <li>\n        title: Title of the notification\n    </li>\n</ul>",
+    "description": "Sends a notification using the pushover service.",
     "documentationURL": "https://docs.waylay.io/plugins/pushovernotification/",
     "iconURL": "https://static.waylay.io/plugs/icons/pushover.png",
     "supportedStates": [

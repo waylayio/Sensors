@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>Bitflip Sensor</h4>\n<br>\nAt any tick it flips between zero and one.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        0\n    </li>\n    <li>\n        1\n    </li>\n</ul>",
+    "description": "At any tick it flips between zero and one.",
     "documentationURL": "https://docs.waylay.io/plugins/bitflip/",
     "iconURL": "https://static.waylay.io/plugs/icons/bitflip.png",
     "supportedStates": [

@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>executeWebscript Sensor</h4>\n<br>\nThis sensor allows you to trigger a waylay webscript execution (<a href=\"https://webscripts.waylay.io/webscripts\" target=\"_blank\">https://webscripts.waylay.io/webscripts</a>).\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        name: The name of the webscript you wish to trigger\n    </li>\n    <li>\n        version (optional): The version of the webscript you want to trigger\n    </li>\n    <li>\n        body: Body passed directly to the webscript as a JSON\n    </li>\n</ul>",
+    "description": "This sensor allows you to trigger a waylay webscript execution.",
     "documentationURL": "https://docs.waylay.io/plugins/executewebscript/",
     "iconURL": "https://static.waylay.io/plugs/icons/Cloud-Functions.png",
     "supportedStates": [

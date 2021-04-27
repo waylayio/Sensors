@@ -5,7 +5,7 @@
   "script": "const transformer = options.requiredProperties.transformer\n\ntry {\n  if (!transformer) {\n    throw new Error('Provide a valid transformer')\n  }\n\n  const result = eval(`(${transformer})`)\n\n  if (typeof result !== 'object' || result === null) {\n    throw new Error('Expected result to be an object')\n  }\n\n  send(null, { rawData: result, observedState: 'Success' })\n} catch (error) {\n  console.log(error)\n  send(null, { observedState: 'Error' })\n}\n",
   "metadata": {
     "author": "",
-    "description": "<h4>transformer</h4>\n<br>\nEvaluates the JSON object and returns it as the rawData.\n<br><br>\n<b>Properties</b>\n<ul>\n    <li>\n        transformer: JSON object\n    </li>\n</ul>\n<b>Example</b> <br>\n<code>\n{\n    foo: bar,\n    baz: $streamdata.temperature\n}\n</code>\n",
+    "description": "Evaluates the JSON object and returns it as the rawData.",
     "documentationURL": "https://docs.waylay.io/plugins/transformer/",
     "iconURL": "https://static.waylay.io/plugs/icons/transformer.png",
     "supportedStates": [

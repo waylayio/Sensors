@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>updateAlarm</h4>\n<br>\nUpdate status and/or severity of an alarm.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        alarmId: id of the alarm to update (UUID)\n    </li>\n    <li>\n        status (optional): ACTIVE or ACKNOWLEDGED\n    </li>\n    <li>\n        severity (optional): WARNING, MINOR, MAJOR or CRITICAL\n    </li>\n</ul>",
+    "description": "Update status and/or severity of an alarm.",
     "documentationURL": "https://docs.waylay.io/plugins/updatealarm/",
     "iconURL": "https://static.waylay.io/icons/update%20alarm.png",
     "supportedStates": [

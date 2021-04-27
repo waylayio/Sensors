@@ -5,7 +5,7 @@
   "script": "const { script } = options.requiredProperties\n\nasync function execute () {\n  try {\n    const result = await eval(`(${script})()`)\n    if (typeof result !== 'object' || result === null) {\n      return send(new Error('return type of script is not an object'))\n    }\n\n    send(null, { observedState: 'Success', rawData: result })\n  } catch (error) {\n    send(error)\n  }\n}\n\nexecute()",
   "metadata": {
     "author": "",
-    "description": "<h4>Script</h4>\n<br>\nThe script sensor allows you to prototype a small piece of code that doesn't belong in a dedicated plug.\n<br><br>\n<b>Example: </b><br>\n<code>\nfunction example () {\n    return { foo: 'bar' }\n}\n</code>\n<br><br>\nThe return value of this function has to be an object and will be used as rawData.",
+    "description": "The script sensor allows you to prototype a small piece of code that doesn't belong in a dedicated plug.",
     "documentationURL": "https://docs.waylay.io/plugins/script/",
     "iconURL": "https://static.waylay.io/plugs/icons/code.png",
     "supportedStates": [

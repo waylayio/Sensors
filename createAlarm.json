@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>createAlarm Sensor</h4>\n<br>\nCreates a new alarms of a chosen type and severity for a configured resource\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        text (optional): Description of the alarm \n    </li>\n    <li>\n        severity:  WARNING, MINOR, MAJOR or CRITICAL\n    </li>\n    <li>\n        type: Type of the alarm (can be string of choice)\n    </li>\n    <li>\n        resource: Waylay resource\n    </li>\n</ul>",
+    "description": "Creates a new alarms of a chosen type and severity for a configured resource.",
     "documentationURL": "https://docs.waylay.io/plugins/createalarm/",
     "iconURL": "https://static.waylay.io/icons/alarm.png",
     "supportedStates": [

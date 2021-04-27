@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>AzureML Sensor</h4>\nAzure ML endpoint invoker.\n<br>\nUsed to invoke a Azure ML endpoint run on the Azure platform.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>\n        Not Predicted: Indicates that no results are ready be due to an error.\n    </li>\n    <li>\n        Predicted: Indicates that a request was made and the results are ready to use.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        data: This will contain the result returned by the Azure ML endpoint.\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        AZURE_ML_ENDPOINT: The url to the Azure ML endpoint.\n    </li>\n    <li>\n        observations: The object with observations formated in the way that Azure ML endpoint expects.\n    </li>\n    <li>\n        contentType: The MIME type of the observations.\n    </li>\n    <li>\n        AZURE_ML_TOKEN: If the endpoint has authorisation this should be the key or token to gain access to it. To generate a key for your service please refere to the <a href=\"https://docs.microsoft.com/en-us/azure/machine-learning/how-to-setup-authentication#web-service-authentication\">official documentation</a>.\n    </li>\n</ul>",
+    "description": "Azure ML endpoint invoker. Used to invoke a Azure ML endpoint run on the Azure platform.",
     "documentationURL": "https://docs.waylay.io/plugins/azureml/",
     "iconURL": "https://static.waylay.io/icons/azureml.png",
     "supportedStates": [

@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>Jira Sensor</h4>\n<br>\nCreates an issue on jira.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        project\n    </li>\n    <li>\n        message\n    </li>\n    <li>\n        subject\n    </li>\n    <li>\n        type (Task, Bug ...) (optional)\n    </li>\n    <li>\n        JIRA_USER\n    </li>\n    <li>\n        JIRA_PASSWORD\n    </li>\n    <li>\n        JIRA_URL\n    </li>\n</ul>",
+    "description": "Creates an issue on jira.",
     "documentationURL": "https://docs.waylay.io/plugins/jira/",
     "iconURL": "https://static.waylay.io/plugs/icons/jira_icon.png",
     "supportedStates": [

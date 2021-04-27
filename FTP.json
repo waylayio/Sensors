@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>FTP Sensor</h4>\n<br>\nThis actuator allows you to send a file to and FTP server using SFTP. \n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        FTP_USR: FTP server username\n    </li>\n    <li>\n        FTP_PWD: FPT server password (we do not recommend to fill in the password as plaintext use <a href=\"https://docs.waylay.io/plugins/sensors-and-actuators/#properties-declarative-binding\" target=\"_blank\">declerative binding</a> in combination with <a href=\"https://docs.waylay.io/features/rules/vault/\" target=\"_blank\">vault</a>)\n    </li>\n    <li>\n        FTP_HOST: FTP server fully qualified domain name\n    </li>\n    <li>\n        FTP_PORT: Port FTP server is listening on\n    </li>\n    <li>\n        FTP_FILEPATH: The location on the FTP server where the file will be sent to\n    </li>\n    <li>\n        filename: Name of the file that will be sent to the FTP server (if left empty a filename will be generated)\n    </li>\n    <li>\n        data: The data that will be sent to the FTP server \n    </li>\n</ul>\n",
+    "description": "This actuator allows you to send a file to and FTP server using SFTP.",
     "documentationURL": "https://docs.waylay.io/plugins/ftp/",
     "iconURL": "https://static.waylay.io/plugs/icons/ftp.png",
     "supportedStates": [

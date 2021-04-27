@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>byomlPredict Sensor</h4>\nBYOML endpoint invoker.\n<br>\nUsed to invoke an uploaded ML model.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n        Not predicted: Indicates that something went wrong.\n    </li>\n    <li>\n        predicted: Indicates that the predictions are succesfully retrieved and the results are ready to use.\n    </li>\n</ul>\n<br>\n<b>Raw data</b>\n<ul>\n    <li>\n        predictions: This will contain the result returned by the specified model.\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        instances: The model inputs.\n    </li>\n    <li>\n        modelName: The model that should be used.\n    </li>\n    <li>\n        useProbabilities: Wether probabilities should be returned, this will only work for a subset of scikit-learn models.\n    </li>\n</ul>\n",
+    "description": "BYOML endpoint invoker. Used to invoke an uploaded ML model.",
     "documentationURL": "https://docs.waylay.io/plugins/byomlpredict/",
     "iconURL": "https://static.waylay.io/plugs/icons/ML-prediction.png",
     "supportedStates": [

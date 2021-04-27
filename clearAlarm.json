@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>clearAlarm Sensor</h4>\n<br>\nClear all the active alarms of a given type for the configured resource.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<br>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returned on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        type: The alarm type you want to clear\n    </li>\n</ul>\n\n",
+    "description": "Clear all the active alarms of a given type for the configured resource.",
     "documentationURL": "https://docs.waylay.io/plugins/clearalarm/",
     "iconURL": "https://static.waylay.io/icons/clear-alarm.png",
     "supportedStates": [

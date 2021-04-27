@@ -6,7 +6,7 @@
   "metadata": {
     "author": "",
     "category": "",
-    "description": "<h4>composite Sensor</h4>\n<br>\nComposite sensor, it will send as many actions \nas there are objects in the propertyList.\n<br><br>\n<b>States</b>\n<ul>\n    <li>\n       Success: The action was executed successfully\n    </li>\n    <li>\n       Error: The action execution failed\n    </li>\n</ul>\n<b>Raw Data</b>\n<ul>\n    <li>\n        response (only returns on Success state)\n    </li>\n    <li>\n        errorMessage (only returned on Error state)\n    </li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        sensor: The actuator you want to execute.\n    </li>\n    <li>\n        propertyList: list of objects containing the properties that are needed to execute the sensor\n    </li>\n</ul>\n<br>\n<b>Example</b>\npropertyList = \n<pre>\n[{ \n \"from\": \"info@waylay.io\",\n \"to\" : \"hello@world\",\n \"message\" : \"hi\",\n \"subject\" : \"test1\", \n \"MANDRILL_KEY\": \"${vault.MANDRILL_KEY}\"\n  },\n  { \n \"from\": \"info@waylay.io\",\n \"to\" : \"hello@world\",\n \"message\" : \"hello\",\n \"subject\" : \"test2\", \n \"MANDRILL_KEY\": \"${vault.MANDRILL_KEY}\"\n  }]\n</pre>\n\nsensor= <code>mandrilMail</code>\n\n",
+    "description": "Composite sensor, it will send as many actions as there are objects in the propertyList.",
     "documentationURL": "https://docs.waylay.io/plugins/composite/",
     "iconURL": "https://static.waylay.io/plugs/icons/box_out.png",
     "supportedStates": [

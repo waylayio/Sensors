@@ -5,7 +5,7 @@
   "script": "const conditionScript = options.requiredProperties.condition\ntry {\n  const observedState = eval(conditionScript) ? 'True' : 'False'\n  send(null, { observedState })\n} catch (error) {\n  console.log(error)\n  send(new Error(error))\n}\n",
   "metadata": {
     "author": "",
-    "description": "<h4>Condition</h4>\n<br>Sets state to True or False depending on the result of the condition expression.\n    The condition expression expects a javascript code snippet that evalueates to True or False.\n    When the condition expression evaluates to anything else it will result in the sensor failing.\n<br><br>\n<b>States</b>\n<br>\n<ul>\n    <li>True</li>\n    <li>False</li>\n</ul>\n<br>\n<b>Properties</b>\n<ul>\n    <li>\n        condition: condition script.\n    </li>\n</ul>\n\n<b>Examples:</b>\n<p>Simple equality</p>\n<pre><code>${streamdata.temperature} > 20</code></pre>\n<p>IIFE (Imediatly invoked function expression).\nIt is also possible to use an IIFE for more advanced use cases. \nHere you can write a function that returns true or false.</p>\n<pre><code>(()=> {\n    const temp = ${streamdata.temperature}\n    const threshold = ${task.resource.meta.threshold}\n    return temp > threshold\n})()</code></pre>",
+    "description": "Sets state to True or False depending on the result of the condition expression. The condition expression expects a javascript code snippet that evalueates to True or False. When the condition expression evaluates to anything else it will result in the sensor failing.",
     "documentationURL": "https://docs.waylay.io/plugins/condition/",
     "iconURL": "https://static.waylay.io/icons/condition.png",
     "supportedStates": [
