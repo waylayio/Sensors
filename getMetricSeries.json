@@ -79,7 +79,11 @@
           "type": "enum",
           "values": [
             "mean",
-            "medium",
+            "median",
+            "first",
+            "last",
+            "count",
+            "std",
             "min",
             "max",
             "sum"
@@ -94,13 +98,13 @@
         "format": {
           "type": "enum",
           "values": [
-            "none",
-            "auto",
-            "second",
-            "minute",
-            "hour",
-            "day",
-            "week"
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT3H",
+            "PT12H",
+            "PT24H"
           ]
         },
         "defaultValue": "auto"
