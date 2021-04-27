@@ -30,6 +30,81 @@
         "parameter": "query",
         "dataType": "object"
       }
+    ],
+    "configuration": [
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": ""
+      },
+      {
+        "name": "metric",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "from",
+        "type": "string",
+        "mandatory": false,
+        "format": {
+          "type": "enum",
+          "values": [
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT3H",
+            "PT12H",
+            "PT24H"
+          ]
+        },
+        "defaultValue": "PT30M"
+      },
+      {
+        "name": "to",
+        "type": "string",
+        "mandatory": false,
+        "defaultValue": ""
+      },
+      {
+        "name": "aggregate",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "enum",
+          "values": [
+            "mean",
+            "medium",
+            "min",
+            "max",
+            "sum"
+          ]
+        },
+        "defaultValue": "mean"
+      },
+      {
+        "name": "grouping",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "enum",
+          "values": [
+            "none",
+            "auto",
+            "second",
+            "minute",
+            "hour",
+            "day",
+            "week"
+          ]
+        },
+        "defaultValue": "auto"
+      }
     ]
   },
   "dependencies": {
