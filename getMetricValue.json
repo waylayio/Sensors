@@ -1,0 +1,84 @@
+{
+  "name": "getMetricValue",
+  "version": "2.0.3",
+  "type": "sensor",
+  "script": "const moment = require('moment')\nconst { resource, metric, duration } = options.requiredProperties\n\nfunction parseDuration (input) {\n  const duration = moment.duration(input)\n  return moment().subtract(duration).unix() * 1000\n}\n\nfunction createQueryParams (options) {\n  let {\n    duration,\n    aggregate\n  } = options.requiredProperties\n\n  const queryParams = {}\n\n  queryParams.from = parseDuration(duration)\n\n  if (aggregate === null || aggregate === '') {\n    aggregate = 'mean'\n  }\n  queryParams.aggregate = aggregate\n\n  queryParams.grouping = duration\n  \n\n  return queryParams\n}\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('Resource not defined'))\n  }\n  if (!metric) {\n    return send(new Error('Please specify metric'))\n  }\n\n  if(!duration){\n    return send(new Error('Please specify duration'))\n  }\n\n  const queryParams = createQueryParams(options)\n  console.log(queryParams)\n  console.log('qs', queryParams)\n\n  const response = await waylay.data.getMetricSeries(resource, metric, queryParams)\n    .catch(error => {\n      console.error(error)\n      send(new Error('Error getting data: ' + error))\n    })\n\n  const series = response.series\n  const state = series.length > 0 ? 'Collected' : 'Not Collected'\n  const result = series[0][1]\n\n  send(null, {\n    observedState: state,\n    rawData: {\n      result : result\n    }\n  })\n}\n\nexecute().catch(send)",
+  "metadata": {
+    "author": "",
+    "description": "Fetches one value for a metric of a resource from timeseries, by providing an aggregation and a timeframe.",
+    "iconURL": "https://static.waylay.io/plugs/icons/timeseries.png",
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
+    ],
+    "requiredProperties": [
+      "resource",
+      "metric",
+      "duration",
+      "aggregate"
+    ],
+    "requiredRawData": [],
+    "rawData": [
+      {
+        "parameter": "result",
+        "dataType": "float"
+      }
+    ],
+    "configuration": [
+      {
+        "name": "resource",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "resource"
+        },
+        "defaultValue": ""
+      },
+      {
+        "name": "metric",
+        "type": "string",
+        "mandatory": true,
+        "defaultValue": ""
+      },
+      {
+        "name": "aggregate",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "enum",
+          "values": [
+            "mean",
+            "median",
+            "first",
+            "last",
+            "count",
+            "std",
+            "min",
+            "max",
+            "sum"
+          ]
+        },
+        "defaultValue": "mean"
+      },
+      {
+        "name": "duration",
+        "type": "string",
+        "mandatory": true,
+        "format": {
+          "type": "enum",
+          "values": [
+            "PT1M",
+            "PT5M",
+            "PT30M",
+            "PT1H",
+            "PT1D"
+          ]
+        },
+        "defaultValue": "PT30M"
+      }
+    ]
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
+  }
+}
