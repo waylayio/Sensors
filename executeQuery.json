@@ -1,74 +1,33 @@
 {
   "name": "executeQuery",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "type": "sensor",
-  "script": "const moment = require('moment')\n\nfunction parseISOStringDataInput (input) {\n  const duration = moment.duration(input)\n  return moment().subtract(duration).unix() * 1000\n}\n\nfunction parseTimestamp (timestamp) {\n  if (!isNaN(timestamp)) { return timestamp }\n  if (timestamp && timestamp !== '' && isNaN(timestamp)) { return parseISOStringDataInput(timestamp) }\n}\n\nfunction createQueryOptions (window, from, until, columnwise) {\n  const queryOptions = {}\n\n  if (window) queryOptions.window = window\n  if (from) queryOptions.from = from\n  if (until) queryOptions.until = until\n  queryOptions['render.mode'] = columnwise ? 'RENDER_MODE_SERIES' : 'RENDER_MODE_COMPACT_WS'\n\n  return queryOptions\n}\n\nfunction hasData (response) {\n  return response && response.data && response.data[0].columns && response.data[0].columns.length > 1\n}\n\nfunction processResponse (response, removeTimestamp, columnwise) {\n  const result = response.data[0]\n\n  if (removeTimestamp) {\n    result.columns.shift()\n\n    if (columnwise) { result.data.shift() } else { result.data = result.data.map(row => { row.shift(); return row }) }\n  }\n\n  if (columnwise) {\n    const nestedData = []\n    nestedData.push(result.data)\n    result.data = nestedData\n  }\n\n  return result\n}\n\nasync function execute () {\n  const { queryName, window, from, until } = options.requiredProperties.queryName\n\n  const removeTimestamp = options.requiredProperties.removeTimestamp === 'true'\n  const columnwise = options.requiredProperties.columnwise === 'true'\n\n  const parsedFrom = parseTimestamp(from)\n  const parsedUntil = parseTimestamp(until)\n\n  if (!queryName) { return send(new Error('No valid queryName supplied.')) }\n  if (window && parsedFrom && parsedUntil) { return send(new Error('Only specify 2 out of the window, from and until properties.')) }\n\n  const queryOptions = createQueryOptions(window, parsedFrom, parsedUntil, columnwise)\n\n  const response = await waylay.analytics.getQueryData(queryName, queryOptions)\n    .catch(error => {\n      send(error)\n    })\n\n  const result = hasData(response) && processResponse(response, removeTimestamp, columnwise)\n\n  send(null, {\n    observedState: result ? 'Collected' : 'Not Collected',\n    rawData: result || response\n  })\n}\n\nexecute()",
+  "script": "const moment = require('moment')\n\nfunction parseISOStringDataInput (input) {\n  const duration = moment.duration(input)\n  return moment().subtract(duration).unix() * 1000\n}\n\nfunction parseTimestamp (timestamp) {\n  if (!isNaN(timestamp)) { return timestamp }\n  if (timestamp && timestamp !== '' && isNaN(timestamp)) { return parseISOStringDataInput(timestamp) }\n}\n\nfunction createQueryOptions (window, from, until, columnwise) {\n  const queryOptions = {}\n\n  if (window) queryOptions.window = window\n  if (from) queryOptions.from = from\n  if (until) queryOptions.until = until\n  queryOptions['render.mode'] = columnwise ? 'RENDER_MODE_SERIES' : 'RENDER_MODE_COMPACT_WS'\n\n  return queryOptions\n}\n\nfunction hasData (response) {\n  return response && response.data && response.data[0].columns && response.data[0].columns.length > 1\n}\n\nfunction processResponse (response, removeTimestamp, columnwise) {\n  const result = response.data[0]\n\n  if (removeTimestamp) {\n    result.columns.shift()\n\n    if (columnwise) { result.data.shift() } else { result.data = result.data.map(row => { row.shift(); return row }) }\n  }\n\n  if (columnwise) {\n    const nestedData = []\n    nestedData.push(result.data)\n    result.data = nestedData\n  }\n\n  return result\n}\n\nasync function execute () {\n  const { queryName, window, from, until } = options.requiredProperties\n\n  const removeTimestamp = options.requiredProperties.removeTimestamp === 'true'\n  const columnwise = options.requiredProperties.columnwise === 'true'\n\n  const parsedFrom = parseTimestamp(from)\n  const parsedUntil = parseTimestamp(until)\n\n  if (!queryName) { return send(new Error('No valid queryName supplied.')) }\n  if (window && parsedFrom && parsedUntil) { return send(new Error('Only specify 2 out of the window, from and until properties.')) }\n\n  const queryOptions = createQueryOptions(window, parsedFrom, parsedUntil, columnwise)\n\n  const response = await waylay.analytics.getQueryData(queryName, queryOptions)\n    .catch(error => {\n      send(error)\n    })\n\n  const result = hasData(response) && processResponse(response, removeTimestamp, columnwise)\n\n  send(null, {\n    observedState: result ? 'Collected' : 'Not Collected',\n    rawData: result || response\n  })\n}\n\nexecute()",
   "metadata": {
     "author": "",
-    "category": "",
-    "description": "Get the data as specified by a certain data query.",
-    "documentationURL": "https://docs.waylay.io/plugins/executequery/",
     "iconURL": "https://static.waylay.io/icons/query_designer.png",
-    "supportedStates": [
-      "Collected",
-      "Not Collected"
+    "description": "<h4>executeQuery Sensor</h4>\n<br>\n<!--Description of wath the sensor doens -->\n\nGet the data as specified by a certain data query.\n\nYou can specify a `window`, `from` and `until` to control the time frame that is fetched.\nWhen doing so, keep in mind that you are able to specify only 2 out of these three,\nelse they will overwrite each other, resulting in unexpected behavior.\n\nThe `removeTimestamp` property will remove the timestamp from the data and columns when it's value is 'true'.\n\nThe `columnwise` property will make the data return columnwise when set to 'true'. By default the data will be returned rowwise.\n\n# Properties:\n- `queryName`: name of the query to execute.\n- `window`: the window of data to get, optional.\n- `from`: the timestamp from which to start getting data, optional.\n- `until`: the timestamp up until to get data, optional.\n- `removeTimestamps`: whether timestamps should be removed, optional.\n- `columnwise`: whether the data should be returned columnwise, optional.\n\n# States:\n- `Collected`: The results are collected and available.\n- `Not Collected`: Something went wrong and the results are not available.",
+    "rawData": [
+      {
+        "dataType": "object",
+        "parameter": "data"
+      },
+      {
+        "dataType": "object",
+        "parameter": "columns"
+      }
     ],
     "requiredProperties": [
       "queryName",
       "window",
-      "from",
       "until",
-      "removeTimestamp",
-      "columnwise"
+      "from",
+      "columnwise",
+      "removeTimestamp"
     ],
-    "requiredRawData": [],
-    "rawData": [
-      {
-        "parameter": "data",
-        "dataType": "object[]"
-      },
-      {
-        "parameter": "columns",
-        "dataType": "object[]"
-      }
-    ],
-    "configuration": [
-      {
-        "name": "queryName",
-        "type": "string",
-        "mandatory": true,
-        "defaultValue": ""
-      },
-      {
-        "name": "window",
-        "type": "string",
-        "mandatory": false,
-        "defaultValue": ""
-      },
-      {
-        "name": "from",
-        "type": "string",
-        "mandatory": false,
-        "defaultValue": ""
-      },
-      {
-        "name": "until",
-        "type": "string",
-        "mandatory": false,
-        "defaultValue": ""
-      },
-      {
-        "name": "removeTimestamp",
-        "type": "boolean",
-        "mandatory": false,
-        "defaultValue": false
-      },
-      {
-        "name": "columnwise",
-        "type": "boolean",
-        "mandatory": false,
-        "defaultValue": false
-      }
+    "supportedStates": [
+      "Collected",
+      "Not Collected"
     ]
   },
   "dependencies": {
