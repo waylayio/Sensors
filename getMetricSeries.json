@@ -1,13 +1,13 @@
 {
   "name": "getMetricSeries",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "type": "sensor",
   "script": "const moment = require('moment')\nconst { resource, metric } = options.requiredProperties\n\nfunction parseISOStringDataInput (input) {\n  const duration = moment.duration(input)\n  return moment().subtract(duration).unix() * 1000\n}\n\nfunction parseTimestamp (timestamp) {\n  if (!isNaN(timestamp)) { return timestamp }\n  if (timestamp && timestamp !== '' && isNaN(timestamp)) { return parseISOStringDataInput(timestamp) }\n}\n\nfunction createQueryParams (options) {\n  let {\n    from,\n    to,\n    grouping,\n    aggregate\n  } = options.requiredProperties\n\n  const queryParams = {}\n\n  if (from) queryParams.from = parseTimestamp(from)\n  if (to) queryParams.until = parseTimestamp(to)\n\n  if ((from === null || from === '') && (aggregate === null || aggregate === '')) {\n    queryParams.from = new Date() - 60 * 60 * 1000 // One hour ago\n    aggregate = 'mean'\n  }\n\n  if (grouping && grouping !== '') queryParams.grouping = grouping\n  if (aggregate && aggregate !== '') queryParams.aggregate = aggregate\n\n  return queryParams\n}\n\nasync function execute () {\n  if (!resource) {\n    return send(new Error('Resource not defined'))\n  }\n  if (!metric) {\n    return send(new Error('Please specify metric'))\n  }\n\n  const queryParams = createQueryParams(options)\n  console.log('qs', queryParams)\n\n  const response = await waylay.data.getMetricSeries(resource, metric, queryParams)\n    .catch(error => {\n      console.error(error)\n      send(new Error('Error getting data: ' + error))\n    })\n\n  response.series = response.series.filter(d => d[1] !== null)\n  send(null, {\n    observedState: response.series.length > 0 ? 'Collected' : 'Not Collected',\n    rawData: response\n  })\n}\n\nexecute()\n",
   "metadata": {
     "author": "",
     "description": "Gives back the time series data of one metric. Resource should be provided from the one associated with this sensor.",
     "documentationURL": "https://docs.waylay.io/plugins/getmetric/",
-    "iconURL": "https://static.waylay.io/plugs/icons/timeseries.png",
+    "iconURL": "http://static.waylay.io.s3.amazonaws.com/icons/getMetric2.png",
     "supportedStates": [
       "Collected",
       "Not Collected"
@@ -29,86 +29,6 @@
       {
         "parameter": "query",
         "dataType": "object"
-      }
-    ],
-    "configuration": [
-      {
-        "name": "resource",
-        "type": "string",
-        "mandatory": true,
-        "format": {
-          "type": "resource"
-        },
-        "defaultValue": ""
-      },
-      {
-        "name": "metric",
-        "type": "string",
-        "mandatory": true,
-        "defaultValue": ""
-      },
-      {
-        "name": "from",
-        "type": "string",
-        "mandatory": false,
-        "format": {
-          "type": "enum",
-          "values": [
-            "PT1M",
-            "PT5M",
-            "PT30M",
-            "PT1H",
-            "PT3H",
-            "PT12H",
-            "PT24H"
-          ]
-        },
-        "defaultValue": "PT30M"
-      },
-      {
-        "name": "to",
-        "type": "string",
-        "mandatory": false,
-        "defaultValue": ""
-      },
-      {
-        "name": "aggregate",
-        "type": "string",
-        "mandatory": true,
-        "format": {
-          "type": "enum",
-          "values": [
-            "mean",
-            "median",
-            "first",
-            "last",
-            "count",
-            "std",
-            "min",
-            "max",
-            "sum"
-          ]
-        },
-        "defaultValue": "mean"
-      },
-      {
-        "name": "grouping",
-        "type": "string",
-        "mandatory": true,
-        "format": {
-          "type": "enum",
-          "values": [
-            "auto",
-            "PT1M",
-            "PT5M",
-            "PT30M",
-            "PT1H",
-            "PT3H",
-            "PT12H",
-            "PT24H"
-          ]
-        },
-        "defaultValue": "auto"
       }
     ]
   },
