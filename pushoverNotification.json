@@ -1,12 +1,12 @@
 {
   "name": "pushoverNotification",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "sensor",
-  "script": "const axios = require('axios')\n\nconst { token, user, message, title } = options.requiredProperties\n\nasync function execute () {\n  if (!token || !user || !message || !title) {\n    return send(new Error('Missing Property'))\n  }\n  try {\n    const response = await axios.post(\n      'https://api.pushover.net/1/messages.json',\n      { token, user, message: options.requiredProperties.message, title }\n    )\n    send(null, {\n      observedState: 'Success', rawData: { response }\n    })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Calling pushover failed: ' + error } })\n  }\n}\n\nexecute()",
+  "script": "const axios = require('axios')\n\nconst { token, user, message, title } = options.requiredProperties\n\nasync function execute () {\n  if (!token || !user || !message || !title) {\n    return send(new Error('Missing Property'))\n  }\n  try {\n    const response = await axios.post(\n      'https://api.pushover.net/1/messages.json',\n      { token, user, message: options.requiredProperties.message, title }\n    )\n    send(null, {\n      observedState: 'Success', rawData: { response: response.data }\n    })\n  } catch (error) {\n    console.error(error)\n    send(null, { observedState: 'Error', rawData: { errorMessage: 'Calling pushover failed: ' + error } })\n  }\n}\n\nexecute()",
   "metadata": {
     "author": "",
     "category": "",
-    "description": "Sends a notification using the pushover service.",
+    "description": "Sends a notification using the pushover service",
     "documentationURL": "https://docs.waylay.io/plugins/pushovernotification/",
     "iconURL": "https://static.waylay.io/plugs/icons/pushover.png",
     "supportedStates": [
